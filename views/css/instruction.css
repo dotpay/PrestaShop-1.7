@@ -1,0 +1,82 @@
+#instruction {
+    text-align: left;
+    float: left;
+    margin: 10px;
+    padding: 10px;
+    width: 100%;
+}
+
+#instruction label {
+    display: block;
+    font-weight: normal;
+    font-size: 18px;
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+#instruction label > input, #instruction label > .input-group {
+    margin-top: 7px;
+}
+
+#instruction input.important {
+    color: #881920;
+    font-weight: bold;
+    background-color: silver;
+}
+
+#instruction-content {
+    font-size: 1.3em;
+    margin: 15px 0px 20px;
+    line-height: 28px;
+}
+
+#instruction .input-group-addon {
+    padding: .445rem .75rem;
+}
+
+#instruction .col-with-margin {
+    margin-left: 16.6667%;
+}
+
+#blankiet-download-form {
+    text-align: center;
+    padding: 0px;
+    margin: 20px 0px;
+}
+
+#channel_container_confirm {
+    border-radius: 3px;
+    display: inline-block;
+    margin: 5px 10px;
+    border: 1px solid #B7AFAF;
+    background-color: #FFF;
+    text-align: center;
+}
+
+#channel_container_confirm:hover {
+    box-shadow: 5px 5px 2px #AAA;
+}
+
+#channel_container_confirm a {
+    width: 100%;
+    height: 100%;
+}
+
+#channel_container_confirm img {
+    margin: auto;
+    width: 150px
+}
+
+#channel_container_confirm span {
+    font-size: 1.3em;
+    font-weight: bold;
+    display: block;
+    margin: 10px;
+    width: 280px
+}
+
+#instruction .alert-info {
+    background-color: #e1f6ff;
+    border-color: #7cb6ff;
+    color: #003380;
+}

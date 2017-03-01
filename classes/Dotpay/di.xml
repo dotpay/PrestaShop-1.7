@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<objects>
+    <object class="Prestashop\Dotpay\Model\Configuration" alias="Config">
+        <param name="pluginId" />
+    </object>
+    <object class="Prestashop\Dotpay\Model\Order" alias="Order">
+        <param name="id" />
+        <param name="amount" />
+        <param name="currency" />
+    </object>
+    <object class="Prestashop\Dotpay\Model\CardBrand" alias="CardBrand">
+        <param name="name" />
+        <param name="logo" />
+        <param name="codename" />
+    </object>
+    <object class="Prestashop\Dotpay\Model\CreditCard" alias="CreditCard">
+        <param name="id" value="" />
+        <param name="userId" value="" />
+    </object>
+    <object class="Prestashop\Dotpay\Model\Notification" alias="Notification" />
+    <object class="Prestashop\Dotpay\Model\Instruction" alias="Instruction">
+        <param name="orderId" />
+    </object>
+    <object class="Prestashop\Dotpay\Channel\Dotpay" alias="DotpayChannel">
+        <param name="config" class="Config" />
+        <param name="transaction" class="Transaction" />
+        <param name="paymentResource" class="PaymentResource" />
+        <param name="sellerResource" class="SellerResource" />
+    </object>
+</objects>

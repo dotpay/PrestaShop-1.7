@@ -25,3 +25,57 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
+
+.cta-button-container {
+    text-align: center;
+}
+
+.cta-button {
+    border-radius: 3px;
+    color: #FFF !important;
+    background-color: #881920;
+    border: medium none;
+    font-size: 20px;
+    padding: 15px 50px;
+    margin: 25px 0px;
+    display: inline-block;
+    text-decoration: none !important;
+}
+
+#scroll-to-save {
+    z-index: 1000;
+    position: fixed;
+    top: 150px;
+    min-height: 30px;
+    width: 108px;
+    
+    text-align: center;
+    font: 11px/100% Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #555;
+    display: block;
+    background-color: #fff;
+    cursor: pointer;
+    border: 1px solid #777;
+    border-radius: 5px;
+
+    /* transition */
+    -webkit-transition: 1s;
+    -moz-transition: 1s;
+    transition: 1s;
+}
+
+#scroll-to-save i {
+    line-height: 30px;
+}
+
+.save-dotpay-settings {
+    margin: auto;
+    display: block;
+}
+
+.errorMessage {
+    color: red;
+    font-weight: bold;
+}

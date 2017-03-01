@@ -1,0 +1,21 @@
+.dotpay-card-brand-logo {
+    max-height: 30px;
+}
+
+#credit-cards-list {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#credit-cards-list .ocheader {
+    font-weight: bold;
+    background-color: #DADBD9;
+}
+
+#credit-cards-list tr:not(.ocheader):hover {
+    background-color: #F3F3F3;
+}
+
+#saved_credit_cards {
+    margin-top: 15px;
+}

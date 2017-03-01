@@ -25,3 +25,86 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
+
+.dotpay-widget-container .dotpay-channels {
+    float: left;
+}
+.dotpay-widget-container + p {
+    clear: both;
+}
+.selectedChannelContainer .channel-container label {
+    text-align: center !important;
+}
+
+.selected-channel-message {
+    margin-bottom: 10px;
+}
+
+
+.dotpay-one-channel label {
+    text-align: left !important;
+    cursor: pointer;
+}
+
+.dotpay-one-channel row {
+    margin-left: 10px;
+}
+
+.payment-option {
+    line-height: 30px;
+}
+
+.payment-option img {
+    height: 30px;
+}
+
+/* One Click card visualisation */
+.dotpay-card-logo {
+    display: block;
+    margin: 10px;
+    margin-left: 20px;
+    border: 1px solid #01217e;
+    border-radius: 5px;
+    max-height: 60px;
+}
+
+.dotpay_card_list {
+    width: 220px;
+}
+
+.payment-form {
+    margin-left: 35px;
+}
+
+.channel-data {
+    margin-bottom: 15px;
+}
+
+.channel-data label {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: block !important;
+    text-align: left;
+}
+
+.dotpay-widget-container .channel-container label {
+    text-align: center !important;
+}
+
+.agreements label {
+    width: 100%;
+    display: block !important;
+    margin: 12px 0px 12px 0px;
+    text-align: left;
+}
+
+.dotpay-back-button {
+    margin-bottom: 10px;
+}
+
+input[name="blik_code"] {
+    width: 200px;
+    margin: 5px 0px 5px 0px;
+    border: #ff6600 2px solid;
+    height: 28px;
+}
