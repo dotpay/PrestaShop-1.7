@@ -1,10 +1,19 @@
 .dotpay-card-brand-logo {
-    max-height: 30px;
+    max-height: 40px;
 }
 
 #credit-cards-list {
     width: 100%;
     margin-bottom: 15px;
+    text-align: center;
+}
+
+#credit-cards-list th {
+    text-align: center;
+}
+
+#credit-cards-list td {
+    padding: 5px;
 }
 
 #credit-cards-list .ocheader {

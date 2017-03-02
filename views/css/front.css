@@ -51,11 +51,11 @@
 }
 
 .payment-option {
-    line-height: 30px;
+    line-height: 40px;
 }
 
 .payment-option img {
-    height: 30px;
+    height: 40px;
 }
 
 /* One Click card visualisation */
@@ -63,7 +63,7 @@
     display: block;
     margin: 10px;
     margin-left: 20px;
-    border: 1px solid #01217e;
+    border: 1px solid #2fb5d2;
     border-radius: 5px;
     max-height: 60px;
 }
@@ -91,20 +91,63 @@
     text-align: center !important;
 }
 
+div.agreements {
+    background-color: #fbfbfb;	
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+select[name="dotpay_card_list"] {
+    border: 1px solid #2fb5d2;
+    font-size: 14px;
+    color: #0a4451;
+}
+
+.dotpay-one-channel.row {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 50px;
+}
+
+.dotpay_card_list {
+    font-size: 16px;
+    margin-left: 50px;
+    margin-bottom: 20px;
+}
+
 .agreements label {
     width: 100%;
     display: block !important;
     margin: 12px 0px 12px 0px;
     text-align: left;
+    font-size: small;
+    color: gray;
 }
+
+label#agreement_oc-store-card {
+    color: black;
+}
+
+.dotpay-widget-container {
+    margin-top: 10px;
+    margin-left: 10px;
+    display: inline-table;
+}
+
 
 .dotpay-back-button {
     margin-bottom: 10px;
 }
+.agreementsMessage{
+    color: gray;
+}
 
 input[name="blik_code"] {
-    width: 200px;
+    width: 160px;
     margin: 5px 0px 5px 0px;
     border: #ff6600 2px solid;
-    height: 28px;
+    height: 44px;
+    font-size: 32px;
 }

@@ -25,6 +25,10 @@ require_once('dotpay.php');
  */
 class dotpaybackModuleFrontController extends DotpayController
 {
+    /**
+     * Set additional media in template
+     * @return boolean
+     */
     public function setMedia()
     {
         parent::setMedia();
@@ -38,6 +42,7 @@ class dotpaybackModuleFrontController extends DotpayController
         );
         return true;
     }
+    
     /**
      * Proces coming back from a Dotpay server
      */

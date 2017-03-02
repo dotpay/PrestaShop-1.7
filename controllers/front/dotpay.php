@@ -150,7 +150,7 @@ abstract class DotpayController extends ModuleFrontController {
             default:
                 die($this->module->l('Unrecognized method'));
         }
-        $this->getChannel()->getSeller()->setInfo(Configuration::get('PS_SHOP_NAME'));
+        $this->getChannel()->getSeller()->setInfo(\Configuration::get('PS_SHOP_NAME'));
         $this->getOrder()->setId($order->id)
                          ->setReference($order->reference);
         $this->getChannel()->getTransaction()->getPayment()->setDescription($this->module->l("Order ID:").' '.$order->reference);

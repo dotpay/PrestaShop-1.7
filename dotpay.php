@@ -42,7 +42,7 @@ include(__DIR__.'/sdk/dotpay.bootstrap.php');
 
 /**
  * Load an overriden class
- * @param type $className Full name of class
+ * @param string $className Full name of class
  */
 function dotpayOverrideApiLoader($className) {
     $location = str_replace('Prestashop', 'classes', str_replace('\\', '/', $className));
@@ -784,7 +784,8 @@ class dotpay extends PaymentModule
                     'currency' => $order->getCurrency(),
                     'surMessage' => $this->l('This payment will be increased by the additional surcharge'),
                     'exMessage' => $this->l('This payment will be increased by'),
-                    'reductMessage' => $this->l('This payment will be reduced by')
+                    'reductMessage' => $this->l('This payment will be reduced by'),
+                    'agreementsMessage' => $this->l('Acceptance Dotpay regulations:')
                 ]);
                 $newOption = new PaymentOption();
                 $newOption->setCallToActionText($channel->getTitle())
