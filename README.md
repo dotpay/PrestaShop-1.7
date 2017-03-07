@@ -1,12 +1,14 @@
 # PrestaShop Dotpay payment module for  PrestaShop 1.7.x
 =====================
 
- Jeśli używasz starszej wersji PrestaShop 1.6.x, dedykowany moduł dla twojej wersji znajdziesz pod adresem: https://github.com/dotpay/PrestaShop
-
 
 #### Wtyczka dla PrestaShop dodająca bramkę płatności Dotpay ####
 
-Najnowsza wersja modułu oraz instrukcji instalacji:
+ Jeśli używasz starszej wersji PrestaShop 1.6.x, dedykowany moduł dla twojej wersji znajdziesz pod adresem: https://github.com/dotpay/PrestaShop
+
+
+
+### Najnowsza wersja modułu oraz instrukcja instalacji:
 https://github.com/dotpay/PrestaShop/releases/latest
 
 ---------------------------------------
@@ -17,5 +19,5 @@ You can find module for older version PrestaShop 1.6.x: https://github.com/dotpa
 
 
 
-Latest plugin and installation manual version:
+### Latest plugin and installation manual version:
 https://github.com/dotpay/PrestaShop/releases/latest
