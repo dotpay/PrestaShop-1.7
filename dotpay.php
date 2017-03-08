@@ -60,6 +60,8 @@ class dotpay extends PaymentModule
 {
     protected $config_form = false;
     
+    const REPOSITORY_NAME = 'PrestaShop-1.7.x';
+    
     /**
      * @var Dotpay\Loader\Loader Instance of SDK Loader
      */
@@ -77,7 +79,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '3.0.0';
+        $this->version = '1.0';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -159,7 +161,7 @@ class dotpay extends PaymentModule
         }
         
         try {
-            $number = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', 'PrestaShop')->getNumber();
+            $number = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME)->getNumber();
             $obsoletePlugin = version_compare($number, $this->version, '>');
             $canNotCheckPlugin = false;
         } catch (RuntimeException $e) {
@@ -174,6 +176,7 @@ class dotpay extends PaymentModule
             $testSellerPin = $sellerResource->checkPin();
 
             $this->context->smarty->assign([
+                'repositoryName' => self::REPOSITORY_NAME,
                 'moduleDir' => $this->_path,
                 'regMessEn' => $this->config->getTestMode() || !$this->config->isGoodAccount(),
                 'badIdMessage' => $this->l('Incorrect ID (required 6 digits)'),

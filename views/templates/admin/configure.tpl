@@ -130,7 +130,7 @@
             <br />
             <p style="color: #555;">
                 {l s='You can manually check the latest version' mod='dotpay'}
-                <a href="https://github.com/dotpay/PrestaShop/releases/latest" target="_blank">{l s='on this page' mod='dotpay'}</a>.
+                <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{l s='on this page' mod='dotpay'}</a>.
             </p>
         </div>
     {else}
@@ -152,7 +152,7 @@
                 <br />
             </div>
         {/if}
-        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="{l s='https://github.com/dotpay/PrestaShop/releases/download/v2.2.2/Dotpay_PrestaShop_module-manual_v2.2.2_en.pdf'  mod='dotpay'}" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
+        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersion}/Dotpay_PrestaShop_module-manual_v{$moduleVersion}_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
     </div>
 </div>
 <p id="scroll-to-save">
