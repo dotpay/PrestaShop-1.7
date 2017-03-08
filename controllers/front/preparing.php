@@ -45,23 +45,22 @@ class dotpayPreparingModuleFrontController extends DotpayController
             $this->setCart(Cart::getCartByOrderId(Tools::getValue('order')));
         }
         $this->initializeOrderData();
-        $exAmount = $this->getOrder()->getExtrachargeAmount($this->getConfig(), $this->getCart()->id_currency);
+        $currency = Currency::getCurrency($this->getCart()->id_currency);
+        $exAmount = $this->getOrder()->getExtrachargeAmount($this->getConfig(), $currency);
         if ($exAmount > 0 && !$this->isVirtualProductInCart()) {
             $productId = $this->getConfig()->getExtraChargeVirtualProductId();
-            if ($productId != 0) {
-                $this->module->checkVirtualProduct();
-                $product = new Product($productId, true);
-                $product->price = $exAmount;
-                $product->save();
-                $product->flushPriceCache();
+            $this->module->checkVirtualProduct();
+            $product = new Product($productId, true);
+            $product->price = $exAmount;
+            $product->save();
+            $product->flushPriceCache();
 
-                $this->getCart()->updateQty(1, $product->id);
-                $this->getCart()->update();
-                $this->getCart()->getPackageList(true);
-            }
+            $this->getCart()->updateQty(1, $product->id);
+            $this->getCart()->update();
+            $this->getCart()->getPackageList(true);
         }
         
-        $discAmount = $this->getOrder()->getReductionAmount($this->getConfig());
+        $discAmount = $this->getOrder()->getReductionAmount($this->getConfig(), $currency);
         if ($discAmount > 0) {
             $discount = new CartRule($this->getConfig()->getShippingReductionId());
             $discount->reduction_amount = $discAmount;

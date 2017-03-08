@@ -58,6 +58,13 @@
     height: 40px;
 }
 
+.alert-total {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: right;
+    color: rgb(169, 68, 66);
+}
+
 /* One Click card visualisation */
 .dotpay-card-logo {
     display: block;

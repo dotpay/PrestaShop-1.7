@@ -680,12 +680,22 @@ class dotpay extends PaymentModule
         
         $reductionFlagAfter = $this->config->getReduction();
         $extrachargeFlagAfter = $this->config->getExtracharge();
-
+        
         if ($extrachargeFlagBefore == false && $extrachargeFlagAfter == true) {
             $this->checkVirtualProduct();
+            if ($this->config->getExtraChargeVirtualProductId() == 0) {
+                $this->context->smarty->assign([
+                    'universalErrorMessage' => $this->l('The error with switching extracharge option occured. Prease try to turn it on again.')
+                ]);
+            }
         }
         if ($reductionFlagBefore == false && $reductionFlagAfter == true) {
             $this->addShippingReduction();
+            if ($this->config->getShippingReductionId() == 0) {
+                $this->context->smarty->assign([
+                    'universalErrorMessage' => $this->l('The error with switching shipping reduction occured. Prease try to turn it on again.')
+                ]);
+            }
         }
     }
 
@@ -772,6 +782,11 @@ class dotpay extends PaymentModule
             $exAmount = $order->getExtrachargeAmount($this->config);
             $surAmount = $order->getSurchargeAmount($this->config);
             $reductAmount = $order->getReductionAmount($this->config);
+            if($exAmount || $reductAmount || $surAmount) {
+                $totalAmount = $order->getAmount() + $exAmount + $surAmount - $reductAmount;
+            } else {
+                $totalAmount = 0.0;
+            }
             foreach ($channelsList as $channel) {
                 $this->context->smarty->assign([
                     'channel' => $channel,
@@ -785,7 +800,9 @@ class dotpay extends PaymentModule
                     'surMessage' => $this->l('This payment will be increased by the additional surcharge'),
                     'exMessage' => $this->l('This payment will be increased by'),
                     'reductMessage' => $this->l('This payment will be reduced by'),
-                    'agreementsMessage' => $this->l('Acceptance Dotpay regulations:')
+                    'agreementsMessage' => $this->l('Acceptance Dotpay regulations:'),
+                    'totalMessage' => $this->l('Total amount for payment'),
+                    'totalAmount' => number_format($totalAmount, 2, '.', ' ')
                 ]);
                 $newOption = new PaymentOption();
                 $newOption->setCallToActionText($channel->getTitle())
@@ -1023,7 +1040,7 @@ class dotpay extends PaymentModule
     }
     
     /**
-     * Checks, if SSL is enabled during current connection
+     * Check, if SSL is enabled during current connection
      * @return boolean
      */
     public function isSSLEnabled()
@@ -1039,7 +1056,7 @@ class dotpay extends PaymentModule
     }
     
     /**
-     * Adds Dotpay virtual product for extracharge option
+     * Add Dotpay virtual product for extracharge option
      * @return boolean
      */
     public function checkVirtualProduct()
@@ -1069,7 +1086,7 @@ class dotpay extends PaymentModule
     }
     
     /**
-     * Checks if Dotpay virtual product is complete
+     * Check if Dotpay virtual product is complete
      * @param Product $product Dotpay virtual product object
      * @return boolean
      */
@@ -1093,13 +1110,13 @@ class dotpay extends PaymentModule
     }
     
     /**
-     * Sets values of Dotpay virtual product
+     * Set values of Dotpay virtual product
      * @param Product $product Dotpay virtual product object
      */
     private function setVPFeatures(Product $product)
     {
-        $product->name = array((int)Configuration::get('PS_LANG_DEFAULT') => 'Online payment');
-        $product->link_rewrite = array((int)Configuration::get('PS_LANG_DEFAULT') => 'online-payment');
+        $product->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Online payment'];
+        $product->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => 'online-payment'];
         $product->visibility = 'none';
         $product->reference = 'DOTPAYFEE';
         $product->price = 0.0;
@@ -1115,31 +1132,28 @@ class dotpay extends PaymentModule
     }
     
     /**
-     * Added Dotpay discount for reducing shipping cost
+     * Set Dotpay discount for reducing shipping cost
      * @return boolean
      */
     private function addShippingReduction()
     {
-        if (!Validate::isInt($this->config->getShippingReductionId())) {
-            $voucher = new Discount();
-            $voucher->id_discount_type = Discount::AMOUNT;
-            $voucher->name = array((int)Configuration::get('PS_LANG_DEFAULT') => 'Discount for online shopping');
-            $voucher->description = array((int)Configuration::get('PS_LANG_DEFAULT') => 'Online payment');
-            $voucher->value = 0;
-            $voucher->code = md5(date("d-m-Y H-i-s"));
-            $voucher->quantity = 9999999;
-            $voucher->quantity_per_user = 9999999;
-            $voucher->cumulable = 1;
-            $voucher->cumulable_reduction = 1;
-            $voucher->active = 1;
-            $voucher->cart_display = 1;
+        if (!Validate::isInt($this->config->getShippingReductionId()) || $this->config->getShippingReductionId() == 0) {
+            $cartRule = new CartRule();
+            $cartRule->name = array((int)Configuration::get('PS_LANG_DEFAULT') => $this->l('Discount for shipping thanks to Dotpay payment'));
+            $cartRule->description = array((int)Configuration::get('PS_LANG_DEFAULT') => $this->l('Customers can reduct the price of shipping by using Dotpay payments'));
+            $cartRule->code = md5(date("d-m-Y H-i-s"));
+            $cartRule->quantity = 9999999;
+            $cartRule->quantity_per_user = 9999999;
+            $cartRule->active = 1;
+            $cartRule->reduction_amount = 1;
+            $cartRule->reduction_tax = 1;
             $now = time();
-            $voucher->date_from = date('Y-m-d H:i:s', $now);
-            $voucher->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)*50);
-            if (!$voucher->add()) {
+            $cartRule->date_from = date('Y-m-d H:i:s', $now);
+            $cartRule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)*50);
+            if (!$cartRule->add()) {
                 return false;
             }
-            $this->config->setShippingReductionId($voucher->id);
+            $this->config->setShippingReductionId($cartRule->id);
         }
         return true;
     }

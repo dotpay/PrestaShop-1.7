@@ -40,6 +40,9 @@
             {if $reductAmount > 0}
                 <p class="alert alert-success">{$reductMessage|escape:'htmlall':'UTF-8'}: {$reductAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}.</p>
             {/if}
+            {if $totalAmount > 0}
+                <p class="alert-total">{$totalMessage|escape:'htmlall':'UTF-8'}: {$totalAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}.</p>
+            {/if}
             {foreach from=$channel->getViewFieldsHtml() item=field}
                 {$field nofilter}
             {/foreach}

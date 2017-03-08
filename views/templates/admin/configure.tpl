@@ -90,6 +90,15 @@
                 <br />
             </div>
         {/if}
+        {if $universalErrorMessage }
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Error with module settings' mod='dotpay'}</h2>
+                <br />
+                <p style="color: #555;"><b>{$universalErrorMessage|escape:'htmlall':'UTF-8'}</b></p>
+                <br />
+            </div>
+        {/if}
 
         <p>{l s='Thanks to Dotpay payment module the only activities needed for integration are: ID and PIN numbers and URLC confirmation configuration.' mod='dotpay'}</p>
         <p>{l s='ID and PIN can be found in Dotpay panel in Settings in the top bar. ID number is a 6-digit string after # in a "Shop" column.' mod='dotpay'}</p>

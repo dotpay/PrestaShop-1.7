@@ -27,4 +27,9 @@
         <param name="paymentResource" class="PaymentResource" />
         <param name="sellerResource" class="SellerResource" />
     </object>
+    <object class="Prestashop\Dotpay\Processor\Confirmation" alias="Confirmation">
+        <param name="config" class="Config" />
+        <param name="resource" class="PaymentResource" />
+        <param name="seller" class="SellerResource" />
+    </object>
 </objects>

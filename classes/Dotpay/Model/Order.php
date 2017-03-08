@@ -38,7 +38,7 @@ class Order extends \Dotpay\Model\Order
     /**
      * Return an amount of an additional surcharge for display it on shop site
      * @param Configuration $config Plugin configuration
-     * @param Array $currency  Array with data of the order currency
+     * @param array|Currency $currency Data of the order currency
      * @return float
      */
     public function getSurchargeAmount(Configuration $config, $currency = null) {
@@ -53,15 +53,15 @@ class Order extends \Dotpay\Model\Order
     /**
      * Return an amount of an additional extracharge for add it to an order
      * @param Configuration $config Plugin configuration
-     * @param Array $currency  Array with data of the order currency
+     * @param array|Currency $currency Data of the order currency
      * @return float
      */
     public function getExtrachargeAmount(Configuration $config, $currency = null) {
         if (!$config->getExtracharge()) {
             return 0.0;
         }
-        $exPercentage = $this->getFormatAmount($this->getAmount() * $config->getExchargePercent()/100);
-        $exAmount = $this->getFormatAmount($config->getExchargeAmount());
+        $exPercentage = $this->getFormatAmount($this->getAmount() * $config->getExchargePercent()/100, $currency);
+        $exAmount = $this->getFormatAmount($config->getExchargeAmount(), $currency);
         if ($currency === null) {
             $price = max($exPercentage, $exAmount);
         } else {
@@ -72,21 +72,23 @@ class Order extends \Dotpay\Model\Order
     
     /**
      * Returns amount after discount for Dotpay
+     * @param Configuration $config Plugin configuration
+     * @param array|Currency $currency Data of the order currency
      * @return float
      */
-    public function getReductionAmount(Configuration $config, $currencyId = null)
+    public function getReductionAmount(Configuration $config, $currency = null)
     {
         if (!$config->getReduction()) {
             return 0.0;
         }
         $amount = $this->getShippingAmount();
-        $discPercentage = $this->getFormatAmount($amount * $config->getReductionPercent()/100);
+        $discPercentage = $this->getFormatAmount($amount * $config->getReductionPercent()/100, $currency);
         $discAmount = $config->getReductionAmount();
         $tmpPrice = max($discPercentage, $discAmount);
-        if ($currencyId === null) {
+        if ($currency === null) {
             $price =  min($tmpPrice, $amount);
         } else {
-            $price = \Tools::convertPrice(min($tmpPrice, $amount), $currencyId, false);
+            $price = \Tools::convertPrice(min($tmpPrice, $amount), $currency, false);
         }
         return $price;
     }
@@ -94,12 +96,13 @@ class Order extends \Dotpay\Model\Order
     /**
      * Returns amount in correct format
      * @param float $amount Amount of the order
-     * @param array $currency Array with data of the order currency
+     * @param array|Currency $currency Data of the order currency
      * @return string
      */
     private function getFormatAmount($amount, $currency)
     {
-        if (isset($currency['decimals']) && $currency['decimals']==0) {
+        if (gettype($currency) == 'object' && isset($currency->decimals) && $currency->decimals ==0 ||
+            gettype($currency) == 'array' && isset($currency['decimals']) && $currency['decimals'] ==0) {
             if (\Configuration::get('PS_PRICE_ROUND_MODE')!=null) {
                 switch (\Configuration::get('PS_PRICE_ROUND_MODE')) {
                     case 0:

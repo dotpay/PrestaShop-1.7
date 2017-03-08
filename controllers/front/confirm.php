@@ -37,10 +37,10 @@ class dotpayconfirmModuleFrontController extends DotpayController
     public function displayAjax()
     {
         $loader = Loader::load();
-        $notification = $loader->get('Notification');
         
         try {
             $confirmProcessor = $loader->get('Confirmation');
+            $notification = $loader->get('Notification');
             $this->setCart(Cart::getCartByOrderId($notification->getOperation()->getControl()));
             $this->initializeOrderData(true);
             
@@ -57,7 +57,8 @@ class dotpayconfirmModuleFrontController extends DotpayController
             $config = $this->getConfig();
             $paymentAction = new MakePaymentOrRefund(
                 function(Operation $operation) use ($config, $loader) {
-                    $order = new Order($operation->getControl());
+                    $control = explode('|', (string)$operation->getControl());
+                    $order = new Order($control[0]);
                     $history = new OrderHistory();
                     $history->id_order = $order->id;
                     $lastOrderState = new OrderState($order->getCurrentState());
@@ -102,7 +103,8 @@ class dotpayconfirmModuleFrontController extends DotpayController
                         return true;
                     }
                     
-                    $order = new Order($operation->getControl());
+                    $control = explode('|', (string)$operation->getControl());
+                    $order = new Order($control[0]);
                     $payments = OrderPayment::getByOrderId($order->id);
                     $foundPaymet = false;
                     $sumOfPayments = 0.0;
@@ -166,7 +168,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
         } catch (ConfirmationInfoException $ex) {
             die($ex->getMessage());
         } catch (RuntimeException $ex) {
-            die($ex->getMessage());
+            die('EXCEPTION! '.get_class($ex).' '.$ex->getMessage());
         }
     }
     
