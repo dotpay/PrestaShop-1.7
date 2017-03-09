@@ -26,6 +26,7 @@ use Dotpay\Model\Seller;
 use Dotpay\Resource\Payment as PaymentResource;
 use Dotpay\Resource\Seller as SellerResource;
 use Dotpay\Tool\Checksum;
+use Dotpay\Exception\Processor\IncorrectRequestException;
 use Dotpay\Exception\Processor\SellerNotRecognizedException;
 use Dotpay\Exception\Processor\ConfirmationDataException;
 use Dotpay\Exception\Processor\ConfirmationInfoException;
@@ -106,7 +107,7 @@ class Confirmation
             throw new ConfirmationInfoException($this->outputMessage);
         } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' &&
                     $_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP)) {
-            
+            throw new IncorrectRequestException();
         }
     }
     
