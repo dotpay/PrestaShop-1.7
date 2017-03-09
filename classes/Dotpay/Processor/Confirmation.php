@@ -12,6 +12,9 @@ class Confirmation extends \Dotpay\Processor\Confirmation {
              ->addOutputMessage('--- Dotpay Discount ---')
              ->addOutputMessage('Discount Enabled: '.(int)$this->config->getReduction())
              ->addOutputMessage('Discount Flat: '.$this->config->getReductionAmount())
-             ->addOutputMessage('Discount Percentage: '.$this->config->getReductionPercent());
+             ->addOutputMessage('Discount Percentage: '.$this->config->getReductionPercent(), true)
+             ->addOutputMessage('--- System Info ---')
+             ->addOutputMessage('PrestaShop Version: '._PS_VERSION_ )
+             ->addOutputMessage('Module Version: '.$this->config->getPluginVersion());
     }
 }

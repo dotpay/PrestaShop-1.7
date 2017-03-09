@@ -2,7 +2,7 @@
 <module>
     <name>dotpay</name>
     <displayName><![CDATA[Dotpay Payments]]></displayName>
-    <version><![CDATA[1.0]]></version>
+    <version><![CDATA[1.0.0]]></version>
     <description><![CDATA[This module allows to pay via Dotpay]]></description>
     <author><![CDATA[Dotpay]]></author>
     <tab><![CDATA[payments_gateways]]></tab>

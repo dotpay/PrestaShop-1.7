@@ -49,6 +49,11 @@ class Oc extends Channel
     private $cardList = [];
     
     /**
+     * @var boolean A flag if user is logged on shop site
+     */
+    private $userIsLogged = false;
+    
+    /**
      * @var string An URL to a place in a shop where a customer can manage saved credit cards
      */
     private $manageCardsUrl;
@@ -87,7 +92,9 @@ class Oc extends Channel
      */
     public function isVisible()
     {
-        return parent::isVisible() && $this->config->isOcEnable();
+        return parent::isVisible() &&
+               $this->config->isOcEnable() &&
+               $this->ifUserIsLogged();
     }
     
     /**
@@ -136,6 +143,14 @@ class Oc extends Channel
         return $this->cardList;
     }
     
+    /**
+     * Return a flag if user is logged
+     * @return boolean
+     */
+    public function ifUserIsLogged() {
+        return $this->userIsLogged;
+    }
+
     /**
      * Return an URL to a place in a shop where a customer can manage saved credit cards
      * @return string
@@ -216,6 +231,17 @@ class Oc extends Channel
         }
     }
     
+    /**
+     * Set a flag if user is logged
+     * @param boolean $userIsLogged A flag if user is logged
+     * @return Oc
+     */
+    public function setUserIsLogged($userIsLogged)
+    {
+        $this->userIsLogged = $userIsLogged;
+        return $this;
+    }
+
     /**
      * Set a description of saved cards option
      * @param string $description Description of saved cards option

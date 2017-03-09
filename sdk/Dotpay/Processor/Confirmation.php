@@ -104,6 +104,9 @@ class Confirmation
         ) {
             $this->completeInformations();
             throw new ConfirmationInfoException($this->outputMessage);
+        } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' &&
+                    $_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP)) {
+            
         }
     }
     
@@ -175,8 +178,9 @@ class Confirmation
     {
         $config = $this->config;
         $this->addOutputMessage('--- Dotpay Diagnostic Information ---')
+             ->addOutputMessage('PHP Version: '.  phpversion())
              ->addOutputMessage('Sdk Version: '.$config::SDK_VERSION)
-             ->addOutputMessage('Enabled: '.(int)$config->getEnable(), true)
+             ->addOutputMessage('Enabled: '.(int)$config->getEnable(), true) 		 
              ->addOutputMessage('--- Dotpay PLN ---')
              ->addOutputMessage('Id: '.$config->getId())
              ->addOutputMessage('Correct Id: '.(int)$this->paymentApi->checkSeller($config->getId()))

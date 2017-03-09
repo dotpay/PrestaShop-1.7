@@ -35,8 +35,8 @@ class Configuration
     /**
      * Version of the SDK
      */
-    const SDK_VERSION = '0.9';
-    
+    const SDK_VERSION = '1.0';
+	
     /**
      * Url of Dotpay payment production server
      */
@@ -119,6 +119,11 @@ class Configuration
      * @var string Id of plugin where is used SDK
      */
     private $pluginId = '';
+    
+    /**
+     * @var string Version of used plugin
+     */
+    private $pluginVersion = '';
     
     /**
      * @var boolean Flag which inform if Dotpay payment is enabled in a shop
@@ -263,6 +268,15 @@ class Configuration
     public function getPluginId()
     {
         return $this->pluginId;
+    }
+    
+    /**
+     * Return plugin version
+     * @return string
+     */
+    public function getPluginVersion()
+    {
+        return $this->pluginVersion;
     }
 
     /**
@@ -622,6 +636,17 @@ class Configuration
     public function setPluginId($pluginId)
     {
         $this->pluginId = (string)$pluginId;
+        return $this;
+    }
+    
+    /**
+     * Set the given plugin version
+     * @param string $pluginVersion Plugin version
+     * @return Configuration
+     */
+    public function setPluginVersion($pluginVersion)
+    {
+        $this->pluginVersion = (string)$pluginVersion;
         return $this;
     }
     

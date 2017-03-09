@@ -32,16 +32,16 @@
         {/if}
         <div class="channel-data">
             {if $surAmount > 0}
-                <p class="alert alert-danger">{$surMessage|escape:'htmlall':'UTF-8'}: {$surAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}.</p>
+                <p class="alert alert-danger">{$surMessage|escape:'htmlall':'UTF-8'}: <strong>{$surAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</strong>.</p>
             {/if}
             {if $exAmount > 0}
-                <p class="alert alert-danger">{$exMessage|escape:'htmlall':'UTF-8'}: {$exAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}.</p>
+                <p class="alert alert-danger">{$exMessage|escape:'htmlall':'UTF-8'}: <strong>{$exAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</strong>.</p>
             {/if}
             {if $reductAmount > 0}
-                <p class="alert alert-success">{$reductMessage|escape:'htmlall':'UTF-8'}: {$reductAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}.</p>
+                <p class="alert alert-success">{$reductMessage|escape:'htmlall':'UTF-8'}: <strong>{$reductAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</strong>.</p>
             {/if}
             {if $totalAmount > 0}
-                <p class="alert-total">{$totalMessage|escape:'htmlall':'UTF-8'}: {$totalAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}.</p>
+                <p class="alert-total">{$totalMessage|escape:'htmlall':'UTF-8'}: {$totalAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</p>
             {/if}
             {foreach from=$channel->getViewFieldsHtml() item=field}
                 {$field nofilter}

@@ -79,7 +79,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0';
+        $this->version = '1.0.0';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -96,10 +96,11 @@ class dotpay extends PaymentModule
         $this->displayName = $this->l('Dotpay Payments');
         $this->description = $this->l('This module allows to pay via Dotpay');
 
-        $this->confirmUninstall = $this->l('');
+        $this->confirmUninstall = $this->l('Are you sure you want to uninstall Dotpay module?');
         
         $this->sdkLoader->parameter('Config:pluginId', $this->name);
         $this->config = $dpConfig = $this->sdkLoader->get('Config');
+        $this->config->setPluginVersion($this->version);
         $this->limited_currencies = $dpConfig::$CURRENCIES;
         
         $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
@@ -855,6 +856,9 @@ class dotpay extends PaymentModule
         $oneClick->setSavedCardsDescription("&nbsp;".$this->l('Select saved credit card'));
         $oneClick->setManageCardsDescription($this->l('Manage saved credit cards'));
         $oneClick->setManageCardsUrl($this->context->link->getModuleLink($this->name, 'ocmanage', [], true));
+        if (Context::getContext()->customer) {
+            $oneClick->setUserIsLogged(Context::getContext()->customer->isLogged());
+        }
         $channelList->addChannel($oneClick);
         
         $fcc = $this->sdkLoader->get('Fcc');
