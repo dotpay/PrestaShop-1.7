@@ -33,6 +33,8 @@ use Dotpay\Model\Customer as DotpayCustomer;
 use Dotpay\Resource\Channel\Agreement;
 use Dotpay\Exception\IncompleteDataException;
 use Dotpay\Channel\Channel;
+use Dotpay\Exception\DotpayException;
+use Dotpay\Exception\Resource\Account\NotFoundException as AccountNotFoundException;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -173,9 +175,23 @@ class dotpay extends PaymentModule
             $paymentResource = $this->sdkLoader->get('PaymentResource');
             $sellerResource = $this->sdkLoader->get('SellerResource');
             $testGoodApiData = $this->config->isGoodApiData();
-            $testApiAccount = $sellerResource->isAccountRight();
-            $testSellerPin = $sellerResource->checkPin();
-
+            $testCorrectSellerForApi = true;
+            try {
+                $testSellerId = $paymentResource->checkSeller($this->config->getId());
+                $testApiAccount = $sellerResource->isAccountRight();
+                $testSellerPin = $sellerResource->checkPin();
+            } catch (AccountNotFoundException $e) {
+                $testSellerPin = true;
+                $testCorrectSellerForApi = false;
+            } catch (DotpayException $e) {
+                $testSellerPin = false;
+            }
+            if(!isset($testSellerId)) {
+                $testSellerId = false;
+            }
+            if(!isset($testApiAccount)) {
+                $testApiAccount = false;
+            }
             $this->context->smarty->assign([
                 'repositoryName' => self::REPOSITORY_NAME,
                 'moduleDir' => $this->_path,
@@ -190,9 +206,10 @@ class dotpay extends PaymentModule
                 'minorPhpVersion' => '5.4',
                 'confOK' => $this->config->isGoodAccount() && $this->config->getEnable(),
                 'moduleVersion' => $this->version,
-                'testSellerId' => $paymentResource->checkSeller($this->config->getId()),
+                'testSellerId' => $testSellerId,
                 'testApiAccount' => $testGoodApiData && !$testApiAccount,
                 'testSellerPin' => $testGoodApiData && $testApiAccount && !$testSellerPin,
+                'testCorrectSellerForApi' => !$testCorrectSellerForApi,
                 'obsoletePlugin' => $obsoletePlugin,
                 'canNotCheckPlugin' => $canNotCheckPlugin
             ]);

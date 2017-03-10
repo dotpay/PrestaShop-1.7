@@ -90,6 +90,15 @@
                 <br />
             </div>
         {/if}
+        {if $testCorrectSellerForApi }
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Error with API data' mod='dotpay'}</h2>
+                <br />
+                <p style="color: #555;"><b>{l s='Your given API data is not correct for the given ID. Please check it.' mod='dotpay'}</b></p>
+                <br />
+            </div>
+        {/if}
         {if $universalErrorMessage }
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
