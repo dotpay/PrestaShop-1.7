@@ -25,7 +25,8 @@ class Checksum {
         $dirIter = new DirectoryIterator($dir);
         $concat = '';
         foreach ($dirIter as $fileinfo) {
-            if (!$fileinfo->isDot()) {
+            $filename = $fileinfo->getFilename();
+            if (!$fileinfo->isDot() && substr($filename, 0, 1) != '.') {
                 if ($fileinfo->getType() == 'dir') {
                     $concat .= self::getForDir($fileinfo->getPathname());
                 } else {

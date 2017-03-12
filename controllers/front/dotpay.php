@@ -88,6 +88,9 @@ abstract class DotpayController extends ModuleFrontController {
         if ($afterOrder) {
             $order = new Order(Order::getOrderByCartId($this->getCart()->id));
             $orderAmount = $order->total_paid;
+            foreach ($order->getBrother() as $brother) {
+                $orderAmount += $brother->total_paid;
+            }
             unset($order);
         } else {
             $orderAmount = $this->getCart()->getOrderTotal(true, Cart::BOTH);
@@ -156,15 +159,20 @@ abstract class DotpayController extends ModuleFrontController {
         $description = $this->module->l("Order ID:").' '.$order->reference;
         $control = $this->getOrder()->getId().'|'.$_SERVER['SERVER_NAME'].'|module:'.$this->module->version;
         if ($this->getConfig()->getSurcharge()) {
-             $description .= ' ('
-                     .$this->module->l("convenience fee - not included").': '.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).' '.$this->getOrder()->getCurrency().')';				
-		   $control .= '|sur:+'.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).' '.$this->getOrder()->getCurrency();
+            $description .= ' ('.
+                            $this->module->l("convenience fee - not included").
+                            ': '.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).
+                            ' '.$this->getOrder()->getCurrency().')';				
+            $control .= '|sur:+'.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).
+                        ' '.$this->getOrder()->getCurrency();
         }
         if ($this->getConfig()->getExtracharge()) {
-            $control .= '|fee:+'.$this->getOrder()->getExtrachargeAmount($this->getConfig(), $this->getCurrencyObject()).' '.$this->getOrder()->getCurrency();
+            $control .= '|fee:+'.$this->getOrder()->getExtrachargeAmount($this->getConfig(), $this->getCurrencyObject()).
+                        ' '.$this->getOrder()->getCurrency();
         }
         if ($this->getConfig()->getReduction()) {
-            $control .= '|disc:-'.$this->getOrder()->getReductionAmount($this->getConfig(), $this->getCurrencyObject()).' '.$this->getOrder()->getCurrency();
+            $control .= '|disc:-'.$this->getOrder()->getReductionAmount($this->getConfig(), $this->getCurrencyObject()).
+                        ' '.$this->getOrder()->getCurrency();
         }
         $this->getChannel()->getTransaction()->getPayment()->setDescription($description);
         $this->getChannel()->getTransaction()->setBackUrl($this->context->link->getModuleLink('dotpay', 'back', array('order' => Order::getOrderByCartId($this->getCart()->id)), $this->module->isSSLEnabled()))

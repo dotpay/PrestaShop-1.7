@@ -38,7 +38,7 @@ class dotpaystatusModuleFrontController extends DotpayController
                     die('0');
                 case _PS_OS_PAYMENT_:
                     $payments = OrderPayment::getByOrderId($orderId);
-                    if (count($payments) > 1) {
+                    if ((count($payments) - count($order->getBrother())) > 1) {
                         die('2');
                     } else {
                         die('1');

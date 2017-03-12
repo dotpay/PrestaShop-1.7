@@ -31,7 +31,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
         if ($this->module->active == false) {
             die;
         }
-                
+        
         if(is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
             unset(Context::getContext()->cookie->dotpay_renew);
             Context::getContext()->cookie->write();

@@ -27,7 +27,7 @@ class Street implements IValidate {
      * @return boolean
      */
     public static function validate($value) {
-        return (bool)preg_match('/^[A-Za-z0-9\.\s\-\/]{2,}$/', $value);
+        return (bool)preg_match('/^[A-Za-z0-9\.\s\-\/]{2,100}$/', $value);
     }
 }
 

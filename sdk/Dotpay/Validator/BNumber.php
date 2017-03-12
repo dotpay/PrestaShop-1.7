@@ -27,7 +27,7 @@ class BNumber implements IValidate {
      * @return boolean
      */
     public static function validate($value) {
-        return (bool)preg_match('/^[0-9]+[0-9]*([A-Za-z]?|(\/[0-9]+\s?[A-Za-z0-9]*)?)$/', $value);
+        return (bool)preg_match('/^[0-9A-Za-z\/]{1,30}$/', $value);
     }
 }
 

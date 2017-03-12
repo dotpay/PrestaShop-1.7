@@ -59,37 +59,43 @@ class dotpayconfirmModuleFrontController extends DotpayController
                 function(Operation $operation) use ($config, $loader) {
                     $control = explode('|', (string)$operation->getControl());
                     $order = new Order($control[0]);
-                    $history = new OrderHistory();
-                    $history->id_order = $order->id;
-                    $lastOrderState = new OrderState($order->getCurrentState());
-                    $newOrderState = $this->getNewOrderState($operation);
-                    if ($newOrderState === null) {
-                        throw new ConfirmationDataException('PrestaShop - WRONG TRANSACTION STATUS');
+                    $brotherOrders = [$order];
+                    foreach($order->getBrother() as $brotherOrder) {
+                        $brotherOrders[] = $brotherOrder;
                     }
-                    if ($lastOrderState->id == _PS_OS_PAYMENT_ ||
-                        $newOrderState == $config->getWaitingStatus()) {
-                        return true;
-                    }
-                    if ($lastOrderState->id != $newOrderState) {
-                        $history->changeIdOrderState($newOrderState, $history->id_order);
-                        $history->addWithemail(true);
-                        if ($newOrderState == _PS_OS_PAYMENT_) {
-                            $payments = OrderPayment::getByOrderId($order->id);
-                            $numberOfPayments = count($payments);
-                            if ($numberOfPayments >= 1) {
-                                if (empty($payments[$numberOfPayments - 1]->transaction_id)) {
-                                    $payments[$numberOfPayments - 1]->transaction_id = $operation->getNumber();
-                                    $payments[$numberOfPayments - 1]->payment_method = $this->module->displayName;
-                                    $payments[$numberOfPayments - 1]->update();
-                                } else {
-                                    $payment = $this->prepareOrderPayment($operation, $order);
-                                    $payment->add();
-                                }
-                            }
-                            $loader->get('Instruction', [$order->id])->deleteForOrder();
+                    foreach ($brotherOrders as $order) {
+                        $history = new OrderHistory();
+                        $history->id_order = $order->id;
+                        $lastOrderState = new OrderState($order->getCurrentState());
+                        $newOrderState = $this->getNewOrderState($operation);
+                        if ($newOrderState === null) {
+                            throw new ConfirmationDataException('PrestaShop - WRONG TRANSACTION STATUS');
                         }
-                    } else {
-                        throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$lastOrderState->name.') IS ALERADY REGISTERED');
+                        if ($lastOrderState->id == _PS_OS_PAYMENT_ ||
+                            $newOrderState == $config->getWaitingStatus()) {
+                            return true;
+                        }
+                        if ($lastOrderState->id != $newOrderState) {
+                            $history->changeIdOrderState($newOrderState, $history->id_order);
+                            $history->addWithemail(true);
+                            if ($newOrderState == _PS_OS_PAYMENT_) {
+                                $payments = OrderPayment::getByOrderId($order->id);
+                                $numberOfPayments = count($payments);
+                                if ($numberOfPayments >= 1) {
+                                    if (empty($payments[$numberOfPayments - 1]->transaction_id)) {
+                                        $payments[$numberOfPayments - 1]->transaction_id = $operation->getNumber();
+                                        $payments[$numberOfPayments - 1]->payment_method = $this->module->displayName;
+                                        $payments[$numberOfPayments - 1]->update();
+                                    } else {
+                                        $payment = $this->prepareOrderPayment($operation, $order);
+                                        $payment->add();
+                                    }
+                                }
+                                $loader->get('Instruction', [$order->id])->deleteForOrder();
+                            }
+                        } else {
+                            throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$lastOrderState->name.') IS ALERADY REGISTERED');
+                        }
                     }
                     return true;
                 }
