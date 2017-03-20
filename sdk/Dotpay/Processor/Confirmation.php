@@ -25,7 +25,6 @@ use Dotpay\Model\Notification;
 use Dotpay\Model\Seller;
 use Dotpay\Resource\Payment as PaymentResource;
 use Dotpay\Resource\Seller as SellerResource;
-use Dotpay\Tool\Checksum;
 use Dotpay\Exception\Processor\IncorrectRequestException;
 use Dotpay\Exception\Processor\SellerNotRecognizedException;
 use Dotpay\Exception\Processor\ConfirmationDataException;
@@ -218,8 +217,6 @@ class Confirmation
         } catch (Exception $ex) {
         }
         $this->addOutputMessage('Correct data: '.$isAccountRight, true);
-        $this->addOutputMessage('--- Integrity ---')
-             ->addOutputMessage('Checksum: '.Checksum::getForDir(mydirname(__DIR__, 3)), true);
     }
     
     /**
