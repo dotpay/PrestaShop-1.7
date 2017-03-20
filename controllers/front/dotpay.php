@@ -81,9 +81,11 @@ abstract class DotpayController extends ModuleFrontController {
                  ->setStreet($address->address1.$address->address2)
                  ->setPostCode($address->postcode)
                  ->setCity($address->city)
-                 ->setPhone($address->phone)
                  ->setCountry($country->iso_code)
                  ->setLanguage($this->getLanguage());
+        if ($address->phone) {
+            $customer->setPhone($address->phone);
+        }
         $currency = $this->getCurrencyObject();
         if ($afterOrder) {
             $order = new Order(Order::getOrderByCartId($this->getCart()->id));
