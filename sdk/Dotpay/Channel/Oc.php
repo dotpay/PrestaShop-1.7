@@ -51,7 +51,7 @@ class Oc extends Channel
     /**
      * @var boolean A flag if user is logged on shop site
      */
-    private $userIsLogged = false;
+    private $userIsLogged = true;
     
     /**
      * @var string An URL to a place in a shop where a customer can manage saved credit cards
@@ -84,6 +84,7 @@ class Oc extends Channel
     public function __construct(Configuration $config, Transaction $transaction, PaymentResource $paymentResource, SellerResource $sellerResource)
     {
         parent::__construct(Configuration::OC_CHANNEL, self::CODE, $config, $transaction, $paymentResource, $sellerResource);
+        $this->setUserIsLogged(false);
     }
     
     /**
@@ -238,7 +239,7 @@ class Oc extends Channel
      */
     public function setUserIsLogged($userIsLogged)
     {
-        $this->userIsLogged = $userIsLogged;
+        $this->userIsLogged = (boolean)$userIsLogged;
         return $this;
     }
 

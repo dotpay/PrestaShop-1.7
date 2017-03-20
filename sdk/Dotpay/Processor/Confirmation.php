@@ -106,7 +106,13 @@ class Confirmation
             $this->completeInformations();
             throw new ConfirmationInfoException($this->outputMessage);
         } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' &&
-                    $_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP)) {
+                    ($_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP ||
+                     ($_SERVER['REMOTE_ADDR'] == $config::LOCAL_IP &&
+                      $config->getTestMode()
+                     )
+                    )
+                   )
+                 ) {
             throw new IncorrectRequestException();
         }
     }
