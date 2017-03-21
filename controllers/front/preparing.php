@@ -47,7 +47,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
         $this->initializeOrderData();
         $currency = Currency::getCurrency($this->getCart()->id_currency);
         $exAmount = $this->getOrder()->getExtrachargeAmount($this->getConfig(), $currency);
-        if ($exAmount > 0 && !$this->isVirtualProductInCart()) {
+        if ($exAmount > 0 && !$this->module->isVirtualProductInCart($this->getConfig(), $this->getCart())) {
             $productId = $this->getConfig()->getExtraChargeVirtualProductId();
             $this->module->checkVirtualProduct();
             $product = new Product($productId, true);
@@ -104,20 +104,5 @@ class dotpayPreparingModuleFrontController extends DotpayController
         $this->loader->get('SellerResource')->close();
         Dotpay\Loader\Loader::unload();
         die((string)$this->getChannel()->getHiddenForm());
-    }
-    
-    /**
-     * Check, if Virtual Product from Dotpay additional payment is in card
-     * @return boolean
-     */
-    protected function isVirtualProductInCart()
-    {
-        $products = $this->getCart()->getProducts(true);
-        foreach ($products as $product) {
-            if ($product['id_product'] == $this->getConfig()->getExtraChargeVirtualProductId()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

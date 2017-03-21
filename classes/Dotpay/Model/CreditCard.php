@@ -106,6 +106,7 @@ class CreditCard extends \Dotpay\Model\CreditCard
     private function add()
     {
         $brand = ($this->getBrand()==null)?null:pSQL($this->getBrand()->getName());
+        $cardId = ($this->getCardId())?'\''.pSQL($this->getRegisterDate()->format('Y-m-d')).'\'':'NULL';
         return Db::getInstance()->execute(
             'INSERT 
             INTO `'._DB_PREFIX_.self::TABLE_NAME.'`
@@ -116,9 +117,9 @@ class CreditCard extends \Dotpay\Model\CreditCard
             '.(int)$this->getUserId().',
             \''.pSQL($this->getMask()).'\',
             \''.$brand.'\',
-            \''.pSQL($this->getCustomerHash()).'\',
-            \''.pSQL($this->getCardId()).'\',
-            \''.pSQL($this->getRegisterDate()->format('Y-m-d')).'\'
+            \''.pSQL($this->getCustomerHash()).'\','.
+            $cardId
+            .', \''.pSQL($this->getRegisterDate()->format('Y-m-d')).'\'
             )'
         );
     }
@@ -133,6 +134,7 @@ class CreditCard extends \Dotpay\Model\CreditCard
             return false;
         }
         $brand = ($this->getBrand()==null)?null:pSQL($this->getBrand()->getName());
+        $cardId = ($this->getCardId())?'\''.pSQL($this->getCardId()).'\'':'NULL';
         return Db::getInstance()->execute(
             'UPDATE `'._DB_PREFIX_.self::TABLE_NAME.'`
             SET
@@ -141,8 +143,8 @@ class CreditCard extends \Dotpay\Model\CreditCard
             mask = \''.pSQL($this->getMask()).'\',
             brand = \''.$brand.'\',
             hash = \''.pSQL($this->getCustomerHash()).'\',
-            card_id = \''.pSQL($this->getCardId()).'\',
-            register_date = \''.pSQL($this->getRegisterDate()->format('Y-m-d')).'\'
+            card_id = '.$cardId
+            .', register_date = \''.pSQL($this->getRegisterDate()->format('Y-m-d')).'\'
             WHERE cc_id = '.(int)$this->getId()
         );
     }

@@ -46,7 +46,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
             
             /* ---- UPDATE CC ---- */
             $updateCcAction = new UpdateCcInfo(
-                function(CreditCard $cc) {var_dump($cc);
+                function(CreditCard $cc) {
                     $cc->save();
                     return true;
                 }

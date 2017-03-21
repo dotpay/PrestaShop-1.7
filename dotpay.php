@@ -35,6 +35,7 @@ use Dotpay\Exception\IncompleteDataException;
 use Dotpay\Channel\Channel;
 use Dotpay\Exception\DotpayException;
 use Dotpay\Exception\Resource\Account\NotFoundException as AccountNotFoundException;
+use Prestashop\Dotpay\Model\Configuration as DotpayConfiguration;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -804,7 +805,10 @@ class dotpay extends PaymentModule
             $surAmount = $order->getSurchargeAmount($this->config);
             $reductAmount = $order->getReductionAmount($this->config);
             if($exAmount || $reductAmount || $surAmount) {
-                $totalAmount = $order->getAmount() + $exAmount + $surAmount - $reductAmount;
+                $totalAmount = $order->getAmount() + $surAmount - $reductAmount;
+                if (!$this->isVirtualProductInCart($this->config, $this->context->cart)) {
+                    $totalAmount += $exAmount;
+                }
             } else {
                 $totalAmount = 0.0;
             }
@@ -1107,6 +1111,23 @@ class dotpay extends PaymentModule
         $this->config->setExtraChargeVirtualProductId($product->id);
 
         return true;
+    }
+    
+    /**
+     * Check, if Virtual Product from Dotpay additional payment is in card
+     * @param Configuration $config Dotpay configuration object
+     * @param Cart $cart Prestashop cart
+     * @return boolean
+     */
+    public function isVirtualProductInCart(DotpayConfiguration $config, Cart $cart)
+    {
+        $products = $cart->getProducts(true);
+        foreach ($products as $product) {
+            if ($product['id_product'] == $config->getExtraChargeVirtualProductId()) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
