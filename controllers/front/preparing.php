@@ -58,6 +58,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
             $this->getCart()->updateQty(1, $product->id);
             $this->getCart()->update();
             $this->getCart()->getPackageList(true);
+            $this->getOrder()->setAmount($this->getOrder()->getAmount()+$exAmount);
         }
         
         $discAmount = $this->getOrder()->getReductionAmount($this->getConfig(), $currency);
@@ -70,6 +71,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
             $this->getCart()->addCartRule($discount->id);
             $this->getCart()->update();
             $this->getCart()->getPackageList(true);
+            $this->getOrder()->setAmount($this->getOrder()->getAmount()-$discAmount);
         }
         
         if (Tools::getValue('order') == false) {
