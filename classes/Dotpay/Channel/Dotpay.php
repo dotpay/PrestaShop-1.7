@@ -17,6 +17,8 @@
  */
 namespace Prestashop\Dotpay\Channel;
 
+use \Context;
+
 /**
  * Overriden class of Dotpay main channel. It allows to adapt SDK features of channels for Prestashop
  */
@@ -29,7 +31,11 @@ class Dotpay extends \Dotpay\Channel\Dotpay {
         if($this->getChannelId() != null) {
             return parent::getLogo();
         } else {
-            return '/modules/'.$this->config->getPluginId().'/views/img/dotpay_logo_big.png';
+            $baseUrl = Context::getContext()->link->getBaseLink();
+            if (substr($baseUrl, -1, 1) !== '/') {
+                $baseUrl .= '/';
+            }
+            return $baseUrl.'modules/'.$this->config->getPluginId().'/views/img/dotpay_logo_big.png';
         }
     }
 }
