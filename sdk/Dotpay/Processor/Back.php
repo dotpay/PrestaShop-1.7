@@ -44,7 +44,7 @@ class Back {
      * @return boolean
      * @throws ExpiredException Thrown when payment has been expired
      * @throws UnknowChannelException Thrown when the given channel is unknown
-     * @throws DisabledChannelException Thrown when selected channel payment is desabled
+     * @throws DisabledChannelException Thrown when selected channel payment is disabled
      * @throws BlockedAccountException Thrown when seller account is disabled
      * @throws InactiveAccountException Thrown when seller account is inactive
      * @throws LowAmountException Thrown when amount is too low
