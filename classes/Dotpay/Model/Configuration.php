@@ -51,7 +51,6 @@ class Configuration extends \Dotpay\Model\Configuration
     private $reduction = false;
     
     /**
-     *
      * @var float Amount of shipping reduction
      */
     private $reductionAmount = 0.0;
@@ -75,7 +74,6 @@ class Configuration extends \Dotpay\Model\Configuration
         'DP_RENEW_DAYS' => 'RenewDays',
         'DP_WIDGET_CURR' => 'WidgetCurrencies',
         'DP_CC' => 'CcVisible',
-        'DP_MP' => 'MpVisible',
         'DP_BLIK' => 'BlikVisible',
         'DP_OC' => 'OcVisible',
         'DP_REFUND' => 'RefundsEnable',
@@ -94,7 +92,8 @@ class Configuration extends \Dotpay\Model\Configuration
         'DP_EX_PERC' => 'ExchargePercent',
         'DP_REDUCT_SHIP' => 'Reduction',
         'DP_RS_AMOUNT' => 'ReductionAmount',
-        'DP_RS_PERC' => 'ReductionPercent'
+        'DP_RS_PERC' => 'ReductionPercent',
+        'DP_CHANNELS' => 'VisibleChannels'
     ];
     
     /**
@@ -105,8 +104,8 @@ class Configuration extends \Dotpay\Model\Configuration
     {
         parent::__construct($pluginId);
         foreach ($this->modelMap as $key => $fname) {
-            $fname = lcfirst($fname);
-            $this->$fname = \Configuration::get($key, null);
+            $fname = 'set'.$fname;
+            $this->$fname(\Configuration::get($key, null));
         }
     }
 

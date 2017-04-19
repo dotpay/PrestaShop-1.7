@@ -153,6 +153,31 @@ class dotpay extends PaymentModule
     }
     
     /**
+     * Return an array with channels which are available
+     * @param \Dotpay\Resource\Payment $paymentResource
+     * @return array
+     */
+    private function getChannelList($paymentResource)
+    {
+        try {
+            $config = $this->config;
+            $seller = $this->sdkLoader->get('Seller', [$this->config->getId(), $this->config->getPin()]);
+            $customer = $this->sdkLoader->get('Customer', ['dotpay@dotpay.pl', 'Fistrname', 'Lastname']);
+            $customer->setLanguage($this->getLanguage());
+            $order = $this->sdkLoader->get('Order', [null, 100, 'PLN']);
+            $payment = $this->sdkLoader->get('PaymentModel', [$customer, $order, '']);
+            $payment->setSeller($seller);
+            $info = $paymentResource->getChannelInfo($payment);
+            $availableChannels = $info->getChannelList($config::$SPECIAL_CHANNELS);
+            unset($info);
+            $paymentResource->clearBuffer();
+            return $availableChannels;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    
+    /**
      * Load the configuration form
      */
     public function getContent()
@@ -165,18 +190,11 @@ class dotpay extends PaymentModule
         }
         
         try {
-            $number = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME)->getNumber();
-            $obsoletePlugin = version_compare($number, $this->version, '>');
-            $canNotCheckPlugin = false;
-        } catch (RuntimeException $e) {
-            $obsoletePlugin = false;
-            $canNotCheckPlugin = true;
-        }
-        try {
             $paymentResource = $this->sdkLoader->get('PaymentResource');
             $sellerResource = $this->sdkLoader->get('SellerResource');
             $testGoodApiData = $this->config->isGoodApiData();
             $testCorrectSellerForApi = true;
+            $availableChannels = $this->getChannelList($paymentResource);
             try {
                 $testSellerId = $paymentResource->checkSeller($this->config->getId());
                 $testApiAccount = $sellerResource->isAccountRight();
@@ -192,6 +210,14 @@ class dotpay extends PaymentModule
             }
             if(!isset($testApiAccount)) {
                 $testApiAccount = false;
+            }
+            try {
+                $number = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME)->getNumber();
+                $obsoletePlugin = version_compare($number, $this->version, '>');
+                $canNotCheckPlugin = false;
+            } catch (RuntimeException $e) {
+                $obsoletePlugin = false;
+                $canNotCheckPlugin = true;
             }
             $this->context->smarty->assign([
                 'repositoryName' => self::REPOSITORY_NAME,
@@ -212,7 +238,8 @@ class dotpay extends PaymentModule
                 'testSellerPin' => $testGoodApiData && $testApiAccount && !$testSellerPin,
                 'testCorrectSellerForApi' => !$testCorrectSellerForApi,
                 'obsoletePlugin' => $obsoletePlugin,
-                'canNotCheckPlugin' => $canNotCheckPlugin
+                'canNotCheckPlugin' => $canNotCheckPlugin,
+                'availableChannels' => $availableChannels
             ]);
             $paymentResource->close();
             $sellerResource->close();
@@ -221,6 +248,7 @@ class dotpay extends PaymentModule
             return $output.$this->renderForm();
         } catch (RuntimeException $e) {
             $this->context->smarty->assign([
+                'class' => get_class($e),
                 'message' => $e->getMessage()
             ]);
             return $this->context->smarty->fetch($this->local_path.'views/templates/admin/error.tpl');
@@ -233,6 +261,8 @@ class dotpay extends PaymentModule
      */
     protected function renderForm()
     {
+        $this->context->controller->addJS('modules/'.$this->name.'/views/js/chooseChannel.js');
+        
         $helper = new HelperForm();
 
         $helper->show_toolbar = false;
@@ -412,23 +442,6 @@ class dotpay extends PaymentModule
                         'name' => 'DP_CC',
                         'is_bool' => true,
                         'desc' => $this->l('Enable payment cards as separate channel'),
-                        'values' => [
-                            [
-                                'id' => 'active_on',
-                                'value' => true,
-                                'label' => $this->l('Enable')
-                            ],[
-                                'id' => 'active_off',
-                                'value' => false,
-                                'label' => $this->l('Disable')
-                            ]
-                        ]
-                    ],[
-                        'type' => 'switch',
-                        'label' => $this->l('Enabling MasterPass channel'),
-                        'name' => 'DP_MP',
-                        'is_bool' => true,
-                        'desc' => $this->l('Enable MasterPass as separate channel'),
                         'values' => [
                             [
                                 'id' => 'active_on',
@@ -664,9 +677,15 @@ class dotpay extends PaymentModule
                         'name' => 'DP_RS_PERC',
                         'prefix' => '<i class="icon icon-th"></i>',
                         'label' => $this->l('Reduce amount of shipping costs (in %)'),
-                        'class' => 'fixed-width-lg reduct-option validate-gui',
+                        'class' => 'fixed-width-lg reduct-option validate-gui lastInSection',
                         'desc' => $this->l('Value of discount for given currency in % (eg. 1.90)').'<br><b>'.$this->l('Bigger amount will be chosen').'</b>',
-                    ]
+                    ],[
+                        'label' => $this->l('Isolated channels on the store page'),
+                        'type' => 'text',
+                        'name' => 'DP_CHANNELS',
+                        'class' => 'chosen-channel-list',
+                        'desc' => '<button id="add-new-channel" type="button"><i class="icon icon-plus"></i>&nbsp;'.$this->l('Add a new channel').'</button>'.$this->l('Select which channels should be presented separately on the store page .The same order will appear on your payment page.'),
+                    ],
                 ],
                 'submit' => [
                     'title' => $this->l('Save'),
@@ -892,16 +911,23 @@ class dotpay extends PaymentModule
            ->set('target', $this->context->link->getModuleLink($this->name, 'preparing', $this->getArgumentsForChannelTarget($cc), true));
         $channelList->addChannel($cc);
         
-        $mp = $this->sdkLoader->get('Mp');
-        $mp->setTitle($this->l("MasterPass"))
-           ->set('target', $this->context->link->getModuleLink($this->name, 'preparing', $this->getArgumentsForChannelTarget($mp), true));
-        $channelList->addChannel($mp);
-        
         $blik = $this->sdkLoader->get('Blik');
-        $blik->setTitle($this->l("BLIK"))
-             ->set('target', $this->context->link->getModuleLink($this->name, 'preparing', $this->getArgumentsForChannelTarget($blik), true))
+        $blik->set('target', $this->context->link->getModuleLink($this->name, 'preparing', $this->getArgumentsForChannelTarget($blik), true))
              ->setFieldDescription($this->l('BLIK code').":&nbsp;");
         $channelList->addChannel($blik);
+        
+        foreach ($this->config->getVisibleChannelsArray() as $channelId) {
+            $channel = $this->sdkLoader->get('Channel',[
+                $channelId,
+                'channel',
+                $this->config,
+                $this->sdkLoader->get('Transaction'),
+                $this->sdkLoader->get('PaymentResource'),
+                $this->sdkLoader->get('SellerResource')
+            ]);
+            $channel->set('target', $this->context->link->getModuleLink($this->name, 'preparing', $this->getArgumentsForChannelTarget($channel), true));
+            $channelList->addChannel($channel);
+        }
         
         $dotpay = $this->sdkLoader->get('DotpayChannel');
         $dotpay->setTitle($this->l("Dotpay"))

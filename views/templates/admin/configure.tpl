@@ -50,7 +50,7 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Module is active. ' mod='dotpay'}</h2>
                 <br />
-                <p style="color: #555;"><b>{l s='If you do not recive payment information, please check URLC configuration in your Dotpay user panel.' mod='dotpay'}</b></p>
+                <p style="color: #555;"><b>{l s='If you do not recive payment information, please check URLC configuration in your Dotpay user panel. Check also if your shop sees Dotpay IP address properly.' mod='dotpay'}</b></p>
                 <p style="color: #D27C82;"><b>{if $testMode}{l s='Module is in TEST mode. All payment information is fake!' mod='dotpay'}{/if}</b></p><br><br>
                 <p style="color: #D27C82;"><b>{if $oldVersion}{l s='Please update your PrestaShop installation to the latest version if you want to use the newest features!' mod='dotpay'}{/if}</b></p>
             </div>
@@ -167,6 +167,16 @@
 <p id="scroll-to-save">
     <i class="icon icon-arrow-down"></i>&nbsp;{l s='Go to Save' mod='dotpay'}
 </p>
+<div class="channel-control-template">
+    <select class="channel-chooser">
+        <option value="">{l s='Choose a channel...' mod='dotpay'}</option>
+        {foreach from=$availableChannels item=channel}
+            <option value="{$channel->getId()}" data-logo="{$channel->getLogo()}">{$channel->getName()}</option>
+        {/foreach}
+    </select>
+    <button class="channel-chooser-remove" type="button"><i class="icon-remove"></i>&nbsp;{l s='Remove this channel' mod='dotpay'}</button>
+    <img src="" class="chosen-channel-logo empty-channel-logo" />
+</div>
 {literal}
 <script type="text/javascript">
     var badID = '{/literal}{$badIdMessage|escape:'htmlall':'UTF-8'}{literal}';
@@ -335,6 +345,8 @@
         $('.validate-gui').change(function(){
             validateGUI();
         });
+        
+        $.dpChannelChooser();
     });
 </script>
 {/literal}

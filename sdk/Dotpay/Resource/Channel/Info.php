@@ -64,6 +64,22 @@ class Info
     }
     
     /**
+     * Return an array of channels wrapped in OneChannel classes
+     * @param array $excludedChannels List of channel ids which should be excluded from the channel array
+     * @return array
+     */
+    public function getChannelList($excludedChannels = [])
+    {
+        $channelList = [];
+        foreach ($this->getChannels() as $channel) {
+            if (isset($channel['id']) && in_array($channel['id'], $excludedChannels) === false) {
+                $channelList[] = new OneChannel($channel);
+            }
+        }
+        return $channelList;
+    }
+    
+    /**
      * Return a structure of payment channel informations for the channel which has the given id
      * @param int $channelId Channel id
      * @return OneChannel

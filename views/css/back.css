@@ -79,3 +79,35 @@
     color: red;
     font-weight: bold;
 }
+
+/* Channel chooser */
+.channel-control-template {
+    display: none;
+}
+
+.channel-control {
+    height: 100px;
+    width: 800px;
+}
+
+.channel-control > * {
+    display: inline !important;
+}
+
+.channel-chooser {
+    width: 320px !important;
+}
+
+.chosen-channel-logo {
+    height: 100px;
+}
+
+.empty-channel-logo {
+    display: none;
+}
+
+#add-new-channel {
+    display: block;
+    color: #3c3c3c;
+    margin-bottom: 15px;
+}

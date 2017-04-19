@@ -20,7 +20,6 @@ use Dotpay\Channel\Channel;
 use Dotpay\Channel\Oc;
 use Dotpay\Channel\Fcc;
 use Dotpay\Channel\Cc;
-use Dotpay\Channel\Mp;
 use Dotpay\Channel\Blik;
 use Dotpay\Channel\Dotpay;
 use Dotpay\Model\Customer as DotpayCustomer;
@@ -140,9 +139,6 @@ abstract class DotpayController extends ModuleFrontController {
             case Cc::CODE:
                 $this->channel = $this->loader->get('Cc');
                 break;
-            case Mp::CODE:
-                $this->channel = $this->loader->get('Mp');
-                break;
             case Blik::CODE:
                 $this->channel = $this->loader->get('Blik')->setBlikCode(Tools::getValue('blik_code'));
                 break;
@@ -151,6 +147,16 @@ abstract class DotpayController extends ModuleFrontController {
                 if (Tools::getValue('channel')) {
                     $this->channel->setChannelId(Tools::getValue('channel'));
                 }
+                break;
+            case Channel::CODE:
+                $this->channel = $this->loader->get('Channel',[
+                    Tools::getValue('channel'),
+                    'channel',
+                    $this->getConfig(),
+                    $this->loader->get('Transaction'),
+                    $this->loader->get('PaymentResource'),
+                    $this->loader->get('SellerResource')
+                ]);
                 break;
             default:
                 die($this->module->l('Unrecognized method'));

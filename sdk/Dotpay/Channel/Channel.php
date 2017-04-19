@@ -37,6 +37,8 @@ use Dotpay\Html\Container\Form;
  */
 class Channel
 {
+    const CODE = 'channel';
+    
     /**
      * Name of cash channels group
      */
@@ -432,8 +434,9 @@ class Channel
             throw new ChannelIdException($channelId);
         }
         try {
-            $channelsData = $this->paymentResource->getChannelList($this->transaction->getPayment());
+            $channelsData = $this->paymentResource->getChannelInfo($this->transaction->getPayment());
             $this->channelInfo = $channelsData->getChannelInfo($channelId);
+            $this->title = $this->channelInfo->getName();
             $this->agreements = $channelsData->getAgreements($channelId);
             $this->available = true;
         } catch (NotFoundException $e) {

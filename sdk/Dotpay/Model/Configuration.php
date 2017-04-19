@@ -88,11 +88,6 @@ class Configuration
     const CC_CHANNEL = 246;
     
     /**
-     * Id of MasterPass channel
-     */
-    const MP_CHANNEL = 71;
-    
-    /**
      * Id of BLIK channel
      */
     const BLIK_CHANNEL = 73;
@@ -102,10 +97,16 @@ class Configuration
      */
     const WIDGET_CLASS_CONTAINER = 'dotpay-widget-container';
     
+    public static $SPECIAL_CHANNELS = [
+        248,
+        246,
+        73
+    ];
+    
     /**
      * List of all supported currencies
      */
-    public static $CURRENCIES = array(
+    public static $CURRENCIES = [
         'EUR',
         'USD',
         'GBP',
@@ -113,7 +114,7 @@ class Configuration
         'CZK',
         'SEK',
         'PLN'
-    );
+    ];
     
     /**
      * @var string Id of plugin where is used SDK
@@ -187,11 +188,6 @@ class Configuration
     private $ccVisible = false;
     
     /**
-     * @var boolean Flag if MasterPass channel is visible
-     */
-    private $mpVisible = false;
-    
-    /**
      * @var boolean Flag if BLIK channel is visible
      */
     private $blikVisible = false;
@@ -251,6 +247,11 @@ class Configuration
      * @var string Payment API version
      */
     private $api = 'dev';
+    
+    /**
+     * @var array List of all visible channels id
+     */
+    private $visibleChannels = [];
     
     /**
      * Initialize the model
@@ -429,15 +430,6 @@ class Configuration
     }
     
     /**
-     * Check if MasterPass channel is set as visible
-     * @return boolean
-     */
-    public function getMpVisible()
-    {
-        return $this->mpVisible;
-    }
-    
-    /**
      * Check if BLIK channel is set as visible
      * @return boolean
      */
@@ -546,6 +538,36 @@ class Configuration
     public function getShopName()
     {
         return $this->shopName;
+    }
+    
+        
+    /**
+     * Return a list of all visible channels id, separated by ","
+     * @return string
+     */
+    public function getVisibleChannels()
+    {
+        return implode(',', $this->visibleChannels);
+    }
+    
+    /**
+     * Return an array of all visible channels id
+     * @return array
+     */
+    public function getVisibleChannelsArray()
+    {
+        return $this->visibleChannels;
+    }
+    
+    /**
+     * Check if channel with the given id is set as visible
+     * @param int $id Channel id
+     * @return boolean
+     */
+    public function isChannelVisible($id)
+    {
+        $channels = explode(',', $this->visibleChannels);
+        return in_array($id, $channels);
     }
     
     /**
@@ -814,17 +836,6 @@ class Configuration
     }
     
     /**
-     * Set the flag if MasterPass channel is visible
-     * @param boolean $mpVisible Flag if MasterPass channel is visible
-     * @return Configuration
-     */
-    public function setMpVisible($mpVisible)
-    {
-        $this->mpVisible = (bool)$mpVisible;
-        return $this;
-    }
-    
-    /**
      * Set the flag if BLIK channel is visible
      * @param boolean $blikVisible  Flag if BLIK channel is visible
      * @return Configuration
@@ -949,6 +960,43 @@ class Configuration
     public function setShopName($shopName)
     {
         $this->shopName = (string)$shopName;
+        return $this;
+    }
+    
+    /**
+     * Set a list of all visible channels id, separated by ","
+     * @param string $visibleChannels List of all visible channels id
+     * @return Configuration
+     */
+    public function setVisibleChannels($visibleChannels)
+    {
+        $this->visibleChannels = explode(',', $visibleChannels);
+        return $this;
+    }
+    
+    /**
+     * Add channel id to list of visible channels
+     * @param int $id Channel id
+     * @return Configuration
+     */
+    public function addVisibleChannel($id)
+    {
+        if(!in_array($id, $this->visibleChannels)) {
+            $this->visibleChannels[] = (int)$id;
+        }
+        return $this;
+    }
+    
+    /**
+     * Remove channel id from list of visible channels
+     * @param int $id Channel id
+     * @return Configuration
+     */
+    public function removeVisibleChannel($id)
+    {
+        if(($index = array_search($id, $this->visibleChannels)) !== false) {
+            unset($this->visibleChannels[$index]);
+        }
         return $this;
     }
     

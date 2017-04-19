@@ -206,7 +206,7 @@ class Dotpay extends Channel
             throw new ChannelIdException($channelId);
         }
         try {
-            $channelsData = $this->paymentResource->getChannelList($this->transaction->getPayment());
+            $channelsData = $this->paymentResource->getChannelInfo($this->transaction->getPayment());
             $this->agreements = $this->prepareAgreements($channelsData);
             $this->available = true;
             if ($channelId !== null) {

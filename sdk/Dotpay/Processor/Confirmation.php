@@ -112,7 +112,7 @@ class Confirmation
                     )
                    )
                  ) {
-            throw new IncorrectRequestException();
+            throw new IncorrectRequestException('IP: '.$_SERVER['REMOTE_ADDR'].' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
         }
     }
     

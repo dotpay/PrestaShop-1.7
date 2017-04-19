@@ -19,6 +19,7 @@ namespace Dotpay\Resource;
 
 use Dotpay\Model\Payment as ModelPayment;
 use Dotpay\Resource\Channel\Info;
+use Dotpay\Resource\Channel\OneChannel;
 use Dotpay\Exception\Resource\ApiException;
 use Dotpay\Exception\BadReturn\TypeNotCompatibleException;
 use Dotpay\Exception\Resource\Account\NotFoundException;
@@ -40,7 +41,7 @@ class Payment extends Resource
      * @throws TypeNotCompatibleException Thrown when a response from Dotpay server is in incompatible type
      * @throws ApiException Thrown when is reported an Api Error
      */
-    public function getChannelList(ModelPayment $payment)
+    public function getChannelInfo(ModelPayment $payment)
     {
         $id = $payment->getIdentifier();
         if (!isset($this->buffer[$id])) {

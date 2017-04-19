@@ -29,7 +29,7 @@
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <h2 style="margin-left: 10px; margin-top: 0px;">{l s='An error occured.' mod='dotpay'}</h2>
             <br />
-            <p style="color: #555;"><b>{$messsage|escape:'htmlall':'UTF-8'}</b></p>
+            <p style="color: #555;"><b>{$class|escape:'htmlall':'UTF-8'}: {$messsage|escape:'htmlall':'UTF-8'}</b></p>
             <br />
         </div>
     </div>
