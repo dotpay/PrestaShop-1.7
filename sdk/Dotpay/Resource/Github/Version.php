@@ -19,6 +19,7 @@ namespace Dotpay\Resource\Github;
 
 use \DateTime;
 use Dotpay\Validator\Url;
+use Dotpay\Exception\Resource\NotFoundException;
 use Dotpay\Exception\BadParameter\UrlException;
 
 /**
@@ -37,12 +38,6 @@ class Version
     private $url;
     
     /**
-     *
-     * @var string Url address of a place where from it's possible do download a zip file with a software
-     */
-    private $zip;
-    
-    /**
      * @var DateTime Date and time when the version has been created
      */
     private $created;
@@ -53,14 +48,17 @@ class Version
     private $published;
     
     /**
+     * @var array List of assets associated with the version
+     */
+    private $assets = [];
+    
+    /**
      * Set basic informations about the version
      * @param string $number Number of the version
-     * @param string $zip Url address of a place where from it's possible do download a zip file with a software
      */
-    public function __construct($number, $zip)
+    public function __construct($number)
     {
         $this->setNumber($number);
-        $this->setZip($zip);
     }
     
     /**
@@ -82,15 +80,6 @@ class Version
     }
     
     /**
-     * Return an url address of a place where from it's possible do download a zip file with a software
-     * @return string
-     */
-    public function getZip()
-    {
-        return $this->zip;
-    }
-    
-    /**
      * Return a date and time when the version has been created
      * @return DateTime
      */
@@ -108,6 +97,33 @@ class Version
         return $this->published;
     }
     
+    /**
+     * Return a list of assets associated with the version
+     * @return array
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+    
+    /**
+     * Return an asset which matches to the crteria
+     * @param string $name Name of parameter
+     * @param string $value Value of parameter
+     * @return Asset
+     * @throws NotFoundException Thrown when none asset matches the given criteria
+     */
+    public function findAsset($name, $value)
+    {
+        $fnName = 'get'.ucfirst($name);
+        foreach($this->assets as $asset) {
+            if ($asset->$fnName() == $value) {
+                return $asset;
+            }
+        }
+        throw new NotFoundException($name.' => '.$value);
+    }
+
     /**
      * Set a number of the version
      * @param string $number Number of the version
@@ -135,21 +151,6 @@ class Version
     }
     
     /**
-     * Set an url address of a place where from it's possible do download a zip file with a software
-     * @param string $zip Url address of a place where from it's possible do download a zip file with a software
-     * @return Version
-     * @throws UrlException
-     */
-    public function setZip($zip)
-    {
-        if (!Url::validate($zip)) {
-            throw new UrlException($zip);
-        }
-        $this->zip = $zip;
-        return $this;
-    }
-    
-    /**
      * Set a date and time when the version has been created
      * @param DateTime $created Date and time when the version has been created
      * @return Version
@@ -169,5 +170,14 @@ class Version
     {
         $this->published = $published;
         return $this;
+    }
+    
+    /**
+     * Add an asset to the version
+     * @param Asset $asset Asset object
+     */
+    public function addAsset(Asset $asset)
+    {
+        $this->assets[] = $asset;
     }
 }

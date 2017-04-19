@@ -970,7 +970,11 @@ class Configuration
      */
     public function setVisibleChannels($visibleChannels)
     {
-        $this->visibleChannels = explode(',', $visibleChannels);
+        if (empty($visibleChannels)) {
+            $this->visibleChannels = [];
+        } else {
+            $this->visibleChannels = explode(',', $visibleChannels);
+        }
         return $this;
     }
     

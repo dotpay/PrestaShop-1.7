@@ -18,6 +18,7 @@
 namespace Dotpay\Resource;
 
 use Dotpay\Resource\Github\Version;
+use Dotpay\Resource\Github\Asset;
 use Dotpay\Exception\Resource\Github\VersionNotFoundException;
 use Dotpay\Exception\BadReturn\TypeNotCompatibleException;
 use Dotpay\Exception\Resource\NotFoundException;
@@ -72,10 +73,17 @@ class Github extends Resource
         if (!is_array($content)) {
             throw new TypeNotCompatibleException(gettype($content));
         }
-        $version = new Version($content['tag_name'], $content['assets'][0]['browser_download_url']);
+        $version = new Version($content['tag_name']);
         $version->setUrl($content['url'])
                 ->setCreated(new DateTime($content['created_at']))
                 ->setPublished(new DateTime($content['published_at']));
+        foreach($content['assets'] as $rawAsset) {
+            $asset = new Asset($rawAsset['name'], $rawAsset['url'], $rawAsset['content_type']);
+            $asset->setUploader($rawAsset['uploader']['login'])
+                  ->setSize($rawAsset['size'])
+                  ->setDownloadUrl($rawAsset['browser_download_url']);
+            $version->addAsset($asset);
+        }
         return $version;
     }
     

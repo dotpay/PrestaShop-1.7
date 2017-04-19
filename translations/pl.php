@@ -110,6 +110,7 @@ $_MODULE['<{dotpay}prestashop>dotpay_8e127cb38675dca07f419ab021657ddc'] = 'Zarz�
 $_MODULE['<{dotpay}prestashop>dotpay_4d24fabb5b29b21d150e2127e13bc35e'] = 'Karta płatnicza - One Click';
 $_MODULE['<{dotpay}prestashop>dotpay_d082f054837b2c2b99b891eec5888a0c'] = 'Płatności online z Dotpay';
 $_MODULE['<{dotpay}prestashop>dotpay_73a61696f100b3858511e212a3feea6b'] = 'Zapłać swoją kartą płatniczą';
+$_MODULE['<{dotpay}prestashop>dotpay_24977f5a91613985a9cde6c9f2ec265f'] = 'dzięki Dotpay';
 $_MODULE['<{dotpay}prestashop>dotpay_91d1fc4990d4fff923bde3c6c70b7e16'] = 'Kod Blik';
 $_MODULE['<{dotpay}prestashop>dotpay_96559b5a124d7ca7cbc0cbad1fbdb54d'] = 'Wybrany kanał  płatności';
 $_MODULE['<{dotpay}prestashop>dotpay_2e57fd21d7e51b909f2cad0dbb9d5b4d'] = 'zmień kanał';

@@ -118,7 +118,6 @@ class RegisterOrder extends Resource
     private function processCashAndTransfer(array $resultArray, Result $resultObject, Channel $channel)
     {
         if (isset($resultArray['instruction'])) {
-            $config = $this->config;
             $isCash = ($channel->getGroup() == $channel::CASH_GROUP);
             $instruction = $this->loader->get('Instruction');
             $instruction->setOrderId($channel->getTransaction()->getPayment()->getOrder()->getId())
@@ -126,7 +125,7 @@ class RegisterOrder extends Resource
                     ->setChannel($resultArray['operation']['payment_method']['channel_id'])
                     ->setIsCash($isCash)
                     ->setHash($this->getHashFromResultArray($resultArray));
-            if (!$isCash) {
+            if (isset($resultArray['instruction']) && isset($resultArray['instruction']['recipient']) && isset($resultArray['instruction']['recipient']['bank_account_number'])) {
                 $instruction->setBankAccount($resultArray['instruction']['recipient']['bank_account_number']);
             }
             $resultObject->setInstruction($instruction);

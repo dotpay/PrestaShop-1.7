@@ -82,7 +82,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.1';
+        $this->version = '1.0.3';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -212,12 +212,14 @@ class dotpay extends PaymentModule
                 $testApiAccount = false;
             }
             try {
-                $number = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME)->getNumber();
+                $version = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME);
+                $number = $version->getNumber();
                 $obsoletePlugin = version_compare($number, $this->version, '>');
                 $canNotCheckPlugin = false;
             } catch (RuntimeException $e) {
                 $obsoletePlugin = false;
                 $canNotCheckPlugin = true;
+                $number = $this->version;
             }
             $this->context->smarty->assign([
                 'repositoryName' => self::REPOSITORY_NAME,
@@ -232,7 +234,7 @@ class dotpay extends PaymentModule
                 'phpVersion' => PHP_VERSION,
                 'minorPhpVersion' => '5.4',
                 'confOK' => $this->config->isGoodAccount() && $this->config->getEnable(),
-                'moduleVersion' => $this->version,
+                'moduleVersion' => $number,
                 'testSellerId' => $testSellerId,
                 'testApiAccount' => $testGoodApiData && !$testApiAccount,
                 'testSellerPin' => $testGoodApiData && $testApiAccount && !$testSellerPin,
@@ -925,6 +927,7 @@ class dotpay extends PaymentModule
                 $this->sdkLoader->get('PaymentResource'),
                 $this->sdkLoader->get('SellerResource')
             ]);
+            $channel->setTitle($channel->getTitle().' '.$this->l('via Dotpay'));
             $channel->set('target', $this->context->link->getModuleLink($this->name, 'preparing', $this->getArgumentsForChannelTarget($channel), true));
             $channelList->addChannel($channel);
         }
