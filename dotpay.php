@@ -164,7 +164,7 @@ class dotpay extends PaymentModule
             $seller = $this->sdkLoader->get('Seller', [$this->config->getId(), $this->config->getPin()]);
             $customer = $this->sdkLoader->get('Customer', ['dotpay@dotpay.pl', 'Fistrname', 'Lastname']);
             $customer->setLanguage($this->getLanguage());
-            $order = $this->sdkLoader->get('Order', [null, 100, 'PLN']);
+            $order = $this->sdkLoader->get('Order', [null, 301, 'PLN']);
             $payment = $this->sdkLoader->get('PaymentModel', [$customer, $order, '']);
             $payment->setSeller($seller);
             $info = $paymentResource->getChannelInfo($payment);
