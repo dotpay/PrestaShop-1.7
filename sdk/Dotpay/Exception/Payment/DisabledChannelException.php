@@ -18,11 +18,11 @@
 namespace Dotpay\Exception\Payment;
 
 /**
- * Selected channel payment is desabled
+ * Selected channel payment is disabled
  */
 class DisabledChannelException extends \Dotpay\Exception\DotpayException
 {
     public function __construct() {
-        parent::__construct('Selected channel payment is desabled.', null, null);
+        parent::__construct('Selected channel payment is disabled.', null, null);
     }
 }
