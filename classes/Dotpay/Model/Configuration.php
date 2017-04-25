@@ -426,8 +426,10 @@ class Configuration extends \Dotpay\Model\Configuration
     public function readFromForm()
     {
         foreach ($this->modelMap as $key => $fname) {
-            $fname = 'set'.$fname;
-            $this->$fname(\Tools::getValue($key, null));
+            if(($readValue = \Tools::getValue($key, null)) !== null) {
+                $fname = 'set'.$fname;
+                $this->$fname($readValue);
+            }
         }
         return $this;
     }
