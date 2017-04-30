@@ -212,7 +212,7 @@ class CreditCard
         if (!CardMask::validate($mask)) {
             throw new CardMaskException($mask);
         }
-        $this->mask = (string)$mask;
+        $this->mask = (string)trim($mask);
         return $this;
     }
     
@@ -234,7 +234,7 @@ class CreditCard
      */
     public function setUserId($userId)
     {
-        $this->userId = (string)$userId;
+        $this->userId = (string)trim($userId);
         return $this;
     }
     
@@ -245,7 +245,7 @@ class CreditCard
      */
     public function setCardId($cardId)
     {
-        $this->cardId = (string)$cardId;
+        $this->cardId = (string)trim($cardId);
         return $this;
     }
     
@@ -256,7 +256,7 @@ class CreditCard
      */
     public function setIssuerId($issuerId)
     {
-        $this->issuerId = (string)$issuerId;
+        $this->issuerId = (string)trim($issuerId);
         return $this;
     }
     
@@ -266,7 +266,7 @@ class CreditCard
      * @return CreditCard
      */
     public function setCustomerHash($customerHash) {
-        $this->customerHash = (string)$customerHash;
+        $this->customerHash = (string)trim($customerHash);
         return $this;
     }
 
@@ -281,7 +281,7 @@ class CreditCard
         if (!Url::validate($href)) {
             throw new UrlException($href);
         }
-        $this->href = (string)$href;
+        $this->href = (string)trim($href);
         return $this;
     }
     

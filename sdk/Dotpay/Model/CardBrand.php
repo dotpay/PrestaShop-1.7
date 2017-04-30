@@ -118,7 +118,7 @@ class CardBrand
         if (!Url::validate($image)) {
             throw new UrlException($image);
         }
-        $this->image = $image;
+        $this->image = (string)trim($image);
         return $this;
     }
 }

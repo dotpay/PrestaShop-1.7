@@ -100,7 +100,7 @@ class Refund
         if(!OpNumber::validate($payment)) {
             throw new OperationNumberException($payment);
         }
-        $this->payment = (string)$payment;
+        $this->payment = (string)trim($payment);
         return $this;
     }
     

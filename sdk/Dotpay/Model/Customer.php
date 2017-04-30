@@ -261,7 +261,7 @@ class Customer extends Payer
         if (!Phone::validate($phone)) {
             throw new PhoneException($phone);
         }
-        $this->phone = (string)$phone;
+        $this->phone = (string)trim($phone);
         return $this;
     }
     
@@ -276,7 +276,7 @@ class Customer extends Payer
         if (!in_array($language, self::$LANGUAGES)) {
             throw new LanguageException($language);
         }
-        $this->language = (string)$language;
+        $this->language = (string)trim($language);
         return $this;
     }
     

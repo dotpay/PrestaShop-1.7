@@ -202,7 +202,7 @@ class Instruction
         if (!OpNumber::validate($number)) {
             throw new OperationNumberException($number);
         }
-        $this->number = (string)$number;
+        $this->number = (string)trim($number);
         return $this;
     }
     
@@ -220,7 +220,7 @@ class Instruction
         if (!empty($bankAccount) && !BankNumber::validate($bankAccount)) {
             throw new BankNumberException($bankAccount);
         }
-        $this->bankAccount = (string)$bankAccount;
+        $this->bankAccount = (string)trim($bankAccount);
         return $this;
     }
     
@@ -246,7 +246,7 @@ class Instruction
      */
     public function setHash($hash)
     {
-        $this->hash = (string)$hash;
+        $this->hash = (string)trim($hash);
         return $this;
     }
 

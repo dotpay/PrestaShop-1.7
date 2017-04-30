@@ -709,7 +709,7 @@ class Configuration
         if (!Pin::validate($pin)) {
             throw new PinException($pin);
         }
-        $this->pin = (string)$pin;
+        $this->pin = (string)trim($pin);
         return $this;
     }
     
@@ -724,7 +724,7 @@ class Configuration
         if (!empty($username) && !Username::validate($username)) {
             throw new UsernameException($username);
         }
-        $this->username = (string)$username;
+        $this->username = (string)trim($username);
         return $this;
     }
     
@@ -739,7 +739,7 @@ class Configuration
         if (!empty($password) && empty($password)) {
             throw new PasswordException();
         }
-        $this->password = (string)$password;
+        $this->password = (string)trim($password);
         return $this;
     }
     
@@ -819,7 +819,7 @@ class Configuration
     public function setFccCurrencies($fccCurrencies)
     {
         if ($this->getFccVisible()) {
-            $this->fccCurrencies = strtoupper($fccCurrencies);
+            $this->fccCurrencies = trim(strtoupper($fccCurrencies));
         }
         return $this;
     }
@@ -865,7 +865,7 @@ class Configuration
      */
     public function setWidgetCurrencies($widgetCurrencies)
     {
-        $this->widgetCurrencies = strtoupper($widgetCurrencies);
+        $this->widgetCurrencies = trim(strtoupper($widgetCurrencies));
         return $this;
     }
     
@@ -1015,7 +1015,7 @@ class Configuration
         if ($api !== 'dev') {
             throw new ApiVersionException($api);
         }
-        $this->api = $api;
+        $this->api = trim($api);
         return $this;
     }
     

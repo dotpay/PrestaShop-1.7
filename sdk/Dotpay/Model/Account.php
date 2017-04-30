@@ -212,7 +212,7 @@ class Account
      */
     public function setBlockExternalUrlc($blockExternalUrlc)
     {
-        $this->blockExternalUrlc = ($blockExternalUrlc == 'false');
+        $this->blockExternalUrlc = ((string)$blockExternalUrlc == 'false');
         return $this;
     }
     
@@ -227,7 +227,7 @@ class Account
         if (!Pin::validate($pin)) {
             throw new PinException($pin);
         }
-        $this->pin = (string)$pin;
+        $this->pin = (string)trim($pin);
         return $this;
     }
 }

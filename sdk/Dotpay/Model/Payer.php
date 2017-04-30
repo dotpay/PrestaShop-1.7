@@ -96,7 +96,7 @@ class Payer
         if (!Email::validate($email)) {
             throw new EmailException($email);
         }
-        $this->email = (string)$email;
+        $this->email = (string)trim($email);
         return $this;
     }
     

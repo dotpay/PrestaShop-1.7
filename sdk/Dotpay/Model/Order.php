@@ -134,7 +134,7 @@ class Order
         if (!in_array($currency, Configuration::$CURRENCIES)) {
             throw new CurrencyException($currency);
         }
-        $this->currency = $currency;
+        $this->currency = (string)$currency;
         return $this;
     }
     

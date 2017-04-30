@@ -161,7 +161,7 @@ class Seller
         if (!Pin::validate($pin)) {
             throw new PinException($pin);
         }
-        $this->pin = (string)$pin;
+        $this->pin = (string)trim($pin);
         return $this;
     }
     
@@ -176,7 +176,7 @@ class Seller
         if (!Username::validate($username)) {
             throw new UsernameException($username);
         }
-        $this->username = $username;
+        $this->username = (string)trim($username);
         return $this;
     }
     
@@ -187,7 +187,7 @@ class Seller
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        $this->password = (string)trim($password);
         return $this;
     }
     
@@ -198,7 +198,7 @@ class Seller
      */
     public function setInfo($info)
     {
-        $this->info = $info;
+        $this->info = (string)$info;
         return $this;
     }
     
@@ -213,7 +213,7 @@ class Seller
         if (!Email::validate($email)) {
             throw new EmailException($email);
         }
-        $this->email = $email;
+        $this->email = (string)trim($email);
         return $this;
     }
 }

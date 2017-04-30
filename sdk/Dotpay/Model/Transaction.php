@@ -105,7 +105,7 @@ class Transaction
         if (!Url::validate($backUrl)) {
             throw new UrlException($backUrl);
         }
-        $this->backUrl = (string)$backUrl;
+        $this->backUrl = (string)trim($backUrl);
         return $this;
     }
     
@@ -120,7 +120,7 @@ class Transaction
         if (!Url::validate($confirmUrl)) {
             throw new UrlException($confirmUrl);
         }
-        $this->confirmUrl = (string)$confirmUrl;
+        $this->confirmUrl = (string)trim($confirmUrl);
         return $this;
     }
     

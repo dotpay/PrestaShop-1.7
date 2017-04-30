@@ -217,7 +217,7 @@ class Notification
         if (!Email::validate($shopEmail)) {
             throw new EmailException($shopEmail);
         }
-        $this->shopEmail = $shopEmail;
+        $this->shopEmail = (string)trim($shopEmail);
         return $this;
     }
     
@@ -228,7 +228,7 @@ class Notification
      */
     public function setShopName($shopName)
     {
-        $this->shopName = $shopName;
+        $this->shopName = (string)$shopName;
         return $this;
     }
     
@@ -243,7 +243,7 @@ class Notification
         if (!ChannelId::validate($channelId)) {
             throw new ChannelIdException($channelId);
         }
-        $this->channelId = $channelId;
+        $this->channelId = (int)$channelId;
         return $this;
     }
     
@@ -254,7 +254,7 @@ class Notification
      */
     public function setChannelCountry($channelCountry)
     {
-        $this->channelCountry = $channelCountry;
+        $this->channelCountry = (string)$channelCountry;
         return $this;
     }
     
@@ -265,7 +265,7 @@ class Notification
      */
     public function setIpCountry($ipCountry)
     {
-        $this->ipCountry = $ipCountry;
+        $this->ipCountry = (string)$ipCountry;
         return $this;
     }
     
@@ -287,7 +287,7 @@ class Notification
      */
     public function setSignature($signature)
     {
-        $this->signature = $signature;
+        $this->signature = (string)trim($signature);
         return $this;
     }
 }

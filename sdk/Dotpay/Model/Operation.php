@@ -353,7 +353,7 @@ class Operation
         if (!Url::validate($url)) {
             throw new UrlException($url);
         }
-        $this->url = $url;
+        $this->url = (string)trim($url);
         return $this;
     }
     
@@ -368,7 +368,7 @@ class Operation
         if (!OpNumber::validate($number)) {
             throw new OperationNumberException($number);
         }
-        $this->number = $number;
+        $this->number = (string)trim($number);
         return $this;
     }
     
@@ -394,7 +394,7 @@ class Operation
         if (array_search($type, self::$types) === false) {
             throw new OperationTypeException($type);
         }
-        $this->type = $type;
+        $this->type = (string)trim($type);
         return $this;
     }
     
@@ -409,7 +409,7 @@ class Operation
         if (array_search($status, self::$statuses) === false) {
             throw new OperationStatusException($status);
         }
-        $this->status = $status;
+        $this->status = (string)trim($status);
         return $this;
     }
     
@@ -440,7 +440,7 @@ class Operation
         if (!in_array($currency, Configuration::$CURRENCIES)) {
             throw new CurrencyException($currency);
         }
-        $this->currency = $currency;
+        $this->currency = (string)trim($currency);
         return $this;
     }
     
@@ -471,7 +471,7 @@ class Operation
         if (!in_array($originalCurrency, Configuration::$CURRENCIES)) {
             throw new CurrencyException($originalCurrency);
         }
-        $this->originalCurrency = $originalCurrency;
+        $this->originalCurrency = (string)trim($originalCurrency);
         return $this;
     }
     
@@ -516,7 +516,7 @@ class Operation
         if (!Id::validate($accountId)) {
             throw new IdException($accountId);
         }
-        $this->accountId = $accountId;
+        $this->accountId = (int)$accountId;
         return $this;
     }
     
@@ -531,7 +531,7 @@ class Operation
         if (!OpNumber::validate($relatedNumber)) {
             throw new OperationNumberException($relatedNumber);
         }
-        $this->relatedNumber = $relatedNumber;
+        $this->relatedNumber = (string)trim($relatedNumber);
         return $this;
     }
     
@@ -542,7 +542,7 @@ class Operation
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->description = (string)$description;
         return $this;
     }
     

@@ -116,7 +116,7 @@ class Redirect
         if (!Url::validate($url)) {
             throw new UrlException($url);
         }
-        $this->url = (string)$url;
+        $this->url = (string)trim($url);
         return $this;
     }
     
@@ -143,7 +143,7 @@ class Redirect
         if (array_search($method, self::ALLOWED_METHODS) === false) {
             throw new MethodException($method);
         }
-        $this->method = $method;
+        $this->method = (string)trim($method);
         return $this;
     }
     
