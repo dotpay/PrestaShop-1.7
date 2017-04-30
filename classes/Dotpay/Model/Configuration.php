@@ -104,8 +104,10 @@ class Configuration extends \Dotpay\Model\Configuration
     {
         parent::__construct($pluginId);
         foreach ($this->modelMap as $key => $fname) {
-            $fname = 'set'.$fname;
-            $this->$fname(\Configuration::get($key, null));
+            if(($readValue = $this->getFromExtendedSource($key)) !== null) {
+                $fname = 'set'.$fname;
+                $this->$fname($readValue);
+            }
         }
     }
 
@@ -461,5 +463,15 @@ class Configuration extends \Dotpay\Model\Configuration
     private function makeCorrectNumber($input)
     {
         return preg_replace('/[^0-9\.]/', "", str_replace(',', '.', trim($input)));
+    }
+    
+    /**
+     * Return a configure value from shop registry
+     * @param string $name Name of requested value
+     * @return mixed
+     */
+    private function getFromExtendedSource($name) {
+        $context = \Context::getContext();
+        return \Configuration::get($name, $context->id_lang, $context->id_shop_group, $context->id_shop, null);
     }
 }

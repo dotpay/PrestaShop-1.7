@@ -122,22 +122,26 @@ class dotpay extends PaymentModule
         }
         
         Module::updateTranslationsAfterInstall(false);
-        return parent::install() &&
-            $this->registerHook('displayHeader') &&
-            $this->registerHook('displayBackOfficeHeader') &&
-            $this->registerHook('displayCustomerAccount') &&
-            $this->registerHook('displayAdminOrder') &&
-            $this->registerHook('displayOrderDetail') &&
-            $this->registerHook('paymentOptions') &&
-            $this->addOrderWaitingStatus() &&
-            $this->addTotalRefundStatus() &&
-            $this->addPartialRefundStatus() &&
-            $this->addWaitingRefundStatus() &&
-            $this->addFailedRefundStatus() &&
-            $this->addReturnTab() &&
-            Instruction::install() &&
-            CreditCard::install() &&
-            CardBrand::install();
+        try {
+            return parent::install() &&
+                $this->registerHook('displayHeader') &&
+                $this->registerHook('displayBackOfficeHeader') &&
+                $this->registerHook('displayCustomerAccount') &&
+                $this->registerHook('displayAdminOrder') &&
+                $this->registerHook('displayOrderDetail') &&
+                $this->registerHook('paymentOptions') &&
+                $this->addOrderWaitingStatus() &&
+                $this->addTotalRefundStatus() &&
+                $this->addPartialRefundStatus() &&
+                $this->addWaitingRefundStatus() &&
+                $this->addFailedRefundStatus() &&
+                $this->addReturnTab() &&
+                Instruction::install() &&
+                CreditCard::install() &&
+                CardBrand::install();
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
