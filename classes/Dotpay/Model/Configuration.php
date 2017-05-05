@@ -472,6 +472,30 @@ class Configuration extends \Dotpay\Model\Configuration
      */
     private function getFromExtendedSource($name) {
         $context = \Context::getContext();
-        return \Configuration::get($name, $context->id_lang, $context->id_shop_group, $context->id_shop, null);
+        //Language id
+        if(isset($context->id_lang)) {
+            $langId = (int)$context->id_lang;
+        } else if(isset($context->language) && isset($context->language->id_lang)) {
+            $langId = (int)$context->language->id_lang;
+        } else {
+            $langId = (int)\Configuration::get('PS_LANG_DEFAULT');
+        }
+        //Shop group id
+        if(isset($context->id_shop_group)) {
+            $shopGroupId = (int)$context->id_shop_group;
+        } else if(isset($context->shop) && isset($context->shop->id_shop_group)) {
+            $shopGroupId = (int)$context->shop->id_shop_group;
+        } else {
+            $shopGroupId = null;
+        }
+        //Shop id
+        if(isset($context->id_shop)) {
+            $shopId = (int)$context->id_shop;
+        } else if(isset($context->shop) && isset($context->shop->id_shop)) {
+            $shopId = (int)$context->shop->id_shop;
+        } else {
+            $shopId = null;
+        }
+        return \Configuration::get($name, $langId, $shopGroupId, $shopId, null);
     }
 }
