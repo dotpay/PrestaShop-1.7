@@ -97,16 +97,39 @@
 {if $message == null}
     {literal}
         <script type="text/javascript">
-            window.checkStatusConfig = {
-                "url": "{/literal}{$checkStatusUrl nofilter}{literal}",
-                "orderId": "{/literal}{$orderId}{literal}",
-                "waitingMessage": "{/literal}{$waitingMessage nofilter}{literal}",
-                "successMessage": "{/literal}{$successMessage nofilter}{literal}",
-                "tooManyPaymentsMessage": "{/literal}{$tooManyPaymentsMessage nofilter}{literal}",
-                "errorMessage": "{/literal}{$errorMessage nofilter}{literal}",
-                "timeoutMessage": "{/literal}{$timeoutMessage nofilter}{literal}",
-                "redirectUrl": "{/literal}{$redirectUrl nofilter}{literal}"
+            function ready(fn) {
+                if (document.readyState !== 'loading'){
+                    fn();
+                } else if (document.addEventListener) {
+                    document.addEventListener('DOMContentLoaded', fn);
+                } else {
+                    document.attachEvent('onreadystatechange', function() {
+                        if (document.readyState !== 'loading')
+                            fn();
+                    });
+                }
+            }
+            window.backConfig = {
+                messages: {
+                    notFound: "{/literal}{$notFoundMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    basic: "{/literal}{$basicMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    status: "{/literal}{$statusMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    timeout: "{/literal}{$timeoutMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    pending: "{/literal}{$waitingMessage nofilter}{literal}",
+                    success: "{/literal}{$successMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    error: "{/literal}{$errorMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    tooMany: "{/literal}{$tooManyPaymentsMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    unknown: "{/literal}{$unknownMessage|escape:'htmlall':'UTF-8'}{literal}"
+                },
+                target: "{/literal}{$checkStatusUrl nofilter}{literal}",
+                redirect: "{/literal}{$redirectUrl nofilter}{literal}",
+                orderId: {/literal}{$orderId}{literal},
+                interval: 5,
+                timeout: 2*60
             };
+            ready(function(){
+                DotpayStatusChecker($('#statusMessageContainer'), window.backConfig);
+            });
         </script>
     {/literal}
 {/if}

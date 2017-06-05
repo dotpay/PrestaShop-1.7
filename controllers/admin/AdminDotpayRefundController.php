@@ -96,11 +96,18 @@ class AdminDotpayRefundController extends ModuleAdminController
             $operation = $sa->getOperationByNumber(
                 Tools::getValue('payment')
             );
-            die(json_encode([
+            
+            $details = [
                 'sum_of_payments' => $sumOfPayments,
                 'description' => $this->l('Refund of order:').' '.$order->reference,
                 'currency' => $operation->getCurrency(),
-            ]));
+            ];
+            if (function_exists('json_encode')) {
+                $data2display = json_encode($details, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            } else {
+                $data2display = \Tools::jsonEncode($details);
+            }
+            die($data2display);
         } catch (RuntimeException $ex) {
             die('{}');
         }

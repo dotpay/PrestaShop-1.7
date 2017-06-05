@@ -14,25 +14,32 @@
  * @copyright Dotpay
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
+/**
+ * Update details of payment which is assocoated with a possible return
+ * @param {string} payment Payment number
+ * @returns {undefined}
+ */
 function updateDotpayReturnDetails(payment) {
-        $.post(
-            window.refundConfig.returnUrl+"&ajax=1",
-            {"payment": payment, "order": window.refundConfig.orderId},
-            function(response) {
-                var payment = JSON.parse(response);
-                var form = $('#dotpayDetailsPaymentPanel form');
-                form.find('input[name=amount]').val(payment.sum_of_payments).data('maxvalue', payment.sum_of_payments);
-                form.find('#return-currency').html(payment.currency);
-                form.find('input[name=description]').val(payment.description);
-                if(payment.sum_of_payments == 0.0)
-                    form.find('input[type=submit]').attr('disabled', true);
-                else
-                    form.find('input[type=submit]').attr('disabled', false);
-                $('#dotpay-return-payment').attr('disabled', $('#dotpay-return-payment option').length < 2);
-            }
-        );
-    }
-    $(document).ready(function(){
+    $.post(
+        window.refundConfig.returnUrl+"&ajax=1",
+        {"payment": payment, "order": window.refundConfig.orderId},
+        function(response) {
+            var payment = JSON.parse(response);
+            var form = $('#dotpayDetailsPaymentPanel form');
+            form.find('input[name=amount]').val(payment.sum_of_payments).data('maxvalue', payment.sum_of_payments);
+            form.find('#return-currency').html(payment.currency);
+            form.find('input[name=description]').val(payment.description);
+            if(payment.sum_of_payments === 0.0)
+                form.find('input[type=submit]').attr('disabled', true);
+            else
+                form.find('input[type=submit]').attr('disabled', false);
+            $('#dotpay-return-payment').attr('disabled', $('#dotpay-return-payment option').length < 2);
+        }
+    );
+}
+$(document).ready(function(){
+    if (window.refundConfig != undefined) {
         $('#dotpay-return-payment').change(function(){
             updateDotpayReturnDetails($(this).val());
         });
@@ -50,4 +57,5 @@ function updateDotpayReturnDetails(payment) {
         $('#dotpay-refund-send').click(function(){
             $('#dotpay-return-payment').attr('disabled', false);
         });
-    });
+    }
+});

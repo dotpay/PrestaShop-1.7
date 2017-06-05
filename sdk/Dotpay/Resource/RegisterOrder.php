@@ -26,6 +26,7 @@ use Dotpay\Model\Payer;
 use Dotpay\Model\PaymentMethod;
 use Dotpay\Tool\Curl;
 use Dotpay\Resource\RegisterOrder\Result;
+use Dotpay\Exception\FunctionNotFoundException;
 use Dotpay\Exception\Resource\PaymentNotCreatedException;
 use Dotpay\Exception\Resource\InstructionNotFoundException;
 
@@ -63,7 +64,11 @@ class RegisterOrder extends Resource
      */
     public function create(Channel $channel)
     {
-        $data2send = str_replace('\\/', '/', json_encode($this->getDataStructure($channel)));
+         if (function_exists('json_encode')) {
+            $data2send = json_encode($this->getDataStructure($channel), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        } else {
+            throw new FunctionNotFoundException('json_encode');
+        }
         $resultArray = $this->postData($this->config->getPaymentUrl() . self::TARGET, $data2send);
         $info = $this->curl->getInfo();
         if ((int) $info['http_code'] !== 201) {

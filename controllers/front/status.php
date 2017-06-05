@@ -18,36 +18,47 @@
 
 require_once('dotpay.php');
 
+use Dotpay\Processor\Status;
+
 /**
  * Controller for handling return address
  */
 class dotpaystatusModuleFrontController extends DotpayController
 {
     /**
-     * Check a payment status of order in shop
+     * Checks a payment status of order in shop
      */
-    public function initContent()
-    {
-        parent::initContent();
-        $orderId = Tools::getValue('order');
+    public function init() {
+        parent::init();
+        header('Content-Type: application/json; charset=utf-8');
+        $orderId = Tools::getValue('orderId');
+        $status = new Status();
         if ($orderId != null) {
             $order = new Order($orderId);
             $lastOrderState = new OrderState($order->getCurrentState());
+            $statusName = (gettype($lastOrderState->name) == 'array')?$lastOrderState->name[1]:$lastOrderState->name;
+            $status->setStatus($statusName);
             switch ($lastOrderState->id) {
-                case $this->getConfig()->getWaitingStatus():
-                    die('0');
+                case $this->config->getWaitingStatus():
+                    $status->codePending();
+                    break;
                 case _PS_OS_PAYMENT_:
                     $payments = OrderPayment::getByOrderId($orderId);
                     if ((count($payments) - count($order->getBrother())) > 1) {
-                        die('2');
+                        $status->codeTooMany();
                     } else {
-                        die('1');
+                        $status->codeSuccess();
                     }
+                    break;
+                case _PS_OS_ERROR_:
+                    $status->codeError();
+                    break;
                 default:
-                    die('-1');
+                    $status->codeOtherStatus();
             }
         } else {
-            die('NO');
+            $status->codeNotExist();
         }
+        die($status->getJson());
     }
 }

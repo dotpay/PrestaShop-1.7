@@ -28,6 +28,7 @@ use Dotpay\Model\Payout;
 use Dotpay\Model\Seller as SellerModel;
 use Dotpay\Model\Refund;
 use Dotpay\Validator\OpNumber;
+use Dotpay\Exception\FunctionNotFoundException;
 use Dotpay\Exception\BadParameter\OperationNumberException;
 use Dotpay\Exception\Resource\UnauthorizedException;
 use Dotpay\Exception\Resource\ApiException;
@@ -182,11 +183,17 @@ class Seller extends Resource
     public function makeRefund(Refund $refund)
     {
         try {
-            $this->postData($this->getApiUrl('payments/'.$refund->getPayment().'/refund/'), json_encode([
+            $refundDetails = [
                 'amount' => $refund->getAmount(),
                 'description' => $refund->getDescription(),
                 'control' => $refund->getControl()
-            ]));
+            ];
+            if (function_exists('json_encode')) {
+                $data2send = json_encode($refundDetails, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            } else {
+                throw new FunctionNotFoundException('json_encode');
+            }
+            $this->postData($this->getApiUrl('payments/'.$refund->getPayment().'/refund/'), json_encode($data2send));
             return true;
         } catch (ResourceNotFoundException $ex) {
             throw new OperationNotFoundException($refund->getPayment());

@@ -57,7 +57,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
             $config = $this->getConfig();
             $paymentAction = new MakePaymentOrRefund(
                 function(Operation $operation) use ($config, $loader) {
-                    $control = explode('|', (string)$operation->getControl());
+                    $control = explode('/', (string)$operation->getControl());
                     $order = new Order($control[0]);
                     $brotherOrders = [$order];
                     foreach($order->getBrother() as $brotherOrder) {
@@ -109,7 +109,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
                         return true;
                     }
                     
-                    $control = explode('|', (string)$operation->getControl());
+                    $control = explode('/', (string)$operation->getControl());
                     $order = new Order($control[0]);
                     $payments = OrderPayment::getByOrderId($order->id);
                     $foundPaymet = false;

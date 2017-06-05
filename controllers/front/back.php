@@ -72,10 +72,14 @@ class dotpaybackModuleFrontController extends DotpayController
             'orderReference' => $order->reference,
             'orderId' => $orderId,
             'checkStatusUrl' => $this->context->link->getModuleLink($this->module->name, 'status', []),
+            'basicMessage' => $this->module->l('You have come back to the shop site.'),
+            'statusMessage' => $this->module->l('Status of the order'),
             'waitingMessage' => $this->module->l('Waiting for confirm your payment...').'<br>'.$this->module->l('It make take up to 2 minutes.'),
             'successMessage' => $this->module->l('Thank you! The process of payment completed correctly. In a moment you will be able to check the status of your order.'),
             'tooManyPaymentsMessage' => $this->module->l('Warning! Payment for this order have already registered. If you bank account has been charged, please contact to seller and give him a name of the order:').' '.$order->reference,
             'errorMessage' => $this->module->l('Payment was rejected.'),
+            'notFoundMessage' => $this->module->l('Order was not found.'),
+            'unknownMessage' => $this->module->l('It\'s impossible to interprete the response from server.'),
             'timeoutMessage' => $this->module->l('Time intended for waiting for payment confirmation has elapsed. When transaction will be confirmed we will notify you on email. If payment will not be confirmed, please contact with shop owner and give him the order number:').' '.$order->reference,
         ]);
         
