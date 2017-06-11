@@ -66,11 +66,25 @@ class dotpaybackModuleFrontController extends DotpayController
             $message = $this->module->l($e->getMessage());
         }
         
+        if($message === null) {
+            if (\Validate::isLoadedObject($order)) {
+                $currency = new \Currency($order->id_currency);
+                $params['total_to_pay'] = $order->getOrdersTotalPaid();
+                $params['currency'] = $currency->sign;
+                $params['objOrder'] = $order;
+                $params['currencyObj'] = $currency;
+
+                $hiddenHookData = Hook::exec('displayPaymentReturn', $params, $this->module->id);
+                $hiddenHookData .= Hook::exec('displayOrderConfirmation', $params);
+            }
+        }
+        
         $this->context->smarty->assign([
             'message' => $message,
             'redirectUrl' => $url,
             'orderReference' => $order->reference,
             'orderId' => $orderId,
+            'hiddenHookData' => $hiddenHookData,
             'checkStatusUrl' => $this->context->link->getModuleLink($this->module->name, 'status', []),
             'basicMessage' => $this->module->l('You have come back to the shop site.'),
             'statusMessage' => $this->module->l('Status of the order'),

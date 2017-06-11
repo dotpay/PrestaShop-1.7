@@ -81,6 +81,10 @@
             from { -webkit-transform: rotate(0deg); }
             to { -webkit-transform: rotate(360deg); }
         }
+        
+        #hiddenHookData {
+            display: none;
+        }
     </style>
 {/literal}     
 <div id="statusMessageContainer">
@@ -93,7 +97,7 @@
         {/literal}
     {/if}
 </div>
-
+<div id="hiddenHookData">{$hiddenHookData nofilter}</div>
 {if $message == null}
     {literal}
         <script type="text/javascript">
