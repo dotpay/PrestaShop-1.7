@@ -99,7 +99,7 @@
                 <br />
             </div>
         {/if}
-        {if $universalErrorMessage }
+        {if $universalErrorMessage != false}
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Error with module settings' mod='dotpay'}</h2>

@@ -82,7 +82,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.4';
+        $this->version = '1.0.5';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -229,6 +229,7 @@ class dotpay extends PaymentModule
                 'repositoryName' => self::REPOSITORY_NAME,
                 'moduleDir' => $this->_path,
                 'regMessEn' => $this->config->getTestMode() || !$this->config->isGoodAccount(),
+                'testMode' => $this->config->getTestMode(),
                 'badIdMessage' => $this->l('Incorrect ID (required 6 digits)'),
                 'badPinMessage' => $this->l('Incorrect PIN (minimum 16 and maximum 32 alphanumeric characters)'),
                 'valueLowerThanZero' => $this->l('The value must be greater than zero.'),
@@ -728,12 +729,14 @@ class dotpay extends PaymentModule
         $reductionFlagAfter = $this->config->getReduction();
         $extrachargeFlagAfter = $this->config->getExtracharge();
         
+        $universalError = false;
         if ($extrachargeFlagBefore == false && $extrachargeFlagAfter == true) {
             $this->checkVirtualProduct();
             if ($this->config->getExtraChargeVirtualProductId() == 0) {
                 $this->context->smarty->assign([
                     'universalErrorMessage' => $this->l('The error with switching extracharge option occured. Prease try to turn it on again.')
                 ]);
+                $universalError = true;
             }
         }
         if ($reductionFlagBefore == false && $reductionFlagAfter == true) {
@@ -742,7 +745,13 @@ class dotpay extends PaymentModule
                 $this->context->smarty->assign([
                     'universalErrorMessage' => $this->l('The error with switching shipping reduction occured. Prease try to turn it on again.')
                 ]);
+                $universalError = true;
             }
+        }
+        if ($universalError === false) {
+            $this->context->smarty->assign([
+                    'universalErrorMessage' => false
+                ]);
         }
     }
 

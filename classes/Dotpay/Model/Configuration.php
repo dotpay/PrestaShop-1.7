@@ -65,6 +65,7 @@ class Configuration extends \Dotpay\Model\Configuration
      */
     private $modelMap = [
         'DP_ENABLED' => 'Enable',
+        'DP_API' => 'Api',
         'DP_ID' => 'Id',
         'DP_PIN'=> 'Pin',
         'DP_TEST_MODE' => 'TestMode',
