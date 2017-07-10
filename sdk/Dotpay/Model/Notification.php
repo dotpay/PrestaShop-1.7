@@ -171,6 +171,7 @@ class Notification
             $this->getOperation()->getCurrency().
             $this->getOperation()->getWithdrawalAmount().
             $this->getOperation()->getCommissionAmount().
+            $this->getOperation()->isCompleted().
             $this->getOperation()->getOriginalAmount().
             $this->getOperation()->getOriginalCurrency().
             $this->getOperation()->getDateTime()->format('Y-m-d H:i:s').

@@ -1253,8 +1253,8 @@ class dotpay extends PaymentModule
      */
     private function copyStatusImage($source, $dest)
     {
-        $target = mydirname($this->_path, 3);
-        return copy($this->_path.'/views/img/'.$source.'.gif', $target.'/img/os/'.$dest.'.gif');
+        $target = mydirname($this->local_path, 3);
+        return copy($this->local_path.'/views/img/'.$source.'.gif', $target.'/img/os/'.$dest.'.gif');
     }
     
     /**

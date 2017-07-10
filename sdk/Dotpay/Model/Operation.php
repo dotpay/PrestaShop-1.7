@@ -93,6 +93,11 @@ class Operation
     private $commissionAmount = null;
     
     /**
+     * @var boolean A flag if operation is marked as completed in Seller panel
+     */
+    private $completed = false;
+    
+    /**
      * @var int|null An account id of a seller
      */
     private $accountId = null;
@@ -207,15 +212,6 @@ class Operation
     }
     
     /**
-     * Return a DateTime object with date and a time of the last change status of the operation
-     * @return DateTime|null
-     */
-    public function getDateTime()
-    {
-        return $this->dateTime;
-    }
-    
-    /**
      * Return an identifier of a type of the operation
      * @return string
      */
@@ -252,6 +248,25 @@ class Operation
     }
     
     /**
+     * Return a withdrawal amount
+     * @return float|null
+     */
+    public function getWithdrawalAmount()
+    {
+        return $this->withdrawalAmount;
+    }
+    
+    /**
+     * Return an amount of a Dotpay commission.
+     * It's presented as a negative amount.
+     * @return float|null
+     */
+    public function getCommissionAmount()
+    {
+        return $this->commissionAmount;
+    }
+    
+    /**
      * Return an original amount which was sent from a shop
      * @return float|null
      */
@@ -270,22 +285,21 @@ class Operation
     }
     
     /**
-     * Return a withdrawal amount
-     * @return float|null
+     * Return a DateTime object with date and a time of the last change status of the operation
+     * @return DateTime|null
      */
-    public function getWithdrawalAmount()
+    public function getDateTime()
     {
-        return $this->withdrawalAmount;
+        return $this->dateTime;
     }
     
     /**
-     * Return an amount of a Dotpay commission.
-     * It's presented as a negative amount.
-     * @return float|null
+     * Return a flag if operation is marked as completed in Seller panel
+     * @return boolean
      */
-    public function getCommissionAmount()
+    public function isCompleted()
     {
-        return $this->commissionAmount;
+        return $this->completed;
     }
     
     /**
@@ -502,6 +516,17 @@ class Operation
             throw new AmountException($commissionAmount);
         }
         $this->commissionAmount = $commissionAmount;
+        return $this;
+    }
+    
+    /**
+     * Set a flag if operation is marked as completed in Seller panel
+     * @param boolean $completed A flag if operation is marked as completed in Seller panel
+     * @return Operation
+     */
+    public function setCompleted($completed)
+    {
+        $this->completed = (boolean)$completed;
         return $this;
     }
     

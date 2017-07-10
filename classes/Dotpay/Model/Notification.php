@@ -51,6 +51,9 @@ class Notification extends \Dotpay\Model\Notification {
         if(Tools::getValue('operation_original_currency')) {
             $operation->setOriginalCurrency(Tools::getValue('operation_original_currency'));
         }
+        if(Tools::getValue('is_completed')) {
+            $operation->setCompleted(Tools::getValue('is_completed'));
+        }
         if(Tools::getValue('operation_withdrawal_amount')) {
             $operation->setWithdrawalAmount(Tools::getValue('operation_withdrawal_amount'));
         }
