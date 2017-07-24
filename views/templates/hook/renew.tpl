@@ -19,7 +19,7 @@
     {else}
         <p>{l s='Paments provide Dotpay' mod='dotpay'}</p>
     {/if}
-    {if $isInstruction}
+    {if $isInstruction == true}
         <hr />
         <p>{l s='You can see instruction of payment completion.' mod='dotpay'}</p>
         <p class="cart_navigation">

@@ -1026,7 +1026,7 @@ class dotpay extends PaymentModule
         if ($order->module=='dotpay') {
             if ($instruction->getId() != null && $this->config->ifOrderCanBeRenewed(new DateTime($order->date_add))) {
                 $this->smarty->assign(array(
-                    'isInstruction' => ($instruction->getId()!=null),
+                    'isInstruction' => (bool)($instruction->getId() != null),
                     'instructionUrl' => $context->link->getModuleLink('dotpay', 'instruction', [
                         'method'=>'dotpay',
                         'order'=>$order->id,
