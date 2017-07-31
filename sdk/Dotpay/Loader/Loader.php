@@ -212,13 +212,14 @@ class Loader
      */
     private function getObjectInstance(Object $object, array $params = [])
     {
-        if (empty($object->getStoredInstance($params)) || $object->getAlwaysNew() == true) {
+        $storedInstance = $object->getStoredInstance($params);
+        if (empty($storedInstance) || $object->getAlwaysNew() == true) {
             $reflection = new ReflectionClass($object->getClass());
             $instance = $reflection->newInstanceArgs($params);
             $object->setStoredInstance($params, $instance);
             unset($reflection);
         }
-        return $object->getStoredInstance($params);
+        return $storedInstance;
     }
     
     /**

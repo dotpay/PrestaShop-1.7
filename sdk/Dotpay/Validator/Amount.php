@@ -27,6 +27,6 @@ class Amount implements IValidate {
      * @return boolean
      */
     public static function validate($value) {
-        return (bool)preg_match('/^\-?\d{1,}(\.\d{1,4})?$/', $value);
+        return (bool)preg_match('/^\-?\d{1,20}(\.\d{1,6})?$/', $value);
     }
 }
