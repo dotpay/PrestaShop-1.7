@@ -218,6 +218,7 @@ class Loader
             $instance = $reflection->newInstanceArgs($params);
             $object->setStoredInstance($params, $instance);
             unset($reflection);
+            return $instance;
         }
         return $storedInstance;
     }

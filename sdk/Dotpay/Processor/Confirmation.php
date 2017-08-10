@@ -93,7 +93,6 @@ class Confirmation
         $this->sellerApi = $sellerApi;
         $this->outputMessage = '';
         
-        $config = $this->config;
         if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
             ($_SERVER['REMOTE_ADDR'] == $config::OFFICE_IP ||
              ($_SERVER['REMOTE_ADDR'] == $config::LOCAL_IP &&
