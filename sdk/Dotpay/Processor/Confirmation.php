@@ -244,7 +244,7 @@ class Confirmation
         $config = $this->config;
         $clientIp = $this->getClientIp();
         if (
-            !($$clientIp == $config::CALLBACK_IP ||
+            !($clientIp == $config::CALLBACK_IP ||
                 ($this->config->getTestMode() &&
                  ($clientIp == $config::OFFICE_IP ||
                   $clientIp == $config::LOCAL_IP

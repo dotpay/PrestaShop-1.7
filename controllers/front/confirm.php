@@ -96,7 +96,13 @@ class dotpayconfirmModuleFrontController extends DotpayController
                         } else if($lastOrderState->id == $newOrderState && $newOrderState == _PS_OS_OUTOFSTOCK_UNPAID_) {
                             return true;
                         } else {
-                            throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$lastOrderState->name.') IS ALERADY REGISTERED');
+                            $stateName = "OTHER NAME";
+                            if(is_array($lastOrderState->name) && count($lastOrderState->name)) {
+                                $stateName = $lastOrderState->name[0];
+                            } else if(is_string($lastOrderState->name)) {
+                                $stateName = $lastOrderState->name;
+                            }
+                            throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$stateName.') IS ALERADY REGISTERED');
                         }
                     }
                     return true;
