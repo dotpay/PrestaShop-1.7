@@ -75,7 +75,7 @@ class CardBrand extends \Dotpay\Model\CardBrand
     {
         return Db::getInstance()->execute(
             'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.self::TABLE_NAME.'` (
-                `name` varchar(20) DEFAULT null,
+                `name` varchar(20) NOT null,
                 `image` varchar(192) DEFAULT null,
                 `codename` varchar(20) DEFAULT null,
                 PRIMARY KEY (`name`),

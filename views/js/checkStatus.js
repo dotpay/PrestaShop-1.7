@@ -66,16 +66,16 @@ function DotpayStatusChecker(parent, config) {
     
     var getBaseMessage = function(status) {
         return config.messages.basic+"<br />"+config.messages.status+':&nbsp;'+status;
-    }
+    };
     
     var getMessageWithStatus = function(message, status) {
         return message+"<br />"+config.messages.status+':&nbsp;'+status;
-    }
+    };
     
     var finish = function(intervalId) {
         hideLoader();
         clearInterval(intervalId);
-    }
+    };
     
     var isJsonString = function(str) {
         try {
@@ -84,7 +84,7 @@ function DotpayStatusChecker(parent, config) {
             return false;
         }
         return true;
-    }
+    };
     
     setInfoMessage(config.messages.basic);
     showLoader();

@@ -92,10 +92,11 @@ class Confirmation
         $this->paymentApi = $paymentApi;
         $this->sellerApi = $sellerApi;
         $this->outputMessage = '';
+        $clientIp = $this->getClientIp();
         
         if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
-            ($_SERVER['REMOTE_ADDR'] == $config::OFFICE_IP ||
-             ($_SERVER['REMOTE_ADDR'] == $config::LOCAL_IP &&
+            ($clientIp == $config::OFFICE_IP ||
+             ($clientIp == $config::LOCAL_IP &&
               $config->getTestMode()
              )
             )
@@ -104,8 +105,8 @@ class Confirmation
             $this->completeInformations();
             throw new ConfirmationInfoException($this->outputMessage);
         } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' &&
-                    ($_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP ||
-                     ($_SERVER['REMOTE_ADDR'] == $config::LOCAL_IP &&
+                    ($clientIp == $config::CALLBACK_IP ||
+                     ($clientIp == $config::LOCAL_IP &&
                       $config->getTestMode()
                      )
                     )
@@ -241,11 +242,12 @@ class Confirmation
     protected function checkIp()
     {
         $config = $this->config;
+        $clientIp = $this->getClientIp();
         if (
-            !($_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP ||
+            !($$clientIp == $config::CALLBACK_IP ||
                 ($this->config->getTestMode() &&
-                 ($_SERVER['REMOTE_ADDR'] == $config::OFFICE_IP ||
-                  $_SERVER['REMOTE_ADDR'] == $config::LOCAL_IP
+                 ($clientIp == $config::OFFICE_IP ||
+                  $clientIp == $config::LOCAL_IP
                  )
                 )
             )
@@ -382,5 +384,33 @@ class Confirmation
             default:
                 throw new SellerNotRecognizedException($this->notification->getAccountId());
         }
+    }
+    
+    /**
+     * Return ip address from is the confirmation request
+     * @return string
+     */
+    protected function getClientIp() {
+        $ipaddress = '';
+        if (getenv('HTTP_CLIENT_IP')) {
+            $ipaddress = getenv('HTTP_CLIENT_IP');
+        } else if(getenv('HTTP_X_FORWARDED_FOR')) {
+            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+        } else if(getenv('HTTP_X_FORWARDED')) {
+            $ipaddress = getenv('HTTP_X_FORWARDED');
+        } else if(getenv('HTTP_FORWARDED_FOR')) {
+            $ipaddress = getenv('HTTP_FORWARDED_FOR');
+        } else if(getenv('HTTP_FORWARDED')) {
+           $ipaddress = getenv('HTTP_FORWARDED');
+        } else if(getenv('REMOTE_ADDR')) {
+            $ipaddress = getenv('REMOTE_ADDR');
+        } else {
+            $ipaddress = 'UNKNOWN';
+        }
+        if($ipaddress === '0:0:0:0:0:0:0:1' || $ipaddress === '::1') {
+            $config = $this->config;
+            $ipaddress = $config::LOCAL_IP;
+        }
+        return $ipaddress;
     }
 }
