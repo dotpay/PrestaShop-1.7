@@ -191,6 +191,9 @@ class dotpay extends PaymentModule
          */
         if (((bool)Tools::isSubmit('submitDotpayModule')) == true) {
             $this->saveConfiguration();
+            $saved = true;
+        } else {
+            $saved = false;
         }
         
         try {
@@ -225,7 +228,7 @@ class dotpay extends PaymentModule
                 $canNotCheckPlugin = true;
                 $number = $this->version;
             }
-            $this->context->smarty->assign([
+            $templateData = [
                 'repositoryName' => self::REPOSITORY_NAME,
                 'moduleDir' => $this->_path,
                 'regMessEn' => $this->config->getTestMode() || !$this->config->isGoodAccount(),
@@ -246,8 +249,12 @@ class dotpay extends PaymentModule
                 'testCorrectSellerForApi' => !$testCorrectSellerForApi,
                 'obsoletePlugin' => $obsoletePlugin,
                 'canNotCheckPlugin' => $canNotCheckPlugin,
-                'availableChannels' => $availableChannels
-            ]);
+                'availableChannels' => $availableChannels,
+            ];
+            if($saved === false) {
+                $templateData['universalErrorMessage'] = false;
+            }
+            $this->context->smarty->assign($templateData);
             $paymentResource->close();
             $sellerResource->close();
             $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
@@ -729,30 +736,22 @@ class dotpay extends PaymentModule
         $reductionFlagAfter = $this->config->getReduction();
         $extrachargeFlagAfter = $this->config->getExtracharge();
         
-        $universalError = false;
+        $universalErrorMessage = false;
         if ($extrachargeFlagBefore == false && $extrachargeFlagAfter == true) {
             $this->checkVirtualProduct();
             if ($this->config->getExtraChargeVirtualProductId() == 0) {
-                $this->context->smarty->assign([
-                    'universalErrorMessage' => $this->l('The error with switching extracharge option occured. Prease try to turn it on again.')
-                ]);
-                $universalError = true;
+                $universalErrorMessage = $this->l('The error with switching extracharge option occured. Prease try to turn it on again.');
             }
         }
         if ($reductionFlagBefore == false && $reductionFlagAfter == true) {
             $this->addShippingReduction();
             if ($this->config->getShippingReductionId() == 0) {
-                $this->context->smarty->assign([
-                    'universalErrorMessage' => $this->l('The error with switching shipping reduction occured. Prease try to turn it on again.')
-                ]);
-                $universalError = true;
+                $universalErrorMessage = $this->l('The error with switching shipping reduction occured. Prease try to turn it on again.');
             }
         }
-        if ($universalError === false) {
-            $this->context->smarty->assign([
-                    'universalErrorMessage' => false
-                ]);
-        }
+        $this->context->smarty->assign([
+            'universalErrorMessage' => $universalErrorMessage
+        ]);
     }
 
     /**

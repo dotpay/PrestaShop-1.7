@@ -78,7 +78,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
                         if ($lastOrderState->id != $newOrderState) {
                             $history->changeIdOrderState($newOrderState, $history->id_order);
                             $history->addWithemail(true);
-                            if ($newOrderState == _PS_OS_PAYMENT_) {
+                            if ($newOrderState == _PS_OS_PAYMENT_ || $newOrderState == PS_OS_OUTOFSTOCK_) {
                                 $payments = OrderPayment::getByOrderId($order->id);
                                 $numberOfPayments = count($payments);
                                 if ($numberOfPayments >= 1) {
