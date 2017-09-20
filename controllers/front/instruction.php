@@ -31,14 +31,6 @@ class dotpayinstructionModuleFrontController extends DotpayController
     public function setMedia()
     {
         parent::setMedia();
-        $this->registerJavascript(
-            'dotpay-instruction',
-            'modules/'.$this->module->name.'/views/js/instruction.js',
-            [
-                'position' => 'bottom',
-                'priority' => 10
-            ]
-        );
         $this->registerStylesheet(
             'dotpay-instruction-style',
             'modules/'.$this->module->name.'/views/css/instruction.css',

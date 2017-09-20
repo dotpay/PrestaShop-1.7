@@ -47,33 +47,33 @@
             {if $instruction->getBankAccount()!= null}
             <label>
                 {l s='Account number' mod='dotpay'}
-                <input type="text" class="important form-control" id="iban" value="{$instruction->getBankAccount()|escape:'htmlall':'UTF-8'}" />
+                <input type="text" class="important form-control" id="iban" value="{$instruction->getBankAccount()|escape:'htmlall':'UTF-8'}" readonly />
             </label>
             {/if}
             <label>
                 {l s='Amount of payment' mod='dotpay'}
                 <div class="input-group">
-                    <input type="text" class="important form-control" id="amount" value="{$order->getAmount()|escape:'htmlall':'UTF-8'}" aria-describedby="transfer-currency">
+                    <input type="text" class="important form-control" id="amount" value="{$order->getAmount()|escape:'htmlall':'UTF-8'}" aria-describedby="transfer-currency" readonly >
                     <span class="input-group-addon" id="transfer-currency">{$order->getCurrency()|escape:'htmlall':'UTF-8'}</span>
                 </div>
             </label>
             <label>
                 {l s='Title of payment' mod='dotpay'}
-                <input type="text" class="important form-control" id="payment-title" value="{$instruction->getNumber()|escape:'htmlall':'UTF-8'}" />
+                <input type="text" class="important form-control" id="payment-title" value="{$instruction->getNumber()|escape:'htmlall':'UTF-8'}" readonly />
             </label>
         </div>
         <div class="col-md-4">
             <label>
                 {l s='Name of recipient' mod='dotpay'}
-                <input type="text" class="important form-control" id="recipient" value="{$recipient_name|escape:'htmlall':'UTF-8'}" />
+                <input type="text" class="important form-control" id="recipient" value="{$recipient_name|escape:'htmlall':'UTF-8'}" readonly />
             </label>
             <label>
                 {l s='Street' mod='dotpay'}
-                <input type="text" class="important form-control" id="street" value="{$recipient_street|escape:'htmlall':'UTF-8'}" />
+                <input type="text" class="important form-control" id="street" value="{$recipient_street|escape:'htmlall':'UTF-8'}" readonly />
             </label>
             <label>
                 {l s='Post code and city' mod='dotpay'}
-                <input type="text" class="important form-control" id="post-code-city" value="{$recipient_city|escape:'htmlall':'UTF-8'}" />
+                <input type="text" class="important form-control" id="post-code-city" value="{$recipient_city|escape:'htmlall':'UTF-8'}" readonly />
             </label>
         </div>
     </div>
