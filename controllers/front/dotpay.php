@@ -100,7 +100,7 @@ abstract class DotpayController extends ModuleFrontController {
         $orderAmount = (float)$this->getCorrectAmount(
             preg_replace("/[^-0-9\.]/", '', str_replace(',', '.', $orderAmount))
         );
-        $orderAmount = \Tools::convertPrice($orderAmount, $currency["id_currency"], false);
+        $orderAmount = round($orderAmount, 2); // Api allows only 2 decimal places
         $this->loader->parameter('Order:id', null);
         $this->loader->parameter('Order:amount', $orderAmount);
         $this->loader->parameter('Order:currency', $currency['iso_code']);
