@@ -24,6 +24,7 @@ use Dotpay\Channel\Blik;
 use Dotpay\Channel\Dotpay;
 use Dotpay\Model\Customer as DotpayCustomer;
 use Dotpay\Loader\Loader;
+use Dotpay\Tool\AmountFormatter;
 use Prestashop\Dotpay\Model\Configuration;
 
 /**
@@ -100,7 +101,8 @@ abstract class DotpayController extends ModuleFrontController {
         $orderAmount = (float)$this->getCorrectAmount(
             preg_replace("/[^-0-9\.]/", '', str_replace(',', '.', $orderAmount))
         );
-        $orderAmount = \Tools::convertPrice($orderAmount, $currency["id_currency"], false);
+        //$orderAmount = \Tools::convertPrice($orderAmount, $currency["id_currency"], false);
+        $orderAmount = AmountFormatter::format($orderAmount, $currency["id_currency"]);
         $this->loader->parameter('Order:id', null);
         $this->loader->parameter('Order:amount', $orderAmount);
         $this->loader->parameter('Order:currency', $currency['iso_code']);
