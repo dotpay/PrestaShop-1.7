@@ -121,7 +121,10 @@
 <div class="panel">
     <div class="dotpay-config-state">
     <h3>{l s='Updates' mod='dotpay'}</h3>
-    <h4>{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong>.</h4>
+    <h4>
+	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong>.<br>
+	{l s='The latest public version available is: ' mod='dotpay'}<strong><a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a></strong>
+	</h4>
     {if $obsoletePlugin}
         <div class="alert alert-danger">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -161,7 +164,7 @@
                 <br />
             </div>
         {/if}
-        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersion}/Dotpay_PrestaShop_module-manual_v{$moduleVersion}_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
+        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersionGH}/Dotpay_PrestaShop_module-manual_v{$moduleVersionGH}_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
     </div>
 </div>
 <p id="scroll-to-save">

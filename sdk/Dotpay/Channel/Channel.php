@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay
+ * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Channel;
@@ -319,7 +319,7 @@ class Channel
         $data['postcode'] = $this->transaction->getPayment()->getCustomer()->getPostCode();
         $data['country'] = $this->transaction->getPayment()->getCustomer()->getCountry();
         $data['bylaw'] = 1;
-        $data['personal_data'] = 1;
+        // $data['personal_data'] = 1;
         $data['channel'] = $this->getChannelId();
         return $data;
     }

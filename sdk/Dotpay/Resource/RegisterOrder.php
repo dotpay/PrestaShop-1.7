@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay
+ * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Resource;
@@ -158,7 +158,7 @@ class RegisterOrder extends Resource
      */
     private function getDataStructure(Channel $channel)
     {
-        return [
+        $result = [
             'order' => [
                 'amount' => $channel->getTransaction()->getPayment()->getOrder()->getAmount(),
                 'currency' => $channel->getTransaction()->getPayment()->getOrder()->getCurrency(),
@@ -174,13 +174,7 @@ class RegisterOrder extends Resource
                 'first_name' => $channel->getTransaction()->getPayment()->getCustomer()->getFirstName(),
                 'last_name' => $channel->getTransaction()->getPayment()->getCustomer()->getLastName(),
                 'email' => $channel->getTransaction()->getPayment()->getCustomer()->getEmail(),
-                'address' => [
-                    'street' => $channel->getTransaction()->getPayment()->getCustomer()->getStreet(),
-                    'building_number' => $channel->getTransaction()->getPayment()->getCustomer()->getBuildingNumber(),
-                    'postcode' => $channel->getTransaction()->getPayment()->getCustomer()->getPostCode(),
-                    'city' => $channel->getTransaction()->getPayment()->getCustomer()->getCity(),
-                    'country' => $channel->getTransaction()->getPayment()->getCustomer()->getCountry()
-                ]
+                
             ],
             'payment_method' => [
                 'channel_id' => $channel->getChannelId()
@@ -189,5 +183,26 @@ class RegisterOrder extends Resource
                 'ip' => $_SERVER['REMOTE_ADDR']
             ]
         ];
+
+			
+			if (!empty($channel->getTransaction()->getPayment()->getCustomer()->getBuildingNumber()))
+				{
+					$building_numberRO = $channel->getTransaction()->getPayment()->getCustomer()->getBuildingNumber();
+				}else{
+					$building_numberRO = " "; //this field may not be blank in register order.
+				}
+		
+		
+if (!empty($channel->getTransaction()->getPayment()->getCustomer()->getStreet()) && !empty($channel->getTransaction()->getPayment()->getCustomer()->getPostCode()) && !empty($channel->getTransaction()->getPayment()->getCustomer()->getCity()) && !empty($channel->getTransaction()->getPayment()->getCustomer()->getCountry())){
+	$result['payer']['address'] = [
+		'street' => $channel->getTransaction()->getPayment()->getCustomer()->getStreet(),
+		'building_number' => $building_numberRO,
+		'postcode' => $channel->getTransaction()->getPayment()->getCustomer()->getPostCode(),
+		'city' => $channel->getTransaction()->getPayment()->getCustomer()->getCity(),
+		'country' => $channel->getTransaction()->getPayment()->getCustomer()->getCountry(),
+	];
+}
+return $result;
+	
     }
 }

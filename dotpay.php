@@ -82,7 +82,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.7';
+        $this->version = '1.0.8';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -228,6 +228,13 @@ class dotpay extends PaymentModule
                 $canNotCheckPlugin = true;
                 $number = $this->version;
             }
+			
+			$baseUrl2 = Context::getContext()->link->getBaseLink();
+            if (substr($baseUrl2, -1, 1) !== '/') {
+                $baseUrl2 .= '/';
+            }
+			
+			
             $templateData = [
                 'repositoryName' => self::REPOSITORY_NAME,
                 'moduleDir' => $this->_path,
@@ -238,11 +245,12 @@ class dotpay extends PaymentModule
                 'valueLowerThanZero' => $this->l('The value must be greater than zero.'),
                 'targetForUrlc' => $this->context->link->getModuleLink('dotpay', 'confirm', ['ajax' => '1'], $this->isSSLEnabled()),
                 'oldVersion' => !version_compare(_PS_VERSION_, "1.7", ">="),
-                'badPhpVersion' => !version_compare(PHP_VERSION, "5.4", ">="),
+                'badPhpVersion' => !version_compare(PHP_VERSION, "5.6", ">="),
                 'phpVersion' => PHP_VERSION,
-                'minorPhpVersion' => '5.4',
+                'minorPhpVersion' => '5.6',
                 'confOK' => $this->config->isGoodAccount() && $this->config->getEnable(),
-                'moduleVersion' => $number,
+                'moduleVersionGH' => $number,
+                'moduleVersion' => $this->version,
                 'testSellerId' => $testSellerId,
                 'testApiAccount' => $testGoodApiData && !$testApiAccount,
                 'testSellerPin' => $testGoodApiData && $testApiAccount && !$testSellerPin,
@@ -275,7 +283,7 @@ class dotpay extends PaymentModule
      */
     protected function renderForm()
     {
-        $this->context->controller->addJS('modules/'.$this->name.'/views/js/chooseChannel.js');
+        $this->context->controller->addJS($this->_path.'/views/js/chooseChannel.js');
         
         $helper = new HelperForm();
 
@@ -776,7 +784,7 @@ class dotpay extends PaymentModule
     {
         $this->context->controller->registerJavascript(
             'jquery-transit',
-            'modules/'.$this->name.'/views/js/jquery.transit.js',
+            $this->_path.'/views/js/jquery.transit.js',
             [
                 'position' => 'bottom',
                 'priority' => 5
@@ -784,7 +792,7 @@ class dotpay extends PaymentModule
         );
         $this->context->controller->registerJavascript(
             'dotpay-front',
-            'modules/'.$this->name.'/views/js/front.js',
+            $this->_path.'/views/js/front.js',
             [
                 'position' => 'bottom',
                 'priority' => 150
@@ -794,7 +802,7 @@ class dotpay extends PaymentModule
         if($this->context->controller instanceof OrderController) {
             $this->context->controller->registerJavascript(
                 'dotpay-select-cards',
-                'modules/'.$this->name.'/views/js/selectCards.js',
+                $this->_path.'/views/js/selectCards.js',
                 [
                     'position' => 'bottom',
                     'priority' => 10
@@ -802,7 +810,7 @@ class dotpay extends PaymentModule
             );
             $this->context->controller->registerJavascript(
                 'dotpay-animated-widget',
-                'modules/'.$this->name.'/views/js/animatedWidget.js',
+                $this->_path.'/views/js/animatedWidget.js',
                 [
                     'position' => 'bottom',
                     'priority' => 10
@@ -858,7 +866,7 @@ class dotpay extends PaymentModule
                     'surMessage' => $this->l('This payment will be increased by the additional surcharge'),
                     'exMessage' => $this->l('This payment will be increased by'),
                     'reductMessage' => $this->l('This payment will be reduced by'),
-                    'agreementsMessage' => $this->l('Acceptance Dotpay regulations:'),
+                    'agreementsMessage' => $this->l('Acceptance Dotpay regulation:'),
                     'totalMessage' => $this->l('Total amount for payment'),
                     'totalAmount' => number_format($totalAmount, 2, '.', ' ')
                 ]);

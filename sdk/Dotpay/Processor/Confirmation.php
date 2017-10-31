@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay
+ * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Processor;
@@ -183,14 +183,41 @@ class Confirmation
     protected function completeInformations()
     {
         $config = $this->config;
+		
+
+			if(trim($config->getId()) !== null && (int)$config->getEnable() == 1){
+					$CorrectId = (int)$this->paymentApi->checkSeller($config->getId());
+			}else{
+					$CorrectId = '&lt;empty or not active module&gt;';
+				}
+				
+			if(trim($config->getPin()) !== null && (int)$config->getEnable() == 1){
+					$CorrectPin = (int)$this->sellerApi->checkPin();
+			}else{
+					$CorrectPin = '&lt;empty or not active module&gt;';
+				}
+
+			
+			if(trim($config->getFccId()) !== null && (int)$config->getFccVisible() == 1){
+					$FCC_CorrectId = (int)$this->paymentApi->checkSeller($config->getFccId());
+			}else{
+					$FCC_CorrectId = '&lt;empty or not active function&gt;';
+				}
+				
+			if(trim($config->getFccPin()) !== null && (int)$config->getFccVisible() == 1){
+					$FCC_CorrectPin = (int)$this->sellerApi->checkFccPin();
+			}else{
+					$FCC_CorrectPin = '&lt;empty or not active function&gt;';
+				}
+		
         $this->addOutputMessage('--- Dotpay Diagnostic Information ---')
              ->addOutputMessage('PHP Version: '.  phpversion())
              ->addOutputMessage('Sdk Version: '.$config::SDK_VERSION)
              ->addOutputMessage('Enabled: '.(int)$config->getEnable(), true) 		 
              ->addOutputMessage('--- Dotpay PLN ---')
              ->addOutputMessage('Id: '.$config->getId())
-             ->addOutputMessage('Correct Id: '.(int)$this->paymentApi->checkSeller($config->getId()))
-             ->addOutputMessage('Correct Pin: '.(int)$this->sellerApi->checkPin())
+             ->addOutputMessage('Correct Id: '. $CorrectId)
+             ->addOutputMessage('Correct Pin: '.$CorrectPin)
              ->addOutputMessage('API Version: '.$config->getApi())
              ->addOutputMessage('Test Mode: '.(int)$config->getTestMode())
              ->addOutputMessage('Refunds: '.(int)$config->getRefundsEnable())
@@ -200,13 +227,12 @@ class Confirmation
              ->addOutputMessage('--- Separate Channels ---')
              ->addOutputMessage('One Click: '.(int)$config->getOcVisible())
              ->addOutputMessage('Credit Card: '.(int)$config->getCcVisible())
-             ->addOutputMessage('MasterPass: '.(int)$config->getMpVisible())
              ->addOutputMessage('Blik: '.(int)$config->getBlikVisible(), true)
              ->addOutputMessage('--- Dotpay FCC ---')
              ->addOutputMessage('FCC Mode: '.(int)$config->getFccVisible())
              ->addOutputMessage('FCC Id: '.$config->getFccId())
-             ->addOutputMessage('FCC Correct Id: '.(int)$this->paymentApi->checkSeller($config->getFccId()))
-             ->addOutputMessage('FCC Correct Pin: '.(int)$this->sellerApi->checkFccPin())
+  			 ->addOutputMessage('FCC Correct Id: '. $FCC_CorrectId)
+  			 ->addOutputMessage('FCC Correct Pin: '. $FCC_CorrectPin)
              ->addOutputMessage('FCC Currencies: '.$config->getFccCurrencies(), true)
              ->addOutputMessage('--- Dotpay API ---')
              ->addOutputMessage('Data: '.(($config->isGoodApiData())?'&lt;given&gt;':'&lt;empty&gt;'))

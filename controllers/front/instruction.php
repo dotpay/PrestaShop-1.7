@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay
+ * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -33,7 +33,7 @@ class dotpayinstructionModuleFrontController extends DotpayController
         parent::setMedia();
         $this->registerStylesheet(
             'dotpay-instruction-style',
-            'modules/'.$this->module->name.'/views/css/instruction.css',
+             'modules/'.$this->module->name.'/views/css/instruction.css',
             [
               'media' => 'all',
               'priority' => 20,

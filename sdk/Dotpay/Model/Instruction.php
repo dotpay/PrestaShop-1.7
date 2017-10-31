@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay
+ * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Model;
@@ -32,7 +32,7 @@ class Instruction
     /**
      * Name of the recipient of payment
      */
-    const RECIPIENT_NAME = 'DOTPAY SA';
+    const RECIPIENT_NAME = 'Dotpay sp. z o.o.';
     
     /**
      * Street of the recipient of payment

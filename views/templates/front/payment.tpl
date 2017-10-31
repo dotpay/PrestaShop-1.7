@@ -51,7 +51,6 @@
             {/if}
         </div>
 		
-        <div class="agreementsMessage">{$agreementsMessage|escape:'htmlall':'UTF-8'}</div><br>
         <div class="agreements">
             {foreach from=$channel->getAgreements() item=agreement}
                 <label id="agreement_{$agreement->getName()}">

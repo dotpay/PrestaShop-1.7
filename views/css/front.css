@@ -99,10 +99,8 @@
 }
 
 div.agreements {
-    background-color: #fbfbfb;	
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+    padding: 2px;
+	text-align: right !important;
 }
 
 select[name="dotpay_card_list"] {
@@ -127,8 +125,7 @@ select[name="dotpay_card_list"] {
 .agreements label {
     width: 100%;
     display: block !important;
-    margin: 12px 0px 12px 0px;
-    text-align: left;
+    text-align: right;
     font-size: small;
     color: gray;
 }
