@@ -132,7 +132,7 @@
             <br />
             <p style="color: #555;">
                 {l s='You can download the latest version from' mod='dotpay'}
-                <a href="{$urlWithNewVersion|escape:'htmlall':'UTF-8'}" target="_blank">{l s='this page' mod='dotpay'}</a>.
+                <a href=""https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{l s='this page' mod='dotpay'}</a>.
             </p>
         </div>
     {elseif $canNotCheckPlugin}
