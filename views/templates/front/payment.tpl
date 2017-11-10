@@ -44,7 +44,7 @@
                 <p class="alert-total">{$totalMessage|escape:'htmlall':'UTF-8'}: {$totalAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</p>
             {/if}
             {foreach from=$channel->getViewFieldsHtml() item=field}
-                {$field nofilter}
+				{$field nofilter}
             {/foreach}
             {if $channel->getChannelId() != null}
             <input type="hidden" name="channel" value="{$channel->getChannelId()}" />

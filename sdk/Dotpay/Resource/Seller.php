@@ -167,7 +167,7 @@ class Seller extends Resource
     {
         $data = $this->getDataForPayout($payout);
         try {
-            $this->postData($this->getApiUrl('accounts/'.$seller->getId().'/payout/?format=json'), json_encode($data));
+            $this->postData($this->getApiUrl('accounts/'.$seller->getId().'/payout/?format=json'), json_encode($data, 320));
             return true;
         } catch (ResourceNotFoundException $ex) {
             throw new AccountNotFoundException($seller->getId());
@@ -189,11 +189,11 @@ class Seller extends Resource
                 'control' => $refund->getControl()
             ];
             if (function_exists('json_encode')) {
-                $data2send = json_encode($refundDetails, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+				$data2send = json_encode($refundDetails, 320);		
             } else {
                 throw new FunctionNotFoundException('json_encode');
             }
-            $this->postData($this->getApiUrl('payments/'.$refund->getPayment().'/refund/'), json_encode($data2send));
+            $this->postData($this->getApiUrl('payments/'.$refund->getPayment().'/refund/'), json_encode($data2send, 320));
             return true;
         } catch (ResourceNotFoundException $ex) {
             throw new OperationNotFoundException($refund->getPayment());

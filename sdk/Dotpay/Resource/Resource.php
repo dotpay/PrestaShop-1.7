@@ -128,6 +128,9 @@ abstract class Resource
      */
     protected function postData($url, $body)
     {
+					 $body = str_replace("\\\"","\"", $body);
+					 $body = str_replace("\"{","{", $body);
+					 $body = str_replace("}\"","}", $body);
         $this->curl->addOption(CURLOPT_POST, 1)
                    ->addOption(CURLOPT_POSTFIELDS, $body)
                    ->addOption(CURLOPT_USERPWD, $this->config->getUsername().':'.$this->config->getPassword());

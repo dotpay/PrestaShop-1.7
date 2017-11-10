@@ -103,7 +103,7 @@ class AdminDotpayRefundController extends ModuleAdminController
                 'currency' => $operation->getCurrency(),
             ];
             if (function_exists('json_encode')) {
-                $data2display = json_encode($details, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                $data2display = json_encode($details, 320);
             } else {
                 $data2display = \Tools::jsonEncode($details);
             }

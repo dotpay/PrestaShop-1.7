@@ -82,7 +82,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.8';
+        $this->version = '1.0.8.1';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -283,7 +283,7 @@ class dotpay extends PaymentModule
      */
     protected function renderForm()
     {
-        $this->context->controller->addJS($this->_path.'/views/js/chooseChannel.js');
+        $this->context->controller->addJS($this->_path.'views/js/chooseChannel.js');
         
         $helper = new HelperForm();
 
@@ -784,7 +784,7 @@ class dotpay extends PaymentModule
     {
         $this->context->controller->registerJavascript(
             'jquery-transit',
-            $this->_path.'/views/js/jquery.transit.js',
+			'modules/'.$this->name.'/views/js/jquery.transit.js',
             [
                 'position' => 'bottom',
                 'priority' => 5
@@ -792,7 +792,7 @@ class dotpay extends PaymentModule
         );
         $this->context->controller->registerJavascript(
             'dotpay-front',
-            $this->_path.'/views/js/front.js',
+			'modules/'.$this->name.'/views/js/front.js',
             [
                 'position' => 'bottom',
                 'priority' => 150
@@ -802,7 +802,7 @@ class dotpay extends PaymentModule
         if($this->context->controller instanceof OrderController) {
             $this->context->controller->registerJavascript(
                 'dotpay-select-cards',
-                $this->_path.'/views/js/selectCards.js',
+				'modules/'.$this->name.'/views/js/selectCards.js',
                 [
                     'position' => 'bottom',
                     'priority' => 10
@@ -810,14 +810,14 @@ class dotpay extends PaymentModule
             );
             $this->context->controller->registerJavascript(
                 'dotpay-animated-widget',
-                $this->_path.'/views/js/animatedWidget.js',
+				'modules/'.$this->name.'/views/js/animatedWidget.js',
                 [
                     'position' => 'bottom',
                     'priority' => 10
                 ]
             );
         }
-        $this->context->controller->addCSS($this->_path.'views/css/front.css');
+        $this->context->controller->addCSS('modules/'.$this->name.'/views/css/front.css');
     }
     
     /**
@@ -917,7 +917,7 @@ class dotpay extends PaymentModule
         $oneClick->setRegisterCardDescription("&nbsp;".$this->l('Register a new card'));
         $oneClick->setSavedCardsDescription("&nbsp;".$this->l('Select saved credit card'));
         $oneClick->setManageCardsDescription($this->l('Manage saved credit cards'));
-        $oneClick->setManageCardsUrl($this->context->link->getModuleLink($this->name, 'ocmanage', [], true));
+        $oneClick->setManageCardsUrl(htmlspecialchars($this->context->link->getModuleLink($this->name, 'ocmanage', [], true),ENT_COMPAT));
         if (Context::getContext()->customer) {
             $oneClick->setUserIsLogged(Context::getContext()->customer->isLogged());
         }
@@ -1045,10 +1045,14 @@ class dotpay extends PaymentModule
             if ($this->config->ifOrderCanBeRenewed(new DateTime($order->date_add))) {
                 $this->smarty->assign([
                     'isRenew' => $order->current_state == $this->config->getWaitingStatus(),
-                    'paymentUrl' => $context->link->getModuleLink('dotpay', 'renew', ['order_id'=>$order->id])
+                    'paymentUrl' => $context->link->getModuleLink('dotpay', 'renew', ['order_id'=>$order->id]),
+					'moduleDir2' => $this->_path
                 ]);
             }
-            return $this->display(__FILE__, 'renew.tpl');
+
+			return $this->display(__FILE__, 'renew.tpl');
+
+            
         }
     }
 

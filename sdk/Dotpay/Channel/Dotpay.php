@@ -159,7 +159,7 @@ class Dotpay extends Channel
             'disabledChannels' => $disableChanels,
             'host' => $this->config->getPaymentUrl().'payment_api/channels/'
         ];
-        return new Script(new PlainText('var dotpayWidgetConfig = '.json_encode($script).';'));
+        return new Script(new PlainText('var dotpayWidgetConfig = '.json_encode($script, 320).';'));
     }
     
     /**

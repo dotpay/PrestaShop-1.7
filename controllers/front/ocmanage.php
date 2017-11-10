@@ -26,8 +26,7 @@ class dotpayocmanageModuleFrontController extends DotpayController {
         parent::setMedia();
         $this->registerJavascript(
             'dotpay-ocmanage',
-            // 'modules/'.$this->module->name.'/views/js/ocmanage.js',
-            $this->_path.'/views/js/ocmanage.js',
+            'modules/'.$this->module->name.'/views/js/ocmanage.js',
             [
                 'position' => 'bottom',
                 'priority' => 10

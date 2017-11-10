@@ -158,7 +158,7 @@ class Oc extends Channel
      */
     public function getManageCardsUrl()
     {
-        return $this->manageCardsUrl;
+		return $this->manageCardsUrl;
     }
     
     /**
@@ -168,8 +168,8 @@ class Oc extends Channel
      */
     public function setManageCardsUrl($url)
     {
-        $this->manageCardsUrl = (string)$url;
-        return $this;
+         $this->manageCardsUrl = (string)$url;
+         return $this;
     }
     
     /**
