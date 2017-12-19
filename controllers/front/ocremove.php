@@ -23,7 +23,8 @@ require_once('dotpay.php');
 /**
  * Controller for removind card saved by One Click
  */
-class dotpayocremoveModuleFrontController extends DotpayController {
+class dotpayocremoveModuleFrontController extends DotpayController
+{
     /**
      * Remove saved credit card
      */

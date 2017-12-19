@@ -66,7 +66,7 @@ class dotpaybackModuleFrontController extends DotpayController
             $message = $this->module->l($e->getMessage());
         }
         
-        if($message === null) {
+        if ($message === null) {
             if (\Validate::isLoadedObject($order)) {
                 $currency = new \Currency($order->id_currency);
                 $params['total_to_pay'] = $order->getOrdersTotalPaid();

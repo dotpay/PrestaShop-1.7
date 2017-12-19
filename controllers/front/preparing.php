@@ -32,7 +32,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
             die;
         }
         
-        if(is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
+        if (is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
             unset(Context::getContext()->cookie->dotpay_renew);
             Context::getContext()->cookie->write();
         }
@@ -93,7 +93,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
             $order = new Order(Tools::getValue('order'));
         }
         $this->prepareChannel($order);
-        if($this->getChannel()->canHaveInstruction()) {
+        if ($this->getChannel()->canHaveInstruction()) {
             Tools::redirect(
                 $this->context->link->getModuleLink($this->module->name, 'instruction', [
                     'method' => Tools::getValue('method'),

@@ -1,16 +1,16 @@
 <?php
 /**
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Academic Free License (AFL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
- * 
+ *
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to tech@dotpay.pl so we can send you a copy immediately.
- * 
+ *
  * @author    Dotpay Team <tech@dotpay.pl>
  * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
@@ -44,10 +44,10 @@ class CreditCard extends \Dotpay\Model\CreditCard
      */
     public function __construct($id, $userId = '')
     {
-        if(!empty($userId)) {
+        if (!empty($userId)) {
             $this->setUserId($userId);
         }
-        if($id === null) {
+        if ($id === null) {
             return;
         }
         $card = Db::getInstance()->ExecuteS(
@@ -55,21 +55,21 @@ class CreditCard extends \Dotpay\Model\CreditCard
             FROM `'._DB_PREFIX_.self::TABLE_NAME.'` 
             WHERE cc_id = '.(int)$id
         );
-        if($card == false || count($card) != 1) {
+        if ($card == false || count($card) != 1) {
             return;
         }
         parent::__construct($card[0]['cc_id'], $card[0]['customer_id']);
         $this->setCustomerHash($card[0]['hash'])
              ->setRegisterDate(new DateTime($card[0]['register_date']))
              ->setOrderId($card[0]['order_id']);
-        if(!empty($card[0]['mask'])) {
+        if (!empty($card[0]['mask'])) {
             $this->setMask($card[0]['mask']);
         }
-        if(!empty($card[0]['card_id'])) {
+        if (!empty($card[0]['card_id'])) {
             $this->setCardId($card[0]['card_id']);
         }
         $loader = Loader::load();
-        if(!empty($card[0]['brand'])) {
+        if (!empty($card[0]['brand'])) {
             $this->setBrand($loader->get('CardBrand', [$card[0]['brand']]));
         }
         $this->obtained = true;
@@ -89,8 +89,8 @@ class CreditCard extends \Dotpay\Model\CreditCard
                 return false;
             }
         }
-        if($this->obtained) {
-            if($this->getBrand() !== null) {
+        if ($this->obtained) {
+            if ($this->getBrand() !== null) {
                 $this->getBrand()->save();
             }
             return $this->update();
@@ -130,7 +130,7 @@ class CreditCard extends \Dotpay\Model\CreditCard
      */
     private function update()
     {
-        if($this->getId() === null) {
+        if ($this->getId() === null) {
             return false;
         }
         $brand = ($this->getBrand()==null)?null:pSQL($this->getBrand()->getName());
@@ -153,8 +153,9 @@ class CreditCard extends \Dotpay\Model\CreditCard
      * Remove the credit card from database
      * @return boolean
      */
-    public function delete() {
-        if($this->getId() === null) {
+    public function delete()
+    {
+        if ($this->getId() === null) {
             return false;
         }
         return Db::getInstance()->execute(
@@ -185,7 +186,8 @@ class CreditCard extends \Dotpay\Model\CreditCard
      * Create table for this model
      * @return boolean
      */
-    public static function install(){
+    public static function install()
+    {
         return Db::getInstance()->execute(
             'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.self::TABLE_NAME.'` (
                 `cc_id` BIGINT(20) UNSIGNED NOT null AUTO_INCREMENT,
@@ -213,7 +215,8 @@ class CreditCard extends \Dotpay\Model\CreditCard
      * Drop table for this model
      * @return boolean
      */
-    public static function uninstall(){
+    public static function uninstall()
+    {
         return Db::getInstance()->execute(
             'DROP TABLE IF EXISTS `'._DB_PREFIX_.self::TABLE_NAME.'`;'
         );

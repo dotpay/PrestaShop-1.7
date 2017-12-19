@@ -105,7 +105,7 @@ class Configuration extends \Dotpay\Model\Configuration
     {
         parent::__construct($pluginId);
         foreach ($this->modelMap as $key => $fname) {
-            if(($readValue = $this->getFromExtendedSource($key)) !== null) {
+            if (($readValue = $this->getFromExtendedSource($key)) !== null) {
                 $fname = 'set'.$fname;
                 $this->$fname($readValue);
             }
@@ -429,7 +429,7 @@ class Configuration extends \Dotpay\Model\Configuration
     public function readFromForm()
     {
         foreach ($this->modelMap as $key => $fname) {
-            if(($readValue = \Tools::getValue($key, null)) !== null) {
+            if (($readValue = \Tools::getValue($key, null)) !== null) {
                 $fname = 'set'.$fname;
                 $this->$fname($readValue);
             }
@@ -471,28 +471,29 @@ class Configuration extends \Dotpay\Model\Configuration
      * @param string $name Name of requested value
      * @return mixed
      */
-    private function getFromExtendedSource($name) {
+    private function getFromExtendedSource($name)
+    {
         $context = \Context::getContext();
         //Language id
-        if(isset($context->id_lang)) {
+        if (isset($context->id_lang)) {
             $langId = (int)$context->id_lang;
-        } else if(isset($context->language) && isset($context->language->id_lang)) {
+        } elseif (isset($context->language) && isset($context->language->id_lang)) {
             $langId = (int)$context->language->id_lang;
         } else {
             $langId = (int)\Configuration::get('PS_LANG_DEFAULT');
         }
         //Shop group id
-        if(isset($context->id_shop_group)) {
+        if (isset($context->id_shop_group)) {
             $shopGroupId = (int)$context->id_shop_group;
-        } else if(isset($context->shop) && isset($context->shop->id_shop_group)) {
+        } elseif (isset($context->shop) && isset($context->shop->id_shop_group)) {
             $shopGroupId = (int)$context->shop->id_shop_group;
         } else {
             $shopGroupId = null;
         }
         //Shop id
-        if(isset($context->id_shop)) {
+        if (isset($context->id_shop)) {
             $shopId = (int)$context->id_shop;
-        } else if(isset($context->shop) && isset($context->shop->id_shop)) {
+        } elseif (isset($context->shop) && isset($context->shop->id_shop)) {
             $shopId = (int)$context->shop->id_shop;
         } else {
             $shopId = null;

@@ -57,10 +57,10 @@
     {/if}
     <script type="text/javascript">
     {literal}
-        var onRemoveMessage = '{/literal}{$onRemoveMessage nofilter}{literal}';
-        var onDoneMessage = '{/literal}{$onDoneMessage nofilter}{literal}';
-        var onFailureMessage = '{/literal}{$onFailureMessage nofilter}{literal}';
-        var removeUrl = '{/literal}{$removeUrl nofilter}{literal}';
+        var onRemoveMessage = '{/literal}{$onRemoveMessage}{literal}';
+        var onDoneMessage = '{/literal}{$onDoneMessage}{literal}';
+        var onFailureMessage = '{/literal}{$onFailureMessage}{literal}';
+        var removeUrl = '{/literal}{$removeUrl}{literal}';
     {/literal}
     </script>
     

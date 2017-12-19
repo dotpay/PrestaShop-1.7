@@ -61,19 +61,19 @@ class dotpayinstructionModuleFrontController extends DotpayController
         try {
             $this->initializeOrderData();
             $this->prepareChannel(new Order(Tools::getValue('order')));
-        } catch(RuntimeException $ex) {
+        } catch (RuntimeException $ex) {
             die($ex->getMessage());
         }
         $loader = Loader::load();
         
-        if(!$this->getChannel()->canHaveInstruction()) {
+        if (!$this->getChannel()->canHaveInstruction()) {
             die($this->module->l('Incorrect method for the given channel'));
         }
         
         try {
             $instruction = $loader->get('Instruction', [Tools::getValue('order'), Tools::getValue('channel')]);
             $initialized = false;
-            if($instruction->getId() == null) {
+            if ($instruction->getId() == null) {
                 $registerOrder = $loader->get('RegisterOrder');
                 $instruction = $registerOrder->create($this->getChannel())->getInstruction();
                 $instruction->save();
@@ -98,7 +98,7 @@ class dotpayinstructionModuleFrontController extends DotpayController
                 'isOk' =>  true,
                 'initialized' => $initialized
             ]);
-        } catch(RuntimeException $ex) {
+        } catch (RuntimeException $ex) {
             $this->errors[] = $this->module->l('The error with initializing payment occured. Please try to refresh the page or conttact with seller.');
             $this->context->smarty->assign([
                 'isOk' =>  false

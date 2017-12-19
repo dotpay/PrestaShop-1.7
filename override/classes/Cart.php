@@ -27,7 +27,7 @@ class Cart extends CartCore
      */
     public function OrderExists()
     {
-        if(is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
+        if (is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
             return false;
         }
         return parent::OrderExists();

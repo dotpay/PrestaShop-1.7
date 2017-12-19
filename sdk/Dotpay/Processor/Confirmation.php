@@ -351,6 +351,7 @@ class Confirmation
         if (
            $operation->getStatus() == $operation::STATUS_COMPLETE &&
            $this->notification->getChannelId() == $config::OC_CHANNEL &&
+           $this->config->isGoodApiData() === 1 &&
            $this->updateCcAction !== null
           ) {
             $creditCard = null;

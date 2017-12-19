@@ -31,7 +31,8 @@ class Order extends \Dotpay\Model\Order
      * Return an amount of shipping
      * @return float
      */
-    public function getShippingAmount() {
+    public function getShippingAmount()
+    {
         return $this->shippingAmount;
     }
     
@@ -41,8 +42,9 @@ class Order extends \Dotpay\Model\Order
      * @param array|Currency $currency Data of the order currency
      * @return float
      */
-    public function getSurchargeAmount(Configuration $config, $currency = null) {
-        if($currency === null) {
+    public function getSurchargeAmount(Configuration $config, $currency = null)
+    {
+        if ($currency === null) {
             $price = $this->getSurcharge($config);
         } else {
             $price = \Tools::convertPrice($this->getSurcharge($config), $currency, false);
@@ -56,7 +58,8 @@ class Order extends \Dotpay\Model\Order
      * @param array|Currency $currency Data of the order currency
      * @return float
      */
-    public function getExtrachargeAmount(Configuration $config, $currency = null) {
+    public function getExtrachargeAmount(Configuration $config, $currency = null)
+    {
         if (!$config->getExtracharge()) {
             return 0.0;
         }
@@ -126,7 +129,8 @@ class Order extends \Dotpay\Model\Order
      * @param float $shippingAmount
      * @return Order
      */
-    public function setShippingAmount($shippingAmount) {
+    public function setShippingAmount($shippingAmount)
+    {
         $this->shippingAmount = $shippingAmount;
         return $this;
     }

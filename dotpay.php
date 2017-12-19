@@ -47,10 +47,11 @@ include(__DIR__.'/sdk/dotpay.bootstrap.php');
  * Load an overriden class
  * @param string $className Full name of class
  */
-function dotpayOverrideApiLoader($className) {
+function dotpayOverrideApiLoader($className)
+{
     $location = str_replace('Prestashop', 'classes', str_replace('\\', '/', $className));
     $path = __DIR__.'/'.$location.'.php';
-    if(file_exists($path))
+    if (file_exists($path))
         include_once($path);
 }
 
@@ -82,7 +83,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.8.1';
+        $this->version = '1.0.8.2';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -212,10 +213,10 @@ class dotpay extends PaymentModule
             } catch (DotpayException $e) {
                 $testSellerPin = false;
             }
-            if(!isset($testSellerId)) {
+            if (!isset($testSellerId)) {
                 $testSellerId = false;
             }
-            if(!isset($testApiAccount)) {
+            if (!isset($testApiAccount)) {
                 $testApiAccount = false;
             }
             try {
@@ -259,7 +260,7 @@ class dotpay extends PaymentModule
                 'canNotCheckPlugin' => $canNotCheckPlugin,
                 'availableChannels' => $availableChannels,
             ];
-            if($saved === false) {
+            if ($saved === false) {
                 $templateData['universalErrorMessage'] = false;
             }
             $this->context->smarty->assign($templateData);
@@ -799,7 +800,7 @@ class dotpay extends PaymentModule
             ]
         );
         
-        if($this->context->controller instanceof OrderController) {
+        if ($this->context->controller instanceof OrderController) {
             $this->context->controller->registerJavascript(
                 'dotpay-select-cards',
 				'modules/'.$this->name.'/views/js/selectCards.js',
@@ -845,7 +846,7 @@ class dotpay extends PaymentModule
             $exAmount = $order->getExtrachargeAmount($this->config);
             $surAmount = $order->getSurchargeAmount($this->config);
             $reductAmount = $order->getReductionAmount($this->config);
-            if($exAmount || $reductAmount || $surAmount) {
+            if ($exAmount || $reductAmount || $surAmount) {
                 $totalAmount = $order->getAmount() + $surAmount - $reductAmount;
                 if (!$this->isVirtualProductInCart($this->config, $this->context->cart)) {
                     $totalAmount += $exAmount;
@@ -891,7 +892,8 @@ class dotpay extends PaymentModule
      * Return a list of channels which are available or not
      * @return ChannelList
      */
-    private function getChannels() {
+    private function getChannels()
+    {
         $channelList = new ChannelList();
         
         $oneClick = $this->sdkLoader->get('Oc');
@@ -972,8 +974,8 @@ class dotpay extends PaymentModule
     {
         $arguments = [];
         $arguments['method'] = $channel->getCode();
-        if(is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
-            if($cardId = (int)Context::getContext()->cookie->id_cart) {
+        if (is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
+            if ($cardId = (int)Context::getContext()->cookie->id_cart) {
                 $arguments['order'] = (int)Order::getOrderByCartId($cardId);
             }
         }
@@ -985,8 +987,9 @@ class dotpay extends PaymentModule
      * @param array $params Information about a current cart
      * @throws IncompleteDataException Thrown when given data is incompleted
      */
-    private function initializeChannelsDataFromCart($params) {
-        if(!empty($params['cart']->id_customer)) {
+    private function initializeChannelsDataFromCart($params)
+    {
+        if (!empty($params['cart']->id_customer)) {
             $originalCustomer = new Customer($params['cart']->id_customer);
             $this->sdkLoader->parameter('Customer:email', $originalCustomer->email);
             $this->sdkLoader->parameter('Customer:firstName', $originalCustomer->firstname);
@@ -1188,7 +1191,8 @@ class dotpay extends PaymentModule
      * @param Product $product Dotpay virtual product object
      * @return boolean
      */
-    private function isVPIncomplete(Product $product) {
+    private function isVPIncomplete(Product $product)
+    {
         return (
             empty($product->name) ||
             empty($product->link_rewrite) ||

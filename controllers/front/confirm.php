@@ -46,7 +46,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
             
             /* ---- UPDATE CC ---- */
             $updateCcAction = new UpdateCcInfo(
-                function(CreditCard $cc) {
+                function (CreditCard $cc) {
                     $cc->save();
                     return true;
                 }
@@ -56,11 +56,11 @@ class dotpayconfirmModuleFrontController extends DotpayController
             /* ---- PAYMENT ---- */
             $config = $this->getConfig();
             $paymentAction = new MakePaymentOrRefund(
-                function(Operation $operation) use ($config, $loader) {
+                function (Operation $operation) use ($config, $loader) {
                     $control = explode('/', (string)$operation->getControl());
                     $order = new Order($control[0]);
                     $brotherOrders = [$order];
-                    foreach($order->getBrother() as $brotherOrder) {
+                    foreach ($order->getBrother() as $brotherOrder) {
                         $brotherOrders[] = $brotherOrder;
                     }
                     foreach ($brotherOrders as $order) {
@@ -93,13 +93,13 @@ class dotpayconfirmModuleFrontController extends DotpayController
                                 }
                                 $loader->get('Instruction', [$order->id])->deleteForOrder();
                             }
-                        } else if($lastOrderState->id == $newOrderState && $newOrderState == _PS_OS_OUTOFSTOCK_UNPAID_) {
+                        } elseif ($lastOrderState->id == $newOrderState && $newOrderState == _PS_OS_OUTOFSTOCK_UNPAID_) {
                             return true;
                         } else {
                             $stateName = "OTHER NAME";
-                            if(is_array($lastOrderState->name) && count($lastOrderState->name)) {
+                            if (is_array($lastOrderState->name) && count($lastOrderState->name)) {
                                 $stateName = $lastOrderState->name[0];
-                            } else if(is_string($lastOrderState->name)) {
+                            } elseif (is_string($lastOrderState->name)) {
                                 $stateName = $lastOrderState->name;
                             }
                             throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$stateName.') IS ALERADY REGISTERED');
@@ -112,7 +112,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
             
             /* ---- REFUND ---- */
             $refundAction = new MakePaymentOrRefund(
-                function(Operation $operation) use ($config, $loader) {
+                function (Operation $operation) use ($config, $loader) {
                     if ($operation->getStatus() != $operation::STATUS_COMPLETE && $operation->getStatus() != $operation::STATUS_REJECTED) {
                         return true;
                     }
@@ -174,7 +174,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
             );
             $confirmProcessor->setMakeRefundAction($refundAction);
             
-            if($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) {
+            if ($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) {
                 die('OK');
             } else {
                 die('PRESTASHOP - AN ERROR OCCURED');
@@ -192,21 +192,22 @@ class dotpayconfirmModuleFrontController extends DotpayController
      * @param \OrderState $lastOrderState PrestaShop object with last order state
      * @return int
      */
-    private function getNewOrderState(Operation $operation, $lastOrderState) {
+    private function getNewOrderState(Operation $operation, $lastOrderState)
+    {
         $actualState = null;
         switch ($operation->getStatus()) {
             case $operation::STATUS_NEW:
             case $operation::STATUS_PROCESSING:
             case 'processing_realization_waiting':
             case 'processing_realization':
-                if($lastOrderState->id == _PS_OS_OUTOFSTOCK_UNPAID_) {
+                if ($lastOrderState->id == _PS_OS_OUTOFSTOCK_UNPAID_) {
                     $actualState = _PS_OS_OUTOFSTOCK_UNPAID_;
                 } else {
                     $actualState = $this->getConfig()->getWaitingStatus();
                 }
                 break;
             case $operation::STATUS_COMPLETE:
-                if($lastOrderState->id == _PS_OS_OUTOFSTOCK_UNPAID_) {
+                if ($lastOrderState->id == _PS_OS_OUTOFSTOCK_UNPAID_) {
                     $actualState = _PS_OS_OUTOFSTOCK_PAID_;
                 } else {
                     $actualState = _PS_OS_PAYMENT_;
