@@ -20,7 +20,7 @@ use Dotpay\Loader\Loader;
 
 require_once('dotpay.php');
 
-class dotpayocmanageModuleFrontController extends DotpayController
+class dotpayocmanageModuleFrontController extends DotpayController 
 {
     public function setMedia()
     {

@@ -471,8 +471,8 @@ class Configuration extends \Dotpay\Model\Configuration
      * @param string $name Name of requested value
      * @return mixed
      */
-    private function getFromExtendedSource($name)
-    {
+    private function getFromExtendedSource($name) 
+	{
         $context = \Context::getContext();
         //Language id
         if (isset($context->id_lang)) {

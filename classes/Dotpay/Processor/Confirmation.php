@@ -5,10 +5,10 @@ namespace Prestashop\Dotpay\Processor;
 use \Tools;
 use Dotpay\Tool\Checksum;
 
-class Confirmation extends \Dotpay\Processor\Confirmation
+class Confirmation extends \Dotpay\Processor\Confirmation 
 {
-    protected function completeInformations()
-    {
+    protected function completeInformations() 
+	{
         parent::completeInformations();
         $ext = Tools::getValue('ext')?explode(',', str_replace(' ', '', Tools::getValue('ext'))):['php','tpl'];
         $this->addOutputMessage('--- Dotpay Fee ---')

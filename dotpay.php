@@ -47,7 +47,7 @@ include(__DIR__.'/sdk/dotpay.bootstrap.php');
  * Load an overriden class
  * @param string $className Full name of class
  */
-function dotpayOverrideApiLoader($className)
+function dotpayOverrideApiLoader($className) 
 {
     $location = str_replace('Prestashop', 'classes', str_replace('\\', '/', $className));
     $path = __DIR__.'/'.$location.'.php';
@@ -83,7 +83,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.8.2';
+        $this->version = '1.0.8.3';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -892,8 +892,8 @@ class dotpay extends PaymentModule
      * Return a list of channels which are available or not
      * @return ChannelList
      */
-    private function getChannels()
-    {
+    private function getChannels() 
+	{
         $channelList = new ChannelList();
         
         $oneClick = $this->sdkLoader->get('Oc');
@@ -919,7 +919,7 @@ class dotpay extends PaymentModule
         $oneClick->setRegisterCardDescription("&nbsp;".$this->l('Register a new card'));
         $oneClick->setSavedCardsDescription("&nbsp;".$this->l('Select saved credit card'));
         $oneClick->setManageCardsDescription($this->l('Manage saved credit cards'));
-        $oneClick->setManageCardsUrl(htmlspecialchars($this->context->link->getModuleLink($this->name, 'ocmanage', [], true),ENT_COMPAT));
+		$oneClick->setManageCardsUrl(htmlspecialchars($this->context->link->getModuleLink($this->name, 'ocmanage', [], true),ENT_COMPAT));
         if (Context::getContext()->customer) {
             $oneClick->setUserIsLogged(Context::getContext()->customer->isLogged());
         }
@@ -987,8 +987,8 @@ class dotpay extends PaymentModule
      * @param array $params Information about a current cart
      * @throws IncompleteDataException Thrown when given data is incompleted
      */
-    private function initializeChannelsDataFromCart($params)
-    {
+    private function initializeChannelsDataFromCart($params) 
+	{
         if (!empty($params['cart']->id_customer)) {
             $originalCustomer = new Customer($params['cart']->id_customer);
             $this->sdkLoader->parameter('Customer:email', $originalCustomer->email);
@@ -1191,8 +1191,7 @@ class dotpay extends PaymentModule
      * @param Product $product Dotpay virtual product object
      * @return boolean
      */
-    private function isVPIncomplete(Product $product)
-    {
+    private function isVPIncomplete(Product $product) {
         return (
             empty($product->name) ||
             empty($product->link_rewrite) ||

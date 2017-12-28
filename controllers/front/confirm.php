@@ -174,7 +174,8 @@ class dotpayconfirmModuleFrontController extends DotpayController
             );
             $confirmProcessor->setMakeRefundAction($refundAction);
             
-            if ($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) {
+            if ($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) 
+			{
                 die('OK');
             } else {
                 die('PRESTASHOP - AN ERROR OCCURED');
@@ -192,8 +193,8 @@ class dotpayconfirmModuleFrontController extends DotpayController
      * @param \OrderState $lastOrderState PrestaShop object with last order state
      * @return int
      */
-    private function getNewOrderState(Operation $operation, $lastOrderState)
-    {
+    private function getNewOrderState(Operation $operation, $lastOrderState) 
+	{
         $actualState = null;
         switch ($operation->getStatus()) {
             case $operation::STATUS_NEW:

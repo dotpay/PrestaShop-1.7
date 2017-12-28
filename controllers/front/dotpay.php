@@ -30,8 +30,7 @@ use Prestashop\Dotpay\Model\Configuration;
 /**
  * Abstract controller, common for all other controllers in this plugin
  */
-abstract class DotpayController extends ModuleFrontController
-{
+abstract class DotpayController extends ModuleFrontController {
     /**
      * @var Loader Instance of SDK Loader
      */
@@ -60,8 +59,8 @@ abstract class DotpayController extends ModuleFrontController
     /**
      * Initialize the constructor
      */
-    public function __construct()
-    {
+    public function __construct() 
+	{
         parent::__construct();
         $this->loader = Loader::load();
         $this->config = $this->loader->get('Config');
@@ -71,8 +70,8 @@ abstract class DotpayController extends ModuleFrontController
      * Initialize data for Dotpay Order
      * @param boolean $afterOrder Flag if the initialization is done after creating an order
      */
-    protected function initializeOrderData($afterOrder = false)
-    {
+    protected function initializeOrderData($afterOrder = false) 
+	{
         $originalCustomer = new Customer($this->getCart()->id_customer);
         $this->loader->parameter('Customer:email', $originalCustomer->email);
         $this->loader->parameter('Customer:firstName', $originalCustomer->firstname);
@@ -119,8 +118,8 @@ abstract class DotpayController extends ModuleFrontController
      * Prepare the Dotpay Channel for the given order
      * @param Order $order Prestashop Order object
      */
-    protected function prepareChannel($order)
-    {
+    protected function prepareChannel($order) 
+	{
         switch (Tools::getValue('method')) {
             case Oc::CODE:
                 $this->channel = $this->loader->get('Oc');
@@ -199,8 +198,8 @@ abstract class DotpayController extends ModuleFrontController
      * Return the prepared channel
      * @return Channel
      */
-    protected function getChannel()
-    {
+    protected function getChannel() 
+	{
         return $this->channel;
     }
 
@@ -208,8 +207,8 @@ abstract class DotpayController extends ModuleFrontController
      * Return the Prestashop Cart
      * @return Cart
      */
-    protected function getCart()
-    {
+    protected function getCart() 
+	{
         if ($this->cartObject === null) {
             $this->cartObject = Context::getContext()->cart;
         }
@@ -220,8 +219,8 @@ abstract class DotpayController extends ModuleFrontController
      * Return an object of Prestashop Currency
      * @return Currency
      */
-    protected function getCurrencyObject()
-    {
+    protected function getCurrencyObject() 
+	{
         return Currency::getCurrency($this->getCart()->id_currency);
     }
     
@@ -229,8 +228,8 @@ abstract class DotpayController extends ModuleFrontController
      * Return configuration of the plugin
      * @return Configuration
      */
-    protected function getConfig()
-    {
+    protected function getConfig() 
+	{
         return $this->config;
     }
     
@@ -238,8 +237,8 @@ abstract class DotpayController extends ModuleFrontController
      * Return the Prestashop Order object
      * @return \Prestashop\Dotpay\Model\Order
      */
-    protected function getOrder()
-    {
+    protected function getOrder() 
+	{
         return $this->order;
     }
     
@@ -261,8 +260,8 @@ abstract class DotpayController extends ModuleFrontController
      * Set the given card object
      * @param Cart $cart Cart object
      */
-    protected function setCart($cart)
-    {
+    protected function setCart($cart) 
+	{
         $this->cartObject = $cart;
     }
     

@@ -22,14 +22,14 @@ use \Context;
 /**
  * Overriden class of Dotpay main channel. It allows to adapt SDK features of channels for Prestashop
  */
-class Dotpay extends \Dotpay\Channel\Dotpay
+class Dotpay extends \Dotpay\Channel\Dotpay 
 {
     /**
      * Return an URL of image which is a logo of the channel
      * @return string
      */
-    public function getLogo()
-    {
+    public function getLogo() 
+	{
         if ($this->getChannelId() != null) {
             return parent::getLogo();
         } else {

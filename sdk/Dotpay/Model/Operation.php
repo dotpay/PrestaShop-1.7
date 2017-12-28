@@ -521,12 +521,12 @@ class Operation
     
     /**
      * Set a flag if operation is marked as completed in Seller panel
-     * @param boolean $completed A flag if operation is marked as completed in Seller panel
+     * @param $completed A flag if operation is marked as completed in Seller panel
      * @return Operation
      */
     public function setCompleted($completed)
     {
-        $this->completed = (boolean)$completed;
+        $this->completed = $completed;
         return $this;
     }
     
