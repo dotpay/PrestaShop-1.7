@@ -44,6 +44,10 @@
     {else}
         <p>{l s='Paments provide Dotpay' mod='dotpay'}</p>
     {/if}
+	{if isset($DotpayTrId)}
+		 {l s='This payment was processed in' mod='dotpay'} <a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl">Dotpay</a> {l s='at the number:' mod='dotpay'}
+		 <strong>{$DotpayTrId|escape:'htmlall':'UTF-8'}</strong>
+	{/if}
 	{if isset($isInstruction) && $isInstruction == true}
         <hr />
         <p>{l s='You can see instruction of payment completion.' mod='dotpay'}</p>

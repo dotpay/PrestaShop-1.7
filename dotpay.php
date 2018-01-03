@@ -83,7 +83,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.8.3';
+        $this->version = '1.0.8.4';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -1044,12 +1044,20 @@ class dotpay extends PaymentModule
                     ]),
                 ));
             }
-            
-            if ($this->config->ifOrderCanBeRenewed(new DateTime($order->date_add))) {
+     	
+		$payment2 = OrderPayment::getByOrderId($order->id);
+			if (count($payment2) > 0) {
+				$Dotpay_transaction_id = $payment2[0]->transaction_id;
+			}else{
+				$Dotpay_transaction_id = null;
+			}       
+        
+		if ($this->config->ifOrderCanBeRenewed(new DateTime($order->date_add))) {
                 $this->smarty->assign([
                     'isRenew' => $order->current_state == $this->config->getWaitingStatus(),
                     'paymentUrl' => $context->link->getModuleLink('dotpay', 'renew', ['order_id'=>$order->id]),
-					'moduleDir2' => $this->_path
+					'moduleDir2' => $this->_path,
+					'DotpayTrId' => $Dotpay_transaction_id
                 ]);
             }
 
