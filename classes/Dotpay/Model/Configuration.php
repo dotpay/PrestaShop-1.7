@@ -477,8 +477,8 @@ class Configuration extends \Dotpay\Model\Configuration
         //Language id
         if (isset($context->id_lang)) {
             $langId = (int)$context->id_lang;
-        } elseif (isset($context->language) && isset($context->language->id_lang)) {
-            $langId = (int)$context->language->id_lang;
+        } elseif (isset($context->language) && isset($context->language->id)) {
+            $langId = (int)$context->language->id;
         } else {
             $langId = (int)\Configuration::get('PS_LANG_DEFAULT');
         }
@@ -493,8 +493,8 @@ class Configuration extends \Dotpay\Model\Configuration
         //Shop id
         if (isset($context->id_shop)) {
             $shopId = (int)$context->id_shop;
-        } elseif (isset($context->shop) && isset($context->shop->id_shop)) {
-            $shopId = (int)$context->shop->id_shop;
+        } elseif (isset($context->shop) && isset($context->shop->id)) {
+            $shopId = (int)$context->shop->id;
         } else {
             $shopId = null;
         }

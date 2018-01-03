@@ -104,10 +104,10 @@ abstract class DotpayController extends ModuleFrontController {
             preg_replace("/[^-0-9\.]/", '', str_replace(',', '.', $orderAmount))
         );
         //$orderAmount = \Tools::convertPrice($orderAmount, $currency["id_currency"], false);
-        $orderAmount = AmountFormatter::format($orderAmount, $currency["id_currency"]);
+        $orderAmount = AmountFormatter::format($orderAmount, $currency->id);
         $this->loader->parameter('Order:id', null);
         $this->loader->parameter('Order:amount', $orderAmount);
-        $this->loader->parameter('Order:currency', $currency['iso_code']);
+        $this->loader->parameter('Order:currency', $currency->iso_code);
         $this->loader->parameter('PaymentModel:description', '');
         
         $this->order = $this->loader->get('Order');
@@ -221,7 +221,7 @@ abstract class DotpayController extends ModuleFrontController {
      */
     protected function getCurrencyObject() 
 	{
-        return Currency::getCurrency($this->getCart()->id_currency);
+        return new Currency($this->getCart()->id_currency);
     }
     
     /**
