@@ -232,3 +232,5 @@ $_MODULE['<{dotpay}prestashop>renew_83a6a542583767804d3f9aa7e46e252b'] = 'Zobacz
 $_MODULE['<{dotpay}prestashop>dotpay_83fa39a28a4d159061c408fbd6a249e7'] = 'Zamównienie nr:';
 $_MODULE['<{dotpay}prestashop>dotpay_a62c0dd6631b85c54e2de09c30bf7844'] = 'niewliczona opłata manipulacyjna';
 $_MODULE['<{dotpay}prestashop>dotpay_3a23a798a977c57fb39a964018666b0d'] = 'Żądanie zostało prawdopodobnie zmodyfikowane podczas transmisji. Błądna suma kontrolna.';
+$_MODULE['<{dotpay}prestashop>dotpay_a203c39a340e1d45069b1ba64e1d003a'] = 'UWAGA!';
+$_MODULE['<{dotpay}prestashop>dotpay_b316d9245c15250bc0494f2f8e897e46'] = 'Ten sklep używa trybu testowego płatności Dotpay. Płatności są tylko symulowane a Twoje zamówienie nie będzie zrealizowane!';

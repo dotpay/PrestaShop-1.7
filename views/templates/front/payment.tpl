@@ -31,6 +31,9 @@
             {$script nofilter}
         {/if}
         <div class="channel-data">
+			{if $isTestMode}
+                <p class="alert alert-danger"><strong>{$testModeMessage1|escape:'htmlall':'UTF-8'}</strong> {$testModeMessage2|escape:'htmlall':'UTF-8'}</p>
+            {/if}
             {if $surAmount > 0}
                 <p class="alert alert-danger">{$surMessage|escape:'htmlall':'UTF-8'}: <strong>{$surAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</strong>.</p>
             {/if}

@@ -83,7 +83,6 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.8.4';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -869,7 +868,10 @@ class dotpay extends PaymentModule
                     'reductMessage' => $this->l('This payment will be reduced by'),
                     'agreementsMessage' => $this->l('Acceptance Dotpay regulation:'),
                     'totalMessage' => $this->l('Total amount for payment'),
-                    'totalAmount' => number_format($totalAmount, 2, '.', ' ')
+                    'totalAmount' => number_format($totalAmount, 2, '.', ' '),
+                    'isTestMode' => $this->config->getTestMode(),
+					'testModeMessage1' => $this->l('Attention!'),
+					'testModeMessage2' => $this->l('This store uses the Dotpay test payment mode. Payments are only simulated and your order will not be processed!'),
                 ]);
                 $newOption = new PaymentOption();
                 $newOption->setCallToActionText($channel->getTitle())
