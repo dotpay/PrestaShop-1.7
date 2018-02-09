@@ -27,7 +27,7 @@ class Username implements IValidate {
      * @return boolean
      */
     public static function validate($value) {
-        return ((bool)filter_var($value, FILTER_VALIDATE_EMAIL) || (preg_match('/^[A-Za-z0-9\.]{6,}$/', $value) == 1));
+        return ((bool)filter_var($value, FILTER_VALIDATE_EMAIL) || (preg_match('/^[A-Za-z0-9\.@]{6,}$/', $value) == 1));
     }
 }
 
