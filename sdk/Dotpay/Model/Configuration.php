@@ -35,7 +35,7 @@ class Configuration
     /**
      * Version of the SDK
      */
-    const SDK_VERSION = '1.0.3';
+    const SDK_VERSION = '1.0.3.1';
 	
     /**
      * Url of Dotpay payment production server
