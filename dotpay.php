@@ -83,7 +83,7 @@ class dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.9.1';
+        $this->version = '1.0.9.2';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -1009,7 +1009,7 @@ class dotpay extends PaymentModule
             unset($originalCustomer);
             unset($customer);
             unset($currency);
-        } else {
+        } else if(Context::getContext()->customer->isLogged()) {
             throw new IncompleteDataException('Customer id');
         }
     }
