@@ -21,9 +21,9 @@ use Dotpay\Loader\Loader;
 require_once('dotpay.php');
 
 /**
- * Controller for removind card saved by One Click
+ * Controller for removing card saved by One Click
  */
-class dotpayocremoveModuleFrontController extends DotpayController 
+class DotpayOcRemoveModuleFrontController extends DotpayController
 {
     /**
      * Remove saved credit card
@@ -33,7 +33,7 @@ class dotpayocremoveModuleFrontController extends DotpayController
         $this->display_column_left = false;
         parent::initContent();
         $loader = Loader::load();
-        $cc = $loader->get('CreditCard', [Tools::getValue('card_id')]);
+        $cc = $loader->get('CreditCard', array(Tools::getValue('card_id')));
         if ($cc->getId() != null) {
             $cc->delete();
             die('OK');

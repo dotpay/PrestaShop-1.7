@@ -23,7 +23,7 @@ include_once('dotpay.php');
 /**
  * Controller for creating and displaying instructions of payments finishing for cash and transfer channels
  */
-class dotpayinstructionModuleFrontController extends DotpayController
+class DotpayInstructionModuleFrontController extends DotpayController
 {
     /**
      * Add additional media (CSS and JS)
@@ -33,11 +33,11 @@ class dotpayinstructionModuleFrontController extends DotpayController
         parent::setMedia();
         $this->registerStylesheet(
             'dotpay-instruction-style',
-             'modules/'.$this->module->name.'/views/css/instruction.css',
-            [
+            'modules/'.$this->module->name.'/views/css/instruction.css',
+            array(
               'media' => 'all',
               'priority' => 20,
-            ]
+            )
         );
     }
     
@@ -71,7 +71,7 @@ class dotpayinstructionModuleFrontController extends DotpayController
         }
         
         try {
-            $instruction = $loader->get('Instruction', [Tools::getValue('order'), Tools::getValue('channel')]);
+            $instruction = $loader->get('Instruction', array(Tools::getValue('order'), Tools::getValue('channel')));
             $initialized = false;
             if ($instruction->getId() == null) {
                 $registerOrder = $loader->get('RegisterOrder');
@@ -86,7 +86,7 @@ class dotpayinstructionModuleFrontController extends DotpayController
                 $buttonTitle = $this->module->l('Make a money transfer');
                 $address = $instruction->getBankPage($this->getConfig());
             }
-            $this->context->smarty->assign([
+            $this->context->smarty->assign(array(
                 'instruction' => $instruction,
                 'recipient_name' => $instruction::RECIPIENT_NAME,
                 'recipient_street' => $instruction::RECIPIENT_STREET,
@@ -97,12 +97,14 @@ class dotpayinstructionModuleFrontController extends DotpayController
                 'buttonTitle' =>  $buttonTitle,
                 'isOk' =>  true,
                 'initialized' => $initialized
-            ]);
+            ));
         } catch (RuntimeException $ex) {
-            $this->errors[] = $this->module->l('The error with initializing payment occured. Please try to refresh the page or conttact with seller.');
-            $this->context->smarty->assign([
+            $this->errors[] = $this->module->l(
+                'The error with initializing payment occured. Please try to refresh the page or conttact with seller.'
+            );
+            $this->context->smarty->assign(array(
                 'isOk' =>  false
-            ]);
+            ));
         }
         
         return $this->setTemplate('module:dotpay/views/templates/front/instruction.tpl');

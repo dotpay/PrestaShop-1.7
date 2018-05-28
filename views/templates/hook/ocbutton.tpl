@@ -23,7 +23,7 @@
 *
 *}
 
-<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="dotpay-saved-cards-link" href="{$actionUrl nofilter}" title="{l s='My saved cards' mod='dotpay'}">
+<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="dotpay-saved-cards-link" href="{$actionUrl}" title="{l s='My saved cards' mod='dotpay'}">
     <span class="link-item">
         <i class="material-icons">branding_watermark</i>
         <span>{l s='My saved cards' mod='dotpay'}</span>

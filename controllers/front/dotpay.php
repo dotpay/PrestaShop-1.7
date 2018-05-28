@@ -30,7 +30,8 @@ use Prestashop\Dotpay\Model\Configuration;
 /**
  * Abstract controller, common for all other controllers in this plugin
  */
-abstract class DotpayController extends ModuleFrontController {
+abstract class DotpayController extends ModuleFrontController
+{
     /**
      * @var Loader Instance of SDK Loader
      */
@@ -59,8 +60,8 @@ abstract class DotpayController extends ModuleFrontController {
     /**
      * Initialize the constructor
      */
-    public function __construct() 
-	{
+    public function __construct()
+    {
         parent::__construct();
         $this->loader = Loader::load();
         $this->config = $this->loader->get('Config');
@@ -70,8 +71,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Initialize data for Dotpay Order
      * @param boolean $afterOrder Flag if the initialization is done after creating an order
      */
-    protected function initializeOrderData($afterOrder = false) 
-	{
+    protected function initializeOrderData($afterOrder = false)
+    {
         $originalCustomer = new Customer($this->getCart()->id_customer);
         $this->loader->parameter('Customer:email', $originalCustomer->email);
         $this->loader->parameter('Customer:firstName', $originalCustomer->firstname);
@@ -80,7 +81,7 @@ abstract class DotpayController extends ModuleFrontController {
         $country = new Country((int)($address->id_country));
         $customer = $this->loader->get('Customer');
         $customer->setId($originalCustomer->id)
-                 ->setStreet($address->address1.$address->address2)
+                 ->setStreet($address->address1.' '.$address->address2)
                  ->setPostCode($address->postcode)
                  ->setCity($address->city)
                  ->setCountry($country->iso_code)
@@ -114,12 +115,51 @@ abstract class DotpayController extends ModuleFrontController {
         $this->order->setShippingAmount($this->getCart()->getOrderTotal(true, Cart::ONLY_SHIPPING));
     }
     
+	
+  	/**
+     * Returns correct SERVER NAME or HOSTNAME
+     * @return string
+     */ 
+public function getHost()
+    {
+		$possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
+		$sourceTransformations = array(
+			"HTTP_X_FORWARDED_HOST" => function($value) {
+				$elements = explode(',', $value);
+				return trim(end($elements));
+			}
+		);
+		$host = '';
+		foreach ($possibleHostSources as $source)
+		{
+			if (!empty($host)) break;
+			if (empty($_SERVER[$source])) continue;
+			$host = $_SERVER[$source];
+			if (array_key_exists($source, $sourceTransformations))
+			{
+				$host = $sourceTransformations[$source]($host);
+			} 
+		}
+		// Remove port number from host
+		$host = preg_replace('/:\d+$/', '', $host);
+		return trim($host);
+    }
+
     /**
+	 * The validator checks if the given URL address is correct.
+	 */
+	public function validateHostname($value)
+    {
+        return (bool) preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/', $value);
+    }
+	
+
+	/**
      * Prepare the Dotpay Channel for the given order
      * @param Order $order Prestashop Order object
      */
-    protected function prepareChannel($order) 
-	{
+    protected function prepareChannel($order)
+    {
         switch (Tools::getValue('method')) {
             case Oc::CODE:
                 $this->channel = $this->loader->get('Oc');
@@ -154,42 +194,68 @@ abstract class DotpayController extends ModuleFrontController {
                 }
                 break;
             case Channel::CODE:
-                $this->channel = $this->loader->get('Channel', [
+                $this->channel = $this->loader->get('Channel', array(
                     Tools::getValue('channel'),
                     'channel',
                     $this->getConfig(),
                     $this->loader->get('Transaction'),
                     $this->loader->get('PaymentResource'),
                     $this->loader->get('SellerResource')
-                ]);
+                ));
                 break;
             default:
                 die($this->module->l('Unrecognized method'));
         }
+		
+		if ($this->validateHostname($this->getHost()))
+			{
+				$server_name = $this->getHost();
+			} else {
+				$server_name = "HOSTNAME";
+			}
+		
+		
         $this->getChannel()->getSeller()->setInfo(\Configuration::get('PS_SHOP_NAME'));
         $this->getOrder()->setId($order->id)
                          ->setReference($order->reference);
         $description = $this->module->l("Order ID:").' '.$order->reference;
-        $control = $this->getOrder()->getId().'/'.$_SERVER['SERVER_NAME'].'/module:'.$this->module->version;
+        $control = $this->getOrder()->getId().'|'.$server_name.'|PrestaShop '._PS_VERSION_.' module: '.$this->module->version;
         if ($this->getConfig()->getSurcharge()) {
             $description .= ' ('.
                             $this->module->l("convenience fee - not included").
                             ': '.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).
                             ' '.$this->getOrder()->getCurrency().')';
-            $control .= '/sur:+'.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).
+            $control .= '|sur:+'.$this->getOrder()->getSurchargeAmount($this->getConfig(), $this->getCurrencyObject()).
                         ' '.$this->getOrder()->getCurrency();
         }
         if ($this->getConfig()->getExtracharge()) {
-            $control .= '/fee:+'.$this->getOrder()->getExtrachargeAmount($this->getConfig(), $this->getCurrencyObject()).
-                        ' '.$this->getOrder()->getCurrency();
+            $control .= '|fee:+'.$this->getOrder()->getExtrachargeAmount(
+                $this->getConfig(),
+                $this->getCurrencyObject()
+            )
+            .' '.$this->getOrder()->getCurrency();
         }
         if ($this->getConfig()->getReduction()) {
-            $control .= '/disc:-'.$this->getOrder()->getReductionAmount($this->getConfig(), $this->getCurrencyObject()).
-                        ' '.$this->getOrder()->getCurrency();
+            $control .= '|disc:-'.$this->getOrder()->getReductionAmount(
+                $this->getConfig(),
+                $this->getCurrencyObject()
+            )
+            .' '.$this->getOrder()->getCurrency();
         }
         $this->getChannel()->getTransaction()->getPayment()->setDescription($description);
-        $this->getChannel()->getTransaction()->setBackUrl($this->context->link->getModuleLink('dotpay', 'back', array('order' => Order::getOrderByCartId($this->getCart()->id)), $this->module->isSSLEnabled()))
-                                             ->setConfirmUrl($this->context->link->getModuleLink('dotpay', 'confirm', array('ajax' => '1'), $this->module->isSSLEnabled()));
+        $this->getChannel()->getTransaction()->setBackUrl(
+            $this->context->link->getModuleLink(
+                'dotpay',
+                'back',
+                array('order' => Order::getOrderByCartId($this->getCart()->id)),
+                $this->module->isSSLEnabled()
+            )
+        )->setConfirmUrl($this->context->link->getModuleLink(
+            'dotpay',
+            'confirm',
+            array('ajax' => '1'),
+            $this->module->isSSLEnabled()
+        ));
         
         $this->getChannel()->getTransaction()->setControl($control);
     }
@@ -198,8 +264,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Return the prepared channel
      * @return Channel
      */
-    protected function getChannel() 
-	{
+    protected function getChannel()
+    {
         return $this->channel;
     }
 
@@ -207,8 +273,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Return the Prestashop Cart
      * @return Cart
      */
-    protected function getCart() 
-	{
+    protected function getCart()
+    {
         if ($this->cartObject === null) {
             $this->cartObject = Context::getContext()->cart;
         }
@@ -219,8 +285,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Return an object of Prestashop Currency
      * @return Currency
      */
-    protected function getCurrencyObject() 
-	{
+    protected function getCurrencyObject()
+    {
         return new Currency($this->getCart()->id_currency);
     }
     
@@ -228,8 +294,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Return configuration of the plugin
      * @return Configuration
      */
-    protected function getConfig() 
-	{
+    protected function getConfig()
+    {
         return $this->config;
     }
     
@@ -237,8 +303,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Return the Prestashop Order object
      * @return \Prestashop\Dotpay\Model\Order
      */
-    protected function getOrder() 
-	{
+    protected function getOrder()
+    {
         return $this->order;
     }
     
@@ -260,8 +326,8 @@ abstract class DotpayController extends ModuleFrontController {
      * Set the given card object
      * @param Cart $cart Cart object
      */
-    protected function setCart($cart) 
-	{
+    protected function setCart($cart)
+    {
         $this->cartObject = $cart;
     }
     

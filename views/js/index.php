@@ -15,18 +15,13 @@
  * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-namespace Dotpay\Validator;
 
-/**
- * The validator checks if the given phone number is correct
- */
-class Phone implements IValidate {
-    /**
-     * Validate the given value if it's correct
-     * @param mixed $value The given value
-     * @return boolean
-     */
-    public static function validate($value) {
-        return (bool)preg_match('/^[\+\s0-9\-_]{3,20}$/', $value);
-    }
-}
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
+
+header('Location: ../');
+exit;

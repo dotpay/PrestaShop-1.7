@@ -35,7 +35,7 @@ class Configuration
     /**
      * Version of the SDK
      */
-    const SDK_VERSION = '1.0.3.1';
+    const SDK_VERSION = '1.0.5a';
 	
     /**
      * Url of Dotpay payment production server
@@ -531,13 +531,24 @@ class Configuration
         return ($numberOfRenewDays == 0 || ($orderAddDate < $now && $now->diff($orderAddDate)->format("%a") < $numberOfRenewDays));
     }
     
-    /**
+   
+	/**
+	 * prepare data for the name of the shop so that it would be consistent with the validation
+	 */
+	public function NewShopName($value)
+		{	
+			$NewShop_name1 = preg_replace('/[^\p{L}0-9\s\"\/\\:\.\$\+!#\^\?\-_@]/u','',$value);
+			return $this->encoded_substrParams($NewShop_name1,0,300,60);
+		}
+
+
+   /**
      * Return a name of shop which is sent to Dotpay server
      * @return string
      */
     public function getShopName()
     {
-        return $this->shopName;
+        return $this->NewShopName($this->shopName);
     }
     
         

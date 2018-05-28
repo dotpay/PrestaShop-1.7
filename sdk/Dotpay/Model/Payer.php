@@ -67,13 +67,24 @@ class Payer
         return $this->email;
     }
     
+	
+		/**
+	 * prepare data for the firstname and lastname so that it would be consistent with the validation
+	 */
+	public function NewPersonName($value)
+		{
+			$NewPersonName1 = preg_replace('/[^\p{L}0-9\s\-_]/u',' ',$value);
+			return $this->encoded_substrParams($NewPersonName1,0,50,24);
+		}
+	
+	
     /**
      * Return a first name of the payer
      * @return string
      */
     public function getFirstName()
     {
-        return $this->firstName;
+		return $this->NewPersonName($this->firstName);
     }
     
     /**
@@ -82,7 +93,7 @@ class Payer
      */
     public function getLastName()
     {
-        return $this->lastName;
+		return $this->NewPersonName($this->lastName);
     }
     
     /**
@@ -94,7 +105,7 @@ class Payer
     public function setEmail($email)
     {
         if (!Email::validate($email)) {
-            throw new EmailException($email);
+            throw new EmailException("Incorect email: ".$email);
         }
         $this->email = (string)trim($email);
         return $this;
@@ -109,7 +120,7 @@ class Payer
     public function setFirstName($firstName)
     {
         if (!Name::validate($firstName)) {
-            throw new FirstnameException($firstName);
+            throw new FirstnameException("Incorect first name: ".$firstName);
         }
         $this->firstName = (string)$firstName;
         return $this;
@@ -124,7 +135,7 @@ class Payer
     public function setLastName($lastName)
     {
         if (!Name::validate($lastName)) {
-            throw new LastnameException($lastName);
+            throw new LastnameException("Incorect last name: ".$lastName);
         }
         $this->lastName = (string)$lastName;
         return $this;

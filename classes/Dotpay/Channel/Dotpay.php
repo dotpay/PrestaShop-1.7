@@ -15,26 +15,28 @@
  * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
 namespace Prestashop\Dotpay\Channel;
 
 use \Context;
+use \Tools;
 
 /**
  * Overriden class of Dotpay main channel. It allows to adapt SDK features of channels for Prestashop
  */
-class Dotpay extends \Dotpay\Channel\Dotpay 
+class Dotpay extends \Dotpay\Channel\Dotpay
 {
     /**
      * Return an URL of image which is a logo of the channel
      * @return string
      */
-    public function getLogo() 
-	{
+    public function getLogo()
+    {
         if ($this->getChannelId() != null) {
             return parent::getLogo();
         } else {
             $baseUrl = Context::getContext()->link->getBaseLink();
-            if (substr($baseUrl, -1, 1) !== '/') {
+            if (Tools::substr($baseUrl, -1, 1) !== '/') {
                 $baseUrl .= '/';
             }
             return $baseUrl.'modules/'.$this->config->getPluginId().'/views/img/dotpay_logo_big.png';

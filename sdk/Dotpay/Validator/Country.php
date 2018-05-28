@@ -18,15 +18,15 @@
 namespace Dotpay\Validator;
 
 /**
- * The validator checks if the given phone number is correct
+ * The validator checks if the given country is correct
  */
-class Phone implements IValidate {
+class Country implements IValidate {
     /**
      * Validate the given value if it's correct
      * @param mixed $value The given value
      * @return boolean
      */
     public static function validate($value) {
-        return (bool)preg_match('/^[\+\s0-9\-_]{3,20}$/', $value);
+		return (bool) preg_match('/^[\p{L}\.\s\,\(\)]{2,50}$/u', $value);
     }
 }

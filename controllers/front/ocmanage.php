@@ -20,7 +20,7 @@ use Dotpay\Loader\Loader;
 
 require_once('dotpay.php');
 
-class dotpayocmanageModuleFrontController extends DotpayController 
+class DotpayOcManageModuleFrontController extends DotpayController
 {
     public function setMedia()
     {
@@ -28,18 +28,18 @@ class dotpayocmanageModuleFrontController extends DotpayController
         $this->registerJavascript(
             'dotpay-ocmanage',
             'modules/'.$this->module->name.'/views/js/ocmanage.js',
-            [
+            array(
                 'position' => 'bottom',
                 'priority' => 10
-            ]
+            )
         );
         $this->registerStylesheet(
             'dotpay-ocmanage-style',
             'modules/'.$this->module->name.'/views/css/ocmanage.css',
-            [
+            array(
               'media' => 'all',
               'priority' => 20,
-            ]
+            )
         );
         return true;
     }

@@ -53,13 +53,13 @@ class AdminDotpayRefundController extends ModuleAdminController
     {
         try {
             $sa = $this->loader->get('SellerResource');
-            $result = $sa->makeRefund(
-                $this->loader->get('Refund', [
+            $sa->makeRefund(
+                $this->loader->get('Refund', array(
                     Tools::getValue('payment'),
                     Tools::getValue('amount'),
                     Tools::getValue('order_id'),
                     Tools::getValue('description')
-                ])
+                ))
             );
             $status = 'success';
             $state = $this->config->getWaitingRefundStatus();
@@ -97,11 +97,11 @@ class AdminDotpayRefundController extends ModuleAdminController
                 Tools::getValue('payment')
             );
             
-            $details = [
+            $details = array(
                 'sum_of_payments' => $sumOfPayments,
                 'description' => $this->l('Refund of order:').' '.$order->reference,
                 'currency' => $operation->getCurrency(),
-            ];
+            );
             if (function_exists('json_encode')) {
                 $data2display = json_encode($details, 320);
             } else {

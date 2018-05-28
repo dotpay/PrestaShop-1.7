@@ -247,9 +247,8 @@ class Loader
             } catch (DotpayException $ex) {
             }
             $this->objects[$object->getClass()] = $object;
-            $alias = $object->getAlias();
-            if (!empty($alias)) {
-                $this->aliases[$alias] = $object;
+            if (!empty($object->getAlias())) {
+                $this->aliases[$object->getAlias()] = $object;
             }
         }
     }

@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2015 PrestaShop SA
+*  @copyright 2007-2018 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,8 +26,8 @@
 <form class="payment-form" method="POST" action="{$channel->get('target')}">
     <div class="dotpay-one-channel row">
         {if !empty($script)}
-            <link href="{$dotpayUrl nofilter}widget/payment_widget.min.css" rel="stylesheet">
-            <script src="{$modulePath nofilter}views/js/payment_widget.js"></script>
+            <link href="{$dotpayUrl}widget/payment_widget.min.css" rel="stylesheet">
+            <script src="{$modulePath}views/js/payment_widget.js"></script>
             {$script nofilter}
         {/if}
         <div class="channel-data">

@@ -126,7 +126,7 @@
                     unknown: "{/literal}{$unknownMessage|escape:'htmlall':'UTF-8'}{literal}"
                 },
                 target: "{/literal}{$checkStatusUrl nofilter}{literal}",
-                redirect: "{/literal}{$redirectUrl nofilter}{literal}",
+                redirect: "{/literal}{$redirectUrl}{literal}",
                 orderId: {/literal}{$orderId}{literal},
                 interval: 5,
                 timeout: 2*60

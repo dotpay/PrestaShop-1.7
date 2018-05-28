@@ -27,6 +27,6 @@ class Name implements IValidate {
      * @return boolean
      */
     public static function validate($value) {
-        return (strlen($value) > 0) && (preg_match('/^[^\~\@#\$%\^&\*\(\)_+\|\}\{":\?><\/\.,\';\]\[=`\\0123456789]+$/', $value) === 1);
+        return (bool) preg_match('/^[\p{L}0-9\s\-_]{1,50}$/u', $value);
     }
 }

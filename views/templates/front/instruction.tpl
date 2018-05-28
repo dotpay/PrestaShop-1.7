@@ -81,9 +81,9 @@
         <section id="payment-form" class="col-xs-12">
             <div id="blankiet-download-form">
                 <div id="channel_container_confirm">
-                    <a href="{$address nofilter}" target="_blank" title="{$buttonTitle|escape:'htmlall':'UTF-8'}">
+                    <a href="{$address}" target="_blank" title="{$buttonTitle|escape:'htmlall':'UTF-8'}">
                         <div>
-                            <img src="{$channel->getLogo() nofilter}" alt="{l s='Channel logo' mod='dotpay'}" />
+                            <img src="{$channel->getLogo()}" alt="{l s='Channel logo' mod='dotpay'}" />
                             <span><i class="material-icons">description</i>&nbsp;{$buttonTitle|escape:'htmlall':'UTF-8'}</span>
                         </div>
                     </a>

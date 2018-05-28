@@ -29,7 +29,7 @@ require_once('dotpay.php');
 /**
  * Controller for handling callback from Dotpay
  */
-class dotpayconfirmModuleFrontController extends DotpayController
+class DotpayConfirmModuleFrontController extends DotpayController
 {
     /**
      * Confirm payment based on Dotpay URLC
@@ -57,9 +57,9 @@ class dotpayconfirmModuleFrontController extends DotpayController
             $config = $this->getConfig();
             $paymentAction = new MakePaymentOrRefund(
                 function (Operation $operation) use ($config, $loader) {
-                    $control = explode('/', (string)$operation->getControl());
+                    $control = explode('|', (string)$operation->getControl());
                     $order = new Order($control[0]);
-                    $brotherOrders = [$order];
+                    $brotherOrders = array($order);
                     foreach ($order->getBrother() as $brotherOrder) {
                         $brotherOrders[] = $brotherOrder;
                     }
@@ -91,9 +91,10 @@ class dotpayconfirmModuleFrontController extends DotpayController
                                         $payment->add();
                                     }
                                 }
-                                $loader->get('Instruction', [$order->id])->deleteForOrder();
+                                $loader->get('Instruction', array($order->id))->deleteForOrder();
                             }
-                        } elseif ($lastOrderState->id == $newOrderState && $newOrderState == _PS_OS_OUTOFSTOCK_UNPAID_) {
+                        } elseif ($lastOrderState->id == $newOrderState &&
+                                  $newOrderState == _PS_OS_OUTOFSTOCK_UNPAID_) {
                             return true;
                         } else {
                             $stateName = "OTHER NAME";
@@ -102,7 +103,8 @@ class dotpayconfirmModuleFrontController extends DotpayController
                             } elseif (is_string($lastOrderState->name)) {
                                 $stateName = $lastOrderState->name;
                             }
-                            throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$stateName.') IS ALERADY REGISTERED');
+                            throw new
+                            ConfirmationDataException('PrestaShop - THIS STATE ('.$stateName.') IS ALERADY REGISTERED');
                         }
                     }
                     return true;
@@ -113,11 +115,12 @@ class dotpayconfirmModuleFrontController extends DotpayController
             /* ---- REFUND ---- */
             $refundAction = new MakePaymentOrRefund(
                 function (Operation $operation) use ($config, $loader) {
-                    if ($operation->getStatus() != $operation::STATUS_COMPLETE && $operation->getStatus() != $operation::STATUS_REJECTED) {
+                    if ($operation->getStatus() != $operation::STATUS_COMPLETE &&
+                        $operation->getStatus() != $operation::STATUS_REJECTED) {
                         return true;
                     }
                     
-                    $control = explode('/', (string)$operation->getControl());
+                    $control = explode('|', (string)$operation->getControl());
                     $order = new Order($control[0]);
                     $payments = OrderPayment::getByOrderId($order->id);
                     $foundPaymet = false;
@@ -125,7 +128,10 @@ class dotpayconfirmModuleFrontController extends DotpayController
                     
                     foreach ($payments as $payment) {
                         if ($payment->transaction_id == $operation->getNumber()) {
-                            throw new ConfirmationDataException('PrestaShop - PAYMENT '.$operation->getNumber().' IS ALREADY SAVED');
+                            throw new
+                            ConfirmationDataException(
+                                'PrestaShop - PAYMENT '.$operation->getNumber().' IS ALREADY SAVED'
+                            );
                         } elseif ($payment->transaction_id == $operation->getRelatedNumber()) {
                             $foundPaymet = true;
                         }
@@ -135,12 +141,16 @@ class dotpayconfirmModuleFrontController extends DotpayController
                     }
                     
                     if (!$foundPaymet) {
-                        throw new ConfirmationDataException('PrestaShop - PAYMENT '.$operation->getNumber().' IS NOT SAVED');
+                        throw new
+                        ConfirmationDataException('PrestaShop - PAYMENT '.$operation->getNumber().' IS NOT SAVED');
                     }
                     
                     $receivedAmount = (float)$operation->getOriginalAmount();
                     if ($receivedAmount - $sumOfPayments >= 0.01) {
-                        throw new ConfirmationDataException('PrestaShop - NO MATCH OR WRONG AMOUNT - '.$receivedAmount.' > '.$sumOfPayments);
+                        throw new
+                        ConfirmationDataException(
+                            'PrestaShop - NO MATCH OR WRONG AMOUNT - '.$receivedAmount.' > '.$sumOfPayments
+                        );
                     }
 
                     $lastOrderState = new OrderState($order->getCurrentState());
@@ -174,8 +184,7 @@ class dotpayconfirmModuleFrontController extends DotpayController
             );
             $confirmProcessor->setMakeRefundAction($refundAction);
             
-            if ($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) 
-			{
+            if ($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) {
                 die('OK');
             } else {
                 die('PRESTASHOP - AN ERROR OCCURED');
@@ -193,8 +202,8 @@ class dotpayconfirmModuleFrontController extends DotpayController
      * @param \OrderState $lastOrderState PrestaShop object with last order state
      * @return int
      */
-    private function getNewOrderState(Operation $operation, $lastOrderState) 
-	{
+    private function getNewOrderState(Operation $operation, $lastOrderState)
+    {
         $actualState = null;
         switch ($operation->getStatus()) {
             case $operation::STATUS_NEW:

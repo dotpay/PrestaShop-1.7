@@ -25,11 +25,11 @@ class Cart extends CartCore
      * Check if order has already been placed
      * @return boolean
      */
-    public function OrderExists()
+    public function orderExists()
     {
         if (is_object(Context::getContext()->cookie) && (int)Context::getContext()->cookie->dotpay_renew == 1) {
             return false;
         }
-        return parent::OrderExists();
+        return parent::orderExists();
     }
 }

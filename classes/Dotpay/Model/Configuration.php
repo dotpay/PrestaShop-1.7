@@ -15,6 +15,7 @@
  * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+
 namespace Prestashop\Dotpay\Model;
 
 use Dotpay\Validator\Amount;
@@ -63,7 +64,7 @@ class Configuration extends \Dotpay\Model\Configuration
     /**
      * @var array List of Prestashop Configuration names which are bonded with setter/getter in SDK Configuration
      */
-    private $modelMap = [
+    private $modelMap = array(
         'DP_ENABLED' => 'Enable',
         'DP_API' => 'Api',
         'DP_ID' => 'Id',
@@ -95,7 +96,7 @@ class Configuration extends \Dotpay\Model\Configuration
         'DP_RS_AMOUNT' => 'ReductionAmount',
         'DP_RS_PERC' => 'ReductionPercent',
         'DP_CHANNELS' => 'VisibleChannels'
-    ];
+    );
     
     /**
      * Load saved data from Prestashop Configuration
@@ -414,7 +415,7 @@ class Configuration extends \Dotpay\Model\Configuration
      */
     public function getFormValues()
     {
-        $result = [];
+        $result = array();
         foreach ($this->modelMap as $key => $fname) {
             $fname = 'get'.$fname;
             $result[$key] = $this->$fname();
@@ -471,8 +472,8 @@ class Configuration extends \Dotpay\Model\Configuration
      * @param string $name Name of requested value
      * @return mixed
      */
-    private function getFromExtendedSource($name) 
-	{
+    private function getFromExtendedSource($name)
+    {
         $context = \Context::getContext();
         //Language id
         if (isset($context->id_lang)) {

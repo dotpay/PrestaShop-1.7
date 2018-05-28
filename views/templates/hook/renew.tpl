@@ -31,7 +31,7 @@
 </style>
 {/literal}
 <div class="box" style="overflow: auto;">
-    <h2 class="page-subheading"><a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl"><img id="dotpay-logo" src="{$moduleDir2 nofilter}views/img/dotpay_logo_big.png" alt="Dotpay - {l s='Fast and secure Internet payments' mod='dotpay'}"/></a>&nbsp;{l s='Pay easy with Dotpay' mod='dotpay'}</h2>
+    <h2 class="page-subheading"><a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl"><img id="dotpay-logo" src="{$moduleDir2}views/img/dotpay_logo_big.png" alt="Dotpay - {l s='Fast and secure Internet payments' mod='dotpay'}"/></a>&nbsp;{l s='Pay easy with Dotpay' mod='dotpay'}</h2>
     {if $isRenew}
     <p>{l s='Your payment was not yet confirmed by Dotpay. If you break payment, you can make it again.' mod='dotpay'}</p>
     <p class="cart_navigation">

@@ -112,7 +112,7 @@ class Confirmation
                     )
                    )
                  ) {
-            throw new IncorrectRequestException('IP: '.$_SERVER['REMOTE_ADDR'].' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
+            throw new IncorrectRequestException('IP: '.$this->getClientIp(true).' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
         }
     }
     
@@ -278,7 +278,7 @@ class Confirmation
                 )
             )
         ) {
-            throw new ConfirmationDataException("ERROR (REMOTE ADDRESS: ".$_SERVER['REMOTE_ADDR'].")");
+            throw new ConfirmationDataException("ERROR (IP ADDRESSES: ".$this->getClientIp(true).")");
         }
         return true;
     }
@@ -417,27 +417,53 @@ class Confirmation
      * Return ip address from is the confirmation request
      * @return string
      */
-    protected function getClientIp() {
-        $ipaddress = '';
-        if (getenv('HTTP_CLIENT_IP')) {
-            $ipaddress = getenv('HTTP_CLIENT_IP');
-        } else if(getenv('HTTP_X_FORWARDED_FOR')) {
-            $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-        } else if(getenv('HTTP_X_FORWARDED')) {
-            $ipaddress = getenv('HTTP_X_FORWARDED');
-        } else if(getenv('HTTP_FORWARDED_FOR')) {
-            $ipaddress = getenv('HTTP_FORWARDED_FOR');
-        } else if(getenv('HTTP_FORWARDED')) {
-           $ipaddress = getenv('HTTP_FORWARDED');
-        } else if(getenv('REMOTE_ADDR')) {
-            $ipaddress = getenv('REMOTE_ADDR');
+	protected function getClientIp($list_ip=null)
+     {   
+		$ipaddress = '';
+
+        // CloudFlare support
+        if (array_key_exists('HTTP_CF_CONNECTING_IP', $_SERVER)) {
+            // Validate IP address (IPv4/IPv6)
+            if (filter_var($_SERVER['HTTP_CF_CONNECTING_IP'], FILTER_VALIDATE_IP)) {
+                $ipaddress = $_SERVER['HTTP_CF_CONNECTING_IP']; 
+                return $ipaddress;   
+            }
+        }
+        if (array_key_exists('X-Forwarded-For', $_SERVER)) {
+            $_SERVER['HTTP_X_FORWARDED_FOR'] = $_SERVER['X-Forwarded-For'];
+        }
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] 
+			&& (!isset($_SERVER['REMOTE_ADDR'])
+            || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.16.*/i', trim($_SERVER['REMOTE_ADDR']))
+            || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
+            
+			if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
+                $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                $ipaddress = $ips[0];
+            } else {
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            }
         } else {
-            $ipaddress = 'UNKNOWN';
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
         }
+        
         if($ipaddress === '0:0:0:0:0:0:0:1' || $ipaddress === '::1') {
-            $config = $this->config;
-            $ipaddress = $config::LOCAL_IP;
-        }
-        return $ipaddress;
+            $ipaddress = self::LOCAL_IP;
+        }       
+        
+        if(isset($list_ip) && $list_ip != null){
+
+            return 
+			(isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? "HTTP_X_FORWARDED_FOR ->".implode(" | ",$_SERVER['HTTP_CF_CONNECTING_IP']).", " : null).
+            (isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? "HTTP_CF_CONNECTING_IP ->".$_SERVER['HTTP_CF_CONNECTING_IP'].", " : null).
+            (isset($_SERVER['REMOTE_ADDR']) ? "REMOTE_ADDR ->".$_SERVER['REMOTE_ADDR'].", " : " REMOTE_ADDR null ");
+        } else {
+
+           return $ipaddress; 
+        } 
+        
     }
+	
+	
+	
 }

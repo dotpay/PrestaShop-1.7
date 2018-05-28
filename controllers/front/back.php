@@ -23,7 +23,7 @@ require_once('dotpay.php');
 /**
  * Controller for handling return address
  */
-class dotpaybackModuleFrontController extends DotpayController
+class DotpayBackModuleFrontController extends DotpayController
 {
     /**
      * Set additional media in template
@@ -35,10 +35,10 @@ class dotpaybackModuleFrontController extends DotpayController
         $this->registerJavascript(
             'dotpay-back-status',
             'modules/'.$this->module->name.'/views/js/checkStatus.js',
-            [
+            array(
                 'position' => 'bottom',
                 'priority' => 10
-            ]
+            )
         );
         return true;
     }
@@ -51,7 +51,7 @@ class dotpaybackModuleFrontController extends DotpayController
         $this->display_column_left = false;
         parent::initContent();
         $message = null;
-		$hiddenHookData = null;
+        $hiddenHookData = null;
         
         if ((bool)Context::getContext()->customer->is_guest) {
             $url=Context::getContext()->link->getPageLink('guest-tracking', true);
@@ -66,10 +66,11 @@ class dotpaybackModuleFrontController extends DotpayController
         } catch (RuntimeException $e) {
             $message = $this->module->l($e->getMessage());
         }
-        
+
         if ($message === null) {
             if (\Validate::isLoadedObject($order)) {
                 $currency = new \Currency($order->id_currency);
+                $params = array();
                 $params['total_to_pay'] = $order->getOrdersTotalPaid();
                 $params['currency'] = $currency->sign;
                 $params['objOrder'] = $order;
@@ -80,23 +81,38 @@ class dotpaybackModuleFrontController extends DotpayController
             }
         }
         
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'message' => $message,
             'redirectUrl' => $url,
             'orderReference' => $order->reference,
             'orderId' => $orderId,
             'hiddenHookData' => $hiddenHookData,
-            'checkStatusUrl' => $this->context->link->getModuleLink($this->module->name, 'status', []),
+            'checkStatusUrl' => $this->context->link->getModuleLink($this->module->name, 'status', array()),
             'basicMessage' => $this->module->l('You have come back to the shop site.'),
             'statusMessage' => $this->module->l('Status of the order'),
-            'waitingMessage' => $this->module->l('Waiting for confirm your payment...').'<br>'.$this->module->l('It make take up to 2 minutes.'),
-            'successMessage' => $this->module->l('Thank you! The process of payment completed correctly. In a moment you will be able to check the status of your order.'),
-            'tooManyPaymentsMessage' => $this->module->l('Warning! Payment for this order have already registered. If you bank account has been charged, please contact to seller and give him a name of the order:').' '.$order->reference,
+            'waitingMessage' => $this->module->l(
+                'Waiting for confirm your payment...'
+            ).
+            '<br>'.$this->module->l('It make take up to 2 minutes.'),
+            'successMessage' => $this->module->l(
+                'Thank you! The process of payment completed correctly. In a moment you will be able to check the '.
+                'status of your order.'
+            ),
+            'tooManyPaymentsMessage' => $this->module->l(
+                'Warning! Payment for this order have already registered. If you bank account has been charged, '.
+                'please contact to seller and give him a name of the order:'
+            ).
+            ' '.$order->reference,
             'errorMessage' => $this->module->l('Payment was rejected.'),
             'notFoundMessage' => $this->module->l('Order was not found.'),
             'unknownMessage' => $this->module->l('It\'s impossible to interprete the response from server.'),
-            'timeoutMessage' => $this->module->l('Time intended for waiting for payment confirmation has elapsed. When transaction will be confirmed we will notify you on email. If payment will not be confirmed, please contact with shop owner and give him the order number:').' '.$order->reference,
-        ]);
+            'timeoutMessage' => $this->module->l(
+                'Time intended for waiting for payment confirmation has elapsed. When transaction will be confirmed '.
+                'we will notify you on email. If payment will not be confirmed, please contact with shop owner and '.
+                'give him the order number:'
+            )
+            .' '.$order->reference,
+        ));
         
         return $this->setTemplate('module:dotpay/views/templates/front/back.tpl');
     }

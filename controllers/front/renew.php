@@ -19,9 +19,9 @@
 include_once('dotpay.php');
 
 /**
- * Controller for renewing cart data from orrder
+ * Controller for renewing cart data from order
  */
-class dotpayrenewModuleFrontController extends DotpayController
+class DotpayRenewModuleFrontController extends DotpayController
 {
     /**
      * Prepare data of cart for renewing
@@ -30,7 +30,7 @@ class dotpayrenewModuleFrontController extends DotpayController
     {
         parent::postProcess();
         
-        if ($id_order = (int) Tools::getValue('order_id')) {
+        if ((int) Tools::getValue('order_id')) {
             if ($renewCart = Cart::getCartByOrderId(Tools::getValue('order_id'))) {
                 $context = $this->context;
                 $context->cookie->id_cart = $renewCart->id;

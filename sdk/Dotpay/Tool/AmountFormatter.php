@@ -32,6 +32,8 @@ class AmountFormatter
         'JPY' => 0,
         'CZK' => 2,
         'SEK' => 2,
+        'UAH' => 2,
+        'RON' => 2,
         'PLN' => 2
     ];
     

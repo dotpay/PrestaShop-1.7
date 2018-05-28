@@ -98,14 +98,24 @@ class Notification
     {
         return $this->shopEmail;
     }
-    
+   
+	/**
+	 * prepare data for the name of the shop so that it would be consistent with the validation
+	 */
+	public function NewShopName($value)
+		{	
+			$NewShop_name1 = preg_replace('/[^\p{L}0-9\s\"\/\\:\.\$\+!#\^\?\-_@]/u','',$value);
+			return Customer::encoded_substrParams($NewShop_name1,0,300,60);
+		}
+
+   
     /**
      * Return a name of a shop
      * @return string
      */
     public function getShopName()
     {
-        return $this->shopName;
+		return $this->NewShopName($this->shopName);
     }
     
     /**

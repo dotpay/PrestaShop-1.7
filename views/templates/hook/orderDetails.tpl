@@ -37,7 +37,7 @@
 <script>{literal}
     window.refundConfig = {
         "orderId":{/literal}{$orderId|escape:'htmlall':'UTF-8'}{literal},
-        "returnUrl":"{/literal}{$returnUrl nofilter}{literal}"
+        "returnUrl":"{/literal}{$returnUrl}{literal}"
     }
 {/literal}</script>
 <div id="dotpayDetailsPaymentPanel" class="panel">

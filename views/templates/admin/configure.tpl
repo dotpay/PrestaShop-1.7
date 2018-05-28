@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2015 PrestaShop SA
+*  @copyright 2007-2018 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -44,7 +44,7 @@
 <div class="panel">
     <div class="dotpay-config">
         <h3>{l s='Information' mod='dotpay'}</h3>
-        <a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl"><img src="{$moduleDir nofilter}views/img/dotpay_logo_big.png" height="50px" border="0" /></a>
+        <a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl"><img src="{$moduleDir}views/img/dotpay_logo_big.png" height="50px" border="0" /></a>
         {if $confOK}
             <div class="alert alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>

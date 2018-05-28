@@ -23,13 +23,13 @@ use Dotpay\Processor\Status;
 /**
  * Controller for handling return address
  */
-class dotpaystatusModuleFrontController extends DotpayController
+class DotpayStatusModuleFrontController extends DotpayController
 {
     /**
      * Checks a payment status of order in shop
      */
-    public function init() 
-	{
+    public function init()
+    {
         parent::init();
         header('Content-Type: application/json; charset=utf-8');
         $orderId = Tools::getValue('orderId');

@@ -21,7 +21,7 @@ include_once('dotpay.php');
 /**
  * Controller for handling preparing form for Dotpay
  */
-class dotpayPreparingModuleFrontController extends DotpayController
+class DotpayPreparingModuleFrontController extends DotpayController
 {
     /**
      * Preparing hidden form with payment data before sending it to Dotpay
@@ -75,7 +75,8 @@ class dotpayPreparingModuleFrontController extends DotpayController
         }
         
         if (Tools::getValue('order') == false) {
-            $secureKey = (Context::getContext()->customer->secure_key!==null)?Context::getContext()->customer->secure_key:md5(uniqid(rand(), true));
+            $secureKey = (Context::getContext()->customer->secure_key!==null)?
+                         Context::getContext()->customer->secure_key:md5(uniqid(rand(), true));
             $cartId = $this->getCart()->id;
             $this->module->validateOrder(
                 $cartId,
@@ -83,7 +84,7 @@ class dotpayPreparingModuleFrontController extends DotpayController
                 $this->getOrder()->getAmount(),
                 $this->module->displayName,
                 null,
-                [],
+                array(),
                 null,
                 false,
                 $secureKey
@@ -95,11 +96,11 @@ class dotpayPreparingModuleFrontController extends DotpayController
         $this->prepareChannel($order);
         if ($this->getChannel()->canHaveInstruction()) {
             Tools::redirect(
-                $this->context->link->getModuleLink($this->module->name, 'instruction', [
+                $this->context->link->getModuleLink($this->module->name, 'instruction', array(
                     'method' => Tools::getValue('method'),
                     'channel' => Tools::getValue('channel'),
                     'order' => $order->id
-                ], true)
+                ), true)
             );
         }
         $this->loader->get('PaymentResource')->close();
