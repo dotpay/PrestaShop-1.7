@@ -149,9 +149,25 @@ label#agreement_oc-store-card {
 }
 
 input[name="blik_code"] {
-    width: 160px;
-    margin: 5px 0px 5px 0px;
-    border: #ff6600 2px solid;
-    height: 44px;
-    font-size: 32px;
+  width: 160px;
+  border: #ff6600 2px solid;
+  height: auto;
+  font-size: 32px;
+  color: #1e1e1e;
+  padding: 6px !important;
+  letter-spacing: 0.2rem;
+  display: inline-block;
+  text-align: center;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+input[name=blik_code]:hover {
+  border-color: #309b4e;
+  background-color: #f7f7f9;
+
+}
+input[name=blik_code]:focus {
+  border-color: #309b4e;
+  background-color: #f7f7f9;
 }

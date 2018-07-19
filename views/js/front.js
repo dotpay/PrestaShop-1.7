@@ -29,6 +29,7 @@ function checkBlikCode() {
     if($('.dotpay_blik_code').parents('.payment-form').parent().css('display') != 'block') {
         return false;
     }
+
     var value = $('input[name="blik_code"]').val();
     return !(value.length == 6 && !isNaN(parseInt(value)) && parseInt(value) == value);
 }
@@ -43,11 +44,18 @@ $(document).ready(function(){
         checkOrderConfirmButton();
         e.stopPropagation();
     });
-    
+
     $('input[name=payment-option]').change(function(){
         $('.agreements input[required]').prop('checked', true);
     });
-    
+
+    $("input.dotpay_blik_code").keypress(function(event) {
+      return /\d/.test(String.fromCharCode(event.keyCode));
+    });
+    $("input.dotpay_blik_code").attr("pattern", "[0-9]{6}");
+    $("input.dotpay_blik_code").attr("maxlength", "6");
+
+
     $('input.dotpay_blik_code').change(function(){
         checkOrderConfirmButton();
     });

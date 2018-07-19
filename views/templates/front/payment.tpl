@@ -53,13 +53,20 @@
             <input type="hidden" name="channel" value="{$channel->getChannelId()}" />
             {/if}
         </div>
-		
+
         <div class="agreements">
             {foreach from=$channel->getAgreements() item=agreement}
-                <label id="agreement_{$agreement->getName()}">
-                    <input type="checkbox" value="1" name="{$agreement->getName()}" {if $agreement->getRequired()}required="true" checked="true" {/if}/>
-                    {$agreement->getDescriptionHtml() nofilter}
-                </label>
+              {if $agreement->getName() != 'personal_data'}
+              <label id="agreement_{$agreement->getName()}">
+                  <input type="checkbox" value="1" name="{$agreement->getName()}" {if $agreement->getRequired()}required="true" checked="true" {/if}/>
+                  {$agreement->getDescriptionHtml() nofilter}
+              </label>
+              {else}
+              <label id="agreement_{$agreement->getName()}">
+                  * {$agreement->getDescriptionHtml() nofilter}
+              </label>
+              {/if}
+
             {/foreach}
         </div>
     </div>

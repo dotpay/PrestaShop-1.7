@@ -35,74 +35,74 @@ class Configuration
     /**
      * Version of the SDK
      */
-    const SDK_VERSION = '1.0.5a';
-	
+    const SDK_VERSION = '1.0.5b';
+
     /**
      * Url of Dotpay payment production server
      */
     const PAYMENT_URL_PROD = 'https://ssl.dotpay.pl/t2/';
-    
+
     /**
      * Url of Dotpay payment test server
      */
     const PAYMENT_URL_DEV = 'https://ssl.dotpay.pl/test_payment/';
-    
+
     /**
      * Url of Dotpay seller production server
      */
     const SELLER_URL_PROD = 'https://ssl.dotpay.pl/s2/login/';
-    
+
     /**
      * Url of Dotpay seller test server
      */
     const SELLER_URL_DEV = 'https://ssl.dotpay.pl/test_seller/';
-    
+
     /**
      * Address IP of Dotpay confirmation server
      */
     const CALLBACK_IP = '195.150.9.37';
-    
+
     /**
      * Address IP od Dotpay office
      */
     const OFFICE_IP = '77.79.195.34';
-    
+
     /**
      * Address IP of the localhost
      */
     const LOCAL_IP = '127.0.0.1';
-    
+
     /**
      * Id of One Click card channel
      */
     const OC_CHANNEL = 248;
-    
+
     /**
      * Id of card channel, used for foreign currencies
      */
     const FCC_CHANNEL = 248;
-    
+
     /**
      * Id of standard chard channel
      */
     const CC_CHANNEL = 246;
-    
+
     /**
      * Id of BLIK channel
      */
     const BLIK_CHANNEL = 73;
-    
+
     /**
      * Class name of the HTML container which contains aDotpay widget on a payment site
      */
     const WIDGET_CLASS_CONTAINER = 'dotpay-widget-container';
-    
+
     public static $SPECIAL_CHANNELS = [
         248,
         246,
         73
     ];
-    
+
     /**
      * List of all supported currencies
      */
@@ -113,146 +113,148 @@ class Configuration
         'JPY',
         'CZK',
         'SEK',
+        'UAH',
+        'RON',
         'PLN'
     ];
-    
+
     /**
      * @var string Id of plugin where is used SDK
      */
     private $pluginId = '';
-    
+
     /**
      * @var string Version of used plugin
      */
     private $pluginVersion = '';
-    
+
     /**
      * @var boolean Flag which inform if Dotpay payment is enabled in a shop
      */
     private $enable = false;
-    
+
     /**
      * @var int|null Seller id
      */
     private $id = null;
-    
+
     /**
      * @var string Seller pin
      */
     private $pin = '';
-    
+
     /**
      * @var string Username of Dotpay seller dashboard
      */
     private $username = '';
-    
+
     /**
      * @var string Password of Dotpay seller dashboard
      */
     private $password = '';
-    
+
     /**
      * @var boolean Flag if test mode is activated
      */
     private $testMode = false;
-    
+
     /**
      * @var boolean Flag if One Click card channel is visible
      */
     private $ocVisible = false;
-    
+
     /**
      * @var boolean Flag if card channel for foreign currencies is visible
      */
     private $fccVisible = false;
-    
+
     /**
      * @var int|null Seller id for an account which is signed to support payment by card using foreign currencies
      */
     private $fccId = null;
-    
+
     /**
      * @var string Seller pin for an account which is signed to support payment by card using foreign currencies
      */
     private $fccPin = '';
-    
+
     /**
      * @var string Codes of currencies for which is allowed the FCC card channel.
      * Every code is separated by "," character.
      */
     private $fccCurrencies = '';
-    
+
     /**
      * @var boolean Flag if normal card channel is visible
      */
     private $ccVisible = false;
-    
+
     /**
      * @var boolean Flag if BLIK channel is visible
      */
     private $blikVisible = false;
-    
+
     /**
      * @var boolean Flag if Dotpay widget is visible on a payment page
      */
     private $widgetVisible = true;
-    
+
     /**
      * @var string Codes of currencies for which is disallowed the Dotpay main channel.
      * Every code is separated by "," character.
      */
     private $widgetCurrencies = '';
-    
+
     /**
      * @var boolean Flag if payment instruction of cash or transfer channels should be visible on a shop site
      */
     private $instructionVisible = true;
-    
+
     /**
      * @var boolean Flag if refunds requesting is enabled from a shop system
      */
     private $refundsEnable = false;
-    
+
     /**
      * @var boolean Flag if renew payments are enabled for customers
      */
     private $renew = false;
-    
+
     /**
      * @var int Number of days, how long after creating an order should be available renew option
      */
     private $renewDays = 0;
-    
+
     /**
      * @var boolean Flag if special surcharge is enabled
      */
     private $surcharge = false;
-    
+
     /**
      * @var float Amount which will be added as a surcharge
      */
     private $surchargeAmount = 0.0;
-    
+
     /**
      * @var float Percent of value of order which will be added as a surcharge
      */
     private $surchargePercent = 0.0;
-    
+
     /**
      * @var string Name of shop which is sent to Dotpay server
      */
     private $shopName = '';
-    
+
     /**
      * @var string Payment API version
      */
     private $api = 'dev';
-    
+
     /**
      * @var array List of all visible channels id
      */
     private $visibleChannels = [];
-    
+
     /**
      * Initialize the model
      * @param string $pluginId Name of the plugin which uses the Configuration
@@ -261,7 +263,7 @@ class Configuration
     {
         $this->setPluginId($pluginId);
     }
-    
+
     /**
      * Return plugin id
      * @return string
@@ -270,7 +272,7 @@ class Configuration
     {
         return $this->pluginId;
     }
-    
+
     /**
      * Return plugin version
      * @return string
@@ -288,7 +290,7 @@ class Configuration
     {
         return $this->enable;
     }
-    
+
     /**
      * Return seller id
      * @return int|null
@@ -297,7 +299,7 @@ class Configuration
     {
         return $this->id;
     }
-    
+
     /**
      * Return seller pin
      * @return string
@@ -306,7 +308,7 @@ class Configuration
     {
         return $this->pin;
     }
-    
+
     /**
      * Return username of Dotpay seller dashboard
      * @return string
@@ -315,7 +317,7 @@ class Configuration
     {
         return $this->username;
     }
-    
+
     /**
      * Return password of Dotpay seller dashboard
      * @return password
@@ -324,25 +326,25 @@ class Configuration
     {
         return $this->password;
     }
-    
+
     /**
      * Check if seller id and pin are not empty
      * @return boolean
      */
     public function isGoodAccount()
     {
-        return !(empty($this->id) || empty($this->pin));
+        return !(empty(trim($this->id)) || empty(trim($this->pin)));
     }
-    
+
     /**
      * Check if username and password are not empty
      * @return boolean
      */
     public function isGoodApiData()
     {
-        return !(empty($this->username) || empty($this->password));
+        return !(empty(trim($this->username)) || empty(trim($this->password)));
     }
-    
+
     /**
      * Check if test mode is enabled
      * @return boolean
@@ -351,7 +353,7 @@ class Configuration
     {
         return $this->testMode;
     }
-    
+
     /**
      * Check if the One Click card channel is set as visible
      * @return boolean
@@ -360,7 +362,7 @@ class Configuration
     {
         return $this->ocVisible;
     }
-    
+
     /**
      * Check if the One Click card channel is enabled to use
      * @return boolean
@@ -368,10 +370,10 @@ class Configuration
     public function isOcEnable()
     {
         return $this->getOcVisible() &&
-               !(empty($this->username) &&
-                 empty($this->password));
+               !(empty(trim($this->username)) &&
+                 empty(trim($this->password)));
     }
-    
+
     /**
      * Check if card channel for foreign currency is set as visible
      * @return boolean
@@ -380,7 +382,7 @@ class Configuration
     {
         return $this->fccVisible;
     }
-    
+
     /**
      * Return seller id for the account which is asigned to card channel for foreign currency
      * @return int|null
@@ -389,7 +391,7 @@ class Configuration
     {
         return $this->fccId;
     }
-    
+
     /**
      * Return seller pin for the account which is asigned to card channel for foreign currency
      * @return string
@@ -398,7 +400,7 @@ class Configuration
     {
         return $this->fccPin;
     }
-    
+
     /**
      * Return a string which contains a list with currency codes for which card channel for foreign currencies is enabled
      * @return string
@@ -407,7 +409,7 @@ class Configuration
     {
         return $this->fccCurrencies;
     }
-    
+
     /**
      * Check if card channel for foreign currencies is enabled
      * @return boolean
@@ -415,11 +417,11 @@ class Configuration
     public function isFccEnable()
     {
         return $this->getFccVisible() &&
-               !(empty($this->fccId) &&
-                 empty($this->fccPin) &&
-                 empty($this->fccCurrencies));
+               !(empty(trim($this->fccId)) &&
+                 empty(trim($this->fccPin)) &&
+                 empty(trim($this->fccCurrencies)));
     }
-    
+
     /**
      * Check if normal card channel is set as visible
      * @return boolean
@@ -428,7 +430,7 @@ class Configuration
     {
         return $this->ccVisible;
     }
-    
+
     /**
      * Check if BLIK channel is set as visible
      * @return boolean
@@ -437,7 +439,7 @@ class Configuration
     {
         return $this->blikVisible;
     }
-    
+
     /**
      * Check if Dotpay widget is set as visible
      * @return boolean
@@ -446,7 +448,7 @@ class Configuration
     {
         return $this->widgetVisible;
     }
-    
+
     /**
      * Return a string which contains a list with currency codes for which main Dotpay channel is disabled
      * @return string
@@ -455,7 +457,7 @@ class Configuration
     {
         return $this->widgetCurrencies;
     }
-    
+
     /**
      * Check if payment instruction of cash or transfer channels should be visible on a shop site
      * @return boolean
@@ -464,7 +466,7 @@ class Configuration
     {
         return $this->instructionVisible;
     }
-    
+
     /**
      * Check if refunds requesting is enabled from a shop system
      * @return boolean
@@ -473,7 +475,7 @@ class Configuration
     {
         return $this->refundsEnable;
     }
-    
+
     /**
      * Check if payments renew option is enabled
      * @return boolean
@@ -482,7 +484,7 @@ class Configuration
     {
         return $this->renew;
     }
-    
+
     /**
      * Return a number of days after creating an order when payment can be renewed
      * @return int
@@ -491,7 +493,7 @@ class Configuration
     {
         return $this->renewDays;
     }
-    
+
     /**
      * Return a flag if special surcharge is enabled
      * @return boolean
@@ -500,7 +502,7 @@ class Configuration
     {
         return $this->surcharge;
     }
-    
+
     /**
      * Return an amount which will be added as a surcharge
      * @return float
@@ -509,7 +511,7 @@ class Configuration
     {
         return $this->surchargeAmount;
     }
-    
+
     /**
      * Return a percent of value of order which will be added as a surcharge
      * @return float
@@ -530,13 +532,13 @@ class Configuration
         $numberOfRenewDays = $this->getRenewDays();
         return ($numberOfRenewDays == 0 || ($orderAddDate < $now && $now->diff($orderAddDate)->format("%a") < $numberOfRenewDays));
     }
-    
-   
+
+
 	/**
 	 * prepare data for the name of the shop so that it would be consistent with the validation
 	 */
 	public function NewShopName($value)
-		{	
+		{
 			$NewShop_name1 = preg_replace('/[^\p{L}0-9\s\"\/\\:\.\$\+!#\^\?\-_@]/u','',$value);
 			return $this->encoded_substrParams($NewShop_name1,0,300,60);
 		}
@@ -550,8 +552,8 @@ class Configuration
     {
         return $this->NewShopName($this->shopName);
     }
-    
-        
+
+
     /**
      * Return a list of all visible channels id, separated by ","
      * @return string
@@ -560,7 +562,7 @@ class Configuration
     {
         return implode(',', $this->visibleChannels);
     }
-    
+
     /**
      * Return an array of all visible channels id
      * @return array
@@ -569,7 +571,7 @@ class Configuration
     {
         return $this->visibleChannels;
     }
-    
+
     /**
      * Check if channel with the given id is set as visible
      * @param int $id Channel id
@@ -580,7 +582,7 @@ class Configuration
         $channels = explode(',', $this->visibleChannels);
         return in_array($id, $channels);
     }
-    
+
     /**
      * Return a payment API version
      * @return string
@@ -589,7 +591,7 @@ class Configuration
     {
         return $this->api;
     }
-    
+
     /**
      * Return an URL to Dotpay server for payments
      * @return string
@@ -602,7 +604,7 @@ class Configuration
             return self::PAYMENT_URL_DEV;
         }
     }
-    
+
     /**
      * Return an URL to Dotpay server for seller API
      * @return string
@@ -615,7 +617,7 @@ class Configuration
             return self::SELLER_URL_DEV;
         }
     }
-    
+
     /**
      * Check if Dotpay payments support the given currency
      * @param string $currency Currency code
@@ -625,7 +627,7 @@ class Configuration
     {
         return $this->isCurrencyOnList($currency, implode(',', self::$CURRENCIES));
     }
-    
+
     /**
      * Check if card channel for foreigner currencies can be used for the given currency
      * @param string $currency Currency code
@@ -635,7 +637,7 @@ class Configuration
     {
         return $this->isCurrencyOnList($currency, $this->getFccCurrencies());
     }
-    
+
     /**
      * Check if Dotpay widget can be used for the given currency
      * @param string $currency Currency code
@@ -645,7 +647,7 @@ class Configuration
     {
         return !$this->isCurrencyOnList($currency, $this->getWidgetCurrencies());
     }
-    
+
     /**
      * Return a shop IP or null if it's not possible to read
      * @return string|null
@@ -660,7 +662,7 @@ class Configuration
         }
         return $ip;
     }
-    
+
     /**
      * Set the given plugin id
      * @param string $pluginId Plugin id
@@ -671,7 +673,7 @@ class Configuration
         $this->pluginId = (string)$pluginId;
         return $this;
     }
-    
+
     /**
      * Set the given plugin version
      * @param string $pluginVersion Plugin version
@@ -682,7 +684,7 @@ class Configuration
         $this->pluginVersion = (string)$pluginVersion;
         return $this;
     }
-    
+
     /**
      * Set the flag if Dotpay payment is enabled in a shop
      * @param bool $enable Flag of enabling Dotpay payment
@@ -693,7 +695,7 @@ class Configuration
         $this->enable = (bool)$enable;
         return $this;
     }
-    
+
     /**
      * Set the given seller id
      * @param int $id Seller id
@@ -708,7 +710,7 @@ class Configuration
         $this->id = (int)$id;
         return $this;
     }
-    
+
     /**
      * Set the given seller pin
      * @param string $pin Seller pin
@@ -723,7 +725,7 @@ class Configuration
         $this->pin = (string)trim($pin);
         return $this;
     }
-    
+
     /**
      * Set the given username for Dotpay dashboard
      * @param string $username Seller username
@@ -738,7 +740,7 @@ class Configuration
         $this->username = (string)trim($username);
         return $this;
     }
-    
+
     /**
      * Set the given password for Dotpay dashboard
      * @param string $password Seller password
@@ -753,7 +755,7 @@ class Configuration
         $this->password = (string)trim($password);
         return $this;
     }
-    
+
     /**
      * Set the flag which informs if test mode is enabled or not
      * @param bool $testMode Test mode flag
@@ -764,7 +766,7 @@ class Configuration
         $this->testMode = (bool)$testMode;
         return $this;
     }
-    
+
     /**
      * Set the flag which informs if One Click card channel is visible
      * @param bool $ocVisible One Click card channel visible flag
@@ -775,7 +777,7 @@ class Configuration
         $this->ocVisible = (bool)$ocVisible;
         return $this;
     }
-    
+
     /**
      * Set the flag which informs if card channel for foreign currencies is visible
      * @param bool $fccVisible Card channel for foreign currencies visible flag
@@ -786,7 +788,7 @@ class Configuration
         $this->fccVisible = (bool)$fccVisible;
         return $this;
     }
-    
+
     /**
      * Set the given seller id for the second account
      * @param int $fccId Seller id for an account which is signed to support payment by card using foreign currencies
@@ -803,7 +805,7 @@ class Configuration
         }
         return $this;
     }
-    
+
     /**
      * Set the given seller pin for the second account
      * @param string $fccPin Seller pin for an account which is signed to support payment by card using foreign currencies
@@ -813,14 +815,14 @@ class Configuration
     public function setFccPin($fccPin)
     {
         if ($this->getFccVisible()) {
-            if (!empty($fccPin) && !Pin::validate($fccPin)) {
+            if (!empty(trim($fccPin)) && !Pin::validate($fccPin)) {
                 throw new PinException($fccPin);
             }
             $this->fccPin = (string)$fccPin;
         }
         return $this;
     }
-    
+
     /**
      * Set the list of codes of currencies for which is allowed the FCC card channel
      * @param string $fccCurrencies List of codes of currencies for which is allowed the FCC card channel.
@@ -834,7 +836,7 @@ class Configuration
         }
         return $this;
     }
-    
+
     /**
      * Set the flag if normal card channel is visible
      * @param boolean $ccVisible Flag if normal card channel is visible
@@ -845,7 +847,7 @@ class Configuration
         $this->ccVisible = (bool)$ccVisible;
         return $this;
     }
-    
+
     /**
      * Set the flag if BLIK channel is visible
      * @param boolean $blikVisible  Flag if BLIK channel is visible
@@ -856,7 +858,7 @@ class Configuration
         $this->blikVisible = (bool)$blikVisible;
         return $this;
     }
-    
+
     /**
      * Set the flag if Dotpay widget is visible on a payment page
      * @param boolean $widgetVisible Flag if Dotpay widget is visible on a payment page
@@ -867,7 +869,7 @@ class Configuration
         $this->widgetVisible = (bool)$widgetVisible;
         return $this;
     }
-    
+
     /**
      * Set the list of currency codes for which is disallowed the Dotpay main channel
      * @param string $widgetCurrencies List of currency codes.
@@ -879,7 +881,7 @@ class Configuration
         $this->widgetCurrencies = trim(strtoupper($widgetCurrencies));
         return $this;
     }
-    
+
     /**
      * Set a flag if payment instruction of cash or transfer channels should be visible on a shop site
      * @param boolean $instructionVisible Flag if payment instruction of cash or transfer channels should be visible on a shop site
@@ -890,7 +892,7 @@ class Configuration
         $this->instructionVisible = (bool)$instructionVisible;
         return $this;
     }
-    
+
     /**
      * Set a flag if refunds requesting is enabled from a shop system
      * @param boolean $refundsEnable Flag of refunds enabling from shop sites
@@ -901,7 +903,7 @@ class Configuration
         $this->refundsEnable = (bool)$refundsEnable;
         return $this;
     }
-    
+
     /**
      * Set a flag if payment of order can be renewed
      * @param boolean $renew
@@ -912,7 +914,7 @@ class Configuration
         $this->renew = (bool)$renew;
         return $this;
     }
-    
+
     /**
      * Set a number of days when after placed an order the payment can be renewed
      * @param type $renewDays
@@ -921,7 +923,7 @@ class Configuration
     public function setRenewDays($renewDays)
     {
         if ($this->getRenew()) {
-            if(!empty($renewDays)) {
+            if(!empty(trim($renewDays))) {
                 $this->renewDays = (int)$renewDays;
             } else {
                 $this->renewDays = 0;
@@ -929,7 +931,7 @@ class Configuration
         }
         return $this;
     }
-    
+
     /**
      * Set a flag if special surcharge is enabled
      * @param boolean $surcharge Flag if special surcharge is enabled
@@ -940,7 +942,7 @@ class Configuration
         $this->surcharge = (bool)$surcharge;
         return $this;
     }
-    
+
     /**
      * Set an amount which will be added as a surcharge
      * @param float $surchargeAmount Amount which will be added as a surcharge
@@ -951,7 +953,7 @@ class Configuration
         $this->surchargeAmount = $surchargeAmount;
         return $this;
     }
-    
+
     /**
      * Set a percent of value of order which will be added as a surcharge
      * @param float $surchargePercent Percent of value of order which will be added as a surcharge
@@ -962,7 +964,7 @@ class Configuration
         $this->surchargePercent = $surchargePercent;
         return $this;
     }
-    
+
     /**
      * Set the given name of shop which is sent to Dotpay server
      * @param string $shopName Shop name
@@ -973,7 +975,7 @@ class Configuration
         $this->shopName = (string)$shopName;
         return $this;
     }
-    
+
     /**
      * Set a list of all visible channels id, separated by ","
      * @param string $visibleChannels List of all visible channels id
@@ -988,7 +990,7 @@ class Configuration
         }
         return $this;
     }
-    
+
     /**
      * Add channel id to list of visible channels
      * @param int $id Channel id
@@ -1001,7 +1003,7 @@ class Configuration
         }
         return $this;
     }
-    
+
     /**
      * Remove channel id from list of visible channels
      * @param int $id Channel id
@@ -1014,7 +1016,7 @@ class Configuration
         }
         return $this;
     }
-    
+
     /**
      * Set the given API version
      * @param string $api Api version. Only "dev" is allowed.
@@ -1029,7 +1031,7 @@ class Configuration
         $this->api = trim($api);
         return $this;
     }
-    
+
     /**
      * Check if the given currency is on the given list
      * @param string $currency Currency code
@@ -1043,14 +1045,14 @@ class Configuration
         $allowCurrency = str_replace(';', ',', $list);
         $allowCurrency = strtoupper(str_replace(' ', '', $allowCurrency));
         $allowCurrencyArray =  explode(",", trim($allowCurrency));
-        
+
         if (in_array(strtoupper($currency), $allowCurrencyArray)) {
             $result = true;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * Set a private property from child class
      * @param string $name Name of the property

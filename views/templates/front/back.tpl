@@ -31,13 +31,10 @@
 {literal}
     <style type="text/css">
         #statusMessageContainer {
-            text-align: center;
-        }
-        
-        #statusMessageContainer p {
             text-align: left;
         }
-        
+
+
         /* Loader */
         .loading {
             position: relative;
@@ -60,7 +57,7 @@
             border-bottom: 1px solid #ebebeb;
             border-top: 2px solid #9e191d;
             border-radius: 100px;
-            margin: -30px 0 0 -20px; 
+            margin: -30px 0 0 -20px;
             animation: spin .75s infinite linear;
             -webkit-animation: spin .75s infinite linear;
             -moz-animation: spin .75s infinite linear;
@@ -81,12 +78,68 @@
             from { -webkit-transform: rotate(0deg); }
             to { -webkit-transform: rotate(360deg); }
         }
-        
+
         #hiddenHookData {
             display: none;
         }
+
+		#statusMessageContainer > p.alert {
+			font-size: 1.1em;
+			min-height: 70px;
+			padding: 30px;
+		}
+
+		#statusMessageContainer > p.alert-danger:before {
+			font-family: "Material Icons"; content: "\E8DB";
+			font-size: 2.5em;
+			color: #d04f4f;
+			display: block;
+			width: 48px;
+			height: 70px;
+			float: left;
+			padding-top: 5px;
+			margin-right: 20px;
+		}
+
+		#statusMessageContainer > p.alert-success:before {
+			font-family: "Material Icons"; content: "\E8DC";
+			font-size: 2.5em;
+			color: #4cbb6c;
+			display: block;
+			width: 48px;
+			height: 70px;
+			float: left;
+			padding-top: 5px;
+			margin-right: 20px;
+		}
+
+		#statusMessageContainer > p.alert-info:before {
+			font-family: "Material Icons"; content: "\E023";
+			font-size: 2.5em;
+			color: #2fb5d2;
+			display: block;
+			width: 48px;
+			height: 70px;
+			float: left;
+			padding-top: 5px;
+			margin-right: 20px;
+		}
+
+		#statusMessageContainer > p.alert-warning:before {
+			font-family: "Material Icons"; content: "\E002";
+			font-size: 2.5em;
+			color: #FF5722;
+			display: block;
+			width: 48px;
+			height: 70px;
+			float: left;
+			padding-top: 5px;
+			margin-right: 20px;
+		}
+
+
     </style>
-{/literal}     
+{/literal}
 <div id="statusMessageContainer">
     {if $message != null}
         <p class="alert alert-danger">{$message|escape:'htmlall':'UTF-8'}</p>

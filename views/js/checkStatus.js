@@ -29,7 +29,7 @@ function DotpayStatusChecker(parent, config) {
     config.interval = config.interval || 5;
     config.timeout = config.timeout || 120;
     config.delay = config.delay || 5;
-    
+
     var setMessage = function(message, className) {
         parent.find('p').remove();
         var element = document.createElement('p');
@@ -37,7 +37,7 @@ function DotpayStatusChecker(parent, config) {
         element.innerHTML = message;
         parent.prepend(element);
     };
-    
+
     var setErrorMessage = function(message) {
         setMessage(message, 'alert-danger');
     };
@@ -50,7 +50,7 @@ function DotpayStatusChecker(parent, config) {
     var setSuccessMessage = function(message) {
         setMessage(message, 'alert-success');
     };
-    
+
     var showLoader = function() {
         var element = document.createElement('div');
         element.className = 'loading';
@@ -60,23 +60,23 @@ function DotpayStatusChecker(parent, config) {
     var hideLoader = function() {
         parent.find('.loading').remove();
     };
-    
+
     var counter = 0;
     var counterLimit = config.timeout/config.interval;
-    
+
     var getBaseMessage = function(status) {
-        return config.messages.basic+"<br />"+config.messages.status+':&nbsp;'+status;
+        return config.messages.basic+"<br />"+config.messages.status+':&nbsp;<b>'+status+'</b>';
     };
-    
+
     var getMessageWithStatus = function(message, status) {
-        return message+"<br />"+config.messages.status+':&nbsp;'+status;
+        return message+"<br />"+config.messages.status+':&nbsp;<b>'+status+'</b>';
     };
-    
+
     var finish = function(intervalId) {
         hideLoader();
         clearInterval(intervalId);
     };
-    
+
     var isJsonString = function(str) {
         try {
             JSON.parse(str);
@@ -85,7 +85,7 @@ function DotpayStatusChecker(parent, config) {
         }
         return true;
     };
-    
+
     setInfoMessage(config.messages.basic);
     showLoader();
     var checkInt = setInterval(function(){
@@ -93,7 +93,7 @@ function DotpayStatusChecker(parent, config) {
             ++counter;
         else {
             finish(checkInt);
-            setErrorMessage(config.messages.timeout);
+            setWarningMessage(config.messages.timeout);
             return;
         }
         $.get(config.target, {"orderId": config.orderId}, function(e){
@@ -104,7 +104,7 @@ function DotpayStatusChecker(parent, config) {
             } else {
                 return;
             }
-            
+
             data.code = parseInt(data.code);
             if (data.message != undefined && data.message != "") {
                 var additionalMessage = "<br />"+data.message;
@@ -141,7 +141,7 @@ function DotpayStatusChecker(parent, config) {
                     finish(checkInt);
                     var message = config.messages.unknown;
                     if(data.status != undefined) {
-                        message += "<br />"+config.messages.status+':&nbsp;'+data.status;
+                        message += "<br />"+config.messages.status+':&nbsp; <b> '+data.status+'</b>';
                     }
                     setErrorMessage(message+additionalMessage);
             }

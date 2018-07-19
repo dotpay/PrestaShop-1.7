@@ -1,16 +1,16 @@
 <?php
 /**
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Academic Free License (AFL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * http://opensource.org/licenses/afl-3.0.php
- * 
+ *
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to tech@dotpay.pl so we can send you a copy immediately.
- * 
+ *
  * @author    Dotpay Team <tech@dotpay.pl>
  * @copyright Dotpay sp. z o.o.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
@@ -37,17 +37,17 @@ use Dotpay\Exception\BadParameter\ChannelIdException;
 class Dotpay extends Channel
 {
     const CODE = 'dotpay';
-    
+
     /**
      * @var string Description of Dotpay widget
      */
     private $selectChannelTitle = '';
-    
+
     /**
      * @var string Description of "change channel" button
      */
     private $changeChannel = '';
-    
+
     /**
      * @var string Description of available channels option
      */
@@ -64,7 +64,7 @@ class Dotpay extends Channel
         parent::__construct(null, self::CODE, $config, $transaction, $paymentResource, $sellerResource);
         $this->available = true;
     }
-    
+
     /**
      * Check if the channel is visible
      * @return boolean
@@ -76,7 +76,7 @@ class Dotpay extends Channel
                     $this->transaction->getPayment()->getOrder()->getCurrency()
                );
     }
-    
+
     /**
      * Set a payment channel which is used
      * @param int $id Payment channel id
@@ -87,7 +87,7 @@ class Dotpay extends Channel
         $this->setChannelInfo($id);
         return $this;
     }
-    
+
     /**
      * Return an array of fields which can be displayed on a list of payment channels.
      * They can contain aditional fields with information which are needed before continue a payment process.
@@ -98,32 +98,32 @@ class Dotpay extends Channel
         $data = parent::getViewFields();
         if ($this->config->getWidgetVisible() && $this->isVisible()) {
             $config = $this->config;
-            
+
             $link = new A('#', $this->changeChannel.'&nbsp;&raquo;');
             $link->setClass('channel-selected-change');
-            
+
             $div1 = new Div([
                 new PlainText($this->selectChannelTitle.':&nbsp;&nbsp;'),
                 $link
             ]);
             $div1->setClass('selected-channel-message');
             $data[] = $div1;
-            
+
             $div2 = new Div(new PlainText('<hr />'));
             $div2->setClass('selectedChannelContainer channels-wrapper');
             $data[] = $div2;
-            
+
             $div3 = new Div(new PlainText($this->availableChannelsTitle.':'));
             $div3->setClass('collapsibleWidgetTitle');
             $data[] = $div3;
-            
+
             $container = new P();
             $container->setClass($config::WIDGET_CLASS_CONTAINER);
             $data[] = $container;
         }
         return $data;
     }
-    
+
     /**
      * Return array of hidden fields for a form to redirecting to a Dotpay site with all needed information about a current payment
      * @return array
@@ -139,7 +139,7 @@ class Dotpay extends Channel
         }
         return $data;
     }
-    
+
     /**
      * Return a Script element with data which contains a configuration of Dotpay widget
      * @param array $disableChanels List of ids of channels which are used as separated payment channels
@@ -161,7 +161,7 @@ class Dotpay extends Channel
         ];
         return new Script(new PlainText('var dotpayWidgetConfig = '.json_encode($script, 320).';'));
     }
-    
+
     /**
      * Set a description of Dotpay widget
      * @param string $selectChannelTitle Description of Dotpay widget
@@ -172,7 +172,7 @@ class Dotpay extends Channel
         $this->selectChannelTitle = (string)$selectChannelTitle;
         return $this;
     }
-    
+
     /**
      * Set a description of "change channel" button
      * @param string $changeChannel Description of "change channel" button
@@ -183,7 +183,7 @@ class Dotpay extends Channel
         $this->changeChannel = (string)$changeChannel;
         return $this;
     }
-    
+
     /**
      * Set a description of available channels option
      * @param string $availableChannelsTitle Description of available channels option
@@ -194,7 +194,7 @@ class Dotpay extends Channel
         $this->availableChannelsTitle = (string)$availableChannelsTitle;
         return $this;
     }
-    
+
     /**
      * Retrieve informations about the channel from Dotpay server
      * @param int $channelId Code number of payment channel in Dotpay system
@@ -219,7 +219,7 @@ class Dotpay extends Channel
             $this->available = false;
         }
     }
-    
+
     /**
      * Prepare agreements list from the given information
      * @param Info $channelInfo Structure with information about channel
@@ -230,7 +230,8 @@ class Dotpay extends Channel
         foreach ($channelInfo->getForms() as $form) {
             if (isset($form['form_name']) && $form['form_name'] == 'agreement' && isset($form['fields'])) {
                 foreach ($form['fields'] as $field) {
-					if ($field['required'] && $field['name'] != 'personal_data') {	
+					//if ($field['required'] && $field['name'] != 'personal_data') {
+          if ($field['required']) {	
                         $agreements[] = new Agreement($field);
                     }
                 }

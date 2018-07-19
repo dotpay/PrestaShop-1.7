@@ -32,17 +32,17 @@ class Payer
      * @var string Email address of the payer
      */
     private $email;
-    
+
     /**
      * @var string First name of the payer
      */
     private $firstName = '';
-    
+
     /**
      * @var string Last name of the payer
      */
     private $lastName = '';
-    
+
     /**
      * Initialize the model
      * @param string $email Email address of the payer
@@ -51,13 +51,14 @@ class Payer
      */
     public function __construct($email, $firstName = '', $lastName = '')
     {
-        $this->setEmail($email);
+        if (!empty($email))
+            $this->setEmail($email);
         if (!empty($firstName))
             $this->setFirstName($firstName);
         if(!empty($lastName))
             $this->setLastName($lastName);
     }
-    
+
     /**
      * Return an email address of the payer
      * @return string
@@ -66,8 +67,8 @@ class Payer
     {
         return $this->email;
     }
-    
-	
+
+
 		/**
 	 * prepare data for the firstname and lastname so that it would be consistent with the validation
 	 */
@@ -76,8 +77,8 @@ class Payer
 			$NewPersonName1 = preg_replace('/[^\p{L}0-9\s\-_]/u',' ',$value);
 			return $this->encoded_substrParams($NewPersonName1,0,50,24);
 		}
-	
-	
+
+
     /**
      * Return a first name of the payer
      * @return string
@@ -86,7 +87,7 @@ class Payer
     {
 		return $this->NewPersonName($this->firstName);
     }
-    
+
     /**
      * Return a last name of the payer
      * @return string
@@ -95,7 +96,7 @@ class Payer
     {
 		return $this->NewPersonName($this->lastName);
     }
-    
+
     /**
      * Set the email address of the payer
      * @param type $email Email address of the payer
@@ -110,7 +111,7 @@ class Payer
         $this->email = (string)trim($email);
         return $this;
     }
-    
+
     /**
      * Set the first name of the payer
      * @param string $firstName First name of the payer
@@ -125,7 +126,7 @@ class Payer
         $this->firstName = (string)$firstName;
         return $this;
     }
-    
+
     /**
      * Set the last name of the payer
      * @param type $lastName Last name of the payer

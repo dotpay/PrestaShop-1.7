@@ -49,49 +49,50 @@ class Customer extends Payer
         'cz',
         'cs',
         'hu',
-        'ru'
+        'ru',
+        'ro'
     );
-    
+
     /**
      * @var int|null Id of the customer in a shop
      */
     private $id = null;
-    
+
     /**
      * @var string Street name of the customer
      */
     private $street = '';
-    
+
     /**
      * @var string Building number of the customer
      */
     private $buildingNumber = '';
-    
+
     /**
      * @var string Post code of the customer
      */
     private $postCode = '';
-    
+
     /**
      * @var string City of the customer
      */
     private $city = '';
-    
+
     /**
      * @var string Country of the customer
      */
     private $country = '';
-    
+
     /**
      * @var string Phone number of the customer
      */
     private $phone = '';
-    
+
     /**
      * @var string Language used by the customer
      */
     private $language = '';
-    
+
     /**
      * Return an id of the customer in a shop
      * @return int|null
@@ -100,28 +101,28 @@ class Customer extends Payer
     {
         return $this->id;
     }
-    
-	
+
+
 	/**
 	 * checks and crops the size of a string
 	 * the $special parameter means an estimate of how many urlencode characters can be used in a given field
 	 * e.q. 'ż' (1 char) -> '%C5%BC' (6 chars)
 	 * replacing removing double or more special characters that appear side by side by space from: firstname, lastname, city, street, p_info...
-	 */	
+	 */
 	public function encoded_substrParams($string, $from, $to, $special=0)
-		{	
+		{
 			$string2 = preg_replace('/(\s{2,}|\.{2,}|@{2,}|\-{2,}|\/{3,} | \'{2,}|\"{2,}|_{2,})/', ' ', $string);
 			$s = html_entity_decode($string2, ENT_QUOTES, 'UTF-8');
 			$sub = mb_substr($s, $from, $to,'UTF-8');
 			$sum = strlen(urlencode($sub));
-			
+
 			if($sum  > $to)
-				{    
-					$newsize = $to - $special; 		
+				{
+					$newsize = $to - $special;
 					$sub = mb_substr($s, $from, $newsize,'UTF-8');
-				} 	
+				}
 			return trim($sub);
-		}   
+		}
 
 
 
@@ -134,7 +135,7 @@ class Customer extends Payer
         $this->extractBnFromStreet();
         return $this->street;
     }
-    
+
     /**
      * Return a building number of the customer
      * @return string
@@ -144,8 +145,8 @@ class Customer extends Payer
         $this->extractBnFromStreet();
         return $this->buildingNumber;
     }
-    
- 	
+
+
 	/**
 	 * prepare data for the postcode so that it would be consistent with the validation
 	 */
@@ -153,7 +154,7 @@ class Customer extends Payer
 		{
 			$NewPostcode1 = preg_replace('/[^\d\w\s\-]/','',$value);
 			return $this->encoded_substrParams($NewPostcode1,0,20,6);
-		}  
+		}
 
     /**
      * Return a post code of the customer
@@ -163,8 +164,8 @@ class Customer extends Payer
     {
         return $this->NewPostcode($this->postCode);
     }
-    
-   
+
+
 
 	/**
 	 * prepare data for the city so that it would be consistent with the validation
@@ -183,7 +184,7 @@ class Customer extends Payer
     {
         return $this->NewCity($this->city);
     }
-    
+
     /**
      * Return a country of the customer
      * @return string
@@ -192,8 +193,8 @@ class Customer extends Payer
     {
         return $this->country;
     }
-    
-    
+
+
 	/**
 	 * prepare data for the phone so that it would be consistent with the validation
 	 */
@@ -202,7 +203,7 @@ class Customer extends Payer
 			$NewPhone1 = preg_replace('/[^\+\s0-9\-_]/','',$value);
 			return $this->encoded_substrParams($NewPhone1,0,20,6);
 		}
-	
+
 	/**
      * Return a phone number of the customer
      * @return string
@@ -211,7 +212,7 @@ class Customer extends Payer
     {
         return $this->NewPhone($this->phone);
     }
-    
+
     /**
      * Return a language used by the customer
      * @return string
@@ -220,7 +221,7 @@ class Customer extends Payer
     {
         return $this->language;
     }
-    
+
     /**
      * Set an id of the customer in a shop
      * @param string $id Id of the customer in a shop
@@ -231,7 +232,7 @@ class Customer extends Payer
         $this->id = $id;
         return $this;
     }
-    
+
     /**
      * Set a street name of the customer
      * @param string $street Street name of the customer
@@ -246,7 +247,7 @@ class Customer extends Payer
         $this->street = (string)$this->NewStreet($street);
         return $this;
     }
-    
+
     /**
      * Set a building number of the customer
      * @param string $buildingNumber Building number of the customer
@@ -261,7 +262,7 @@ class Customer extends Payer
         $this->buildingNumber = ((string)$this->NewStreet_n1($buildingNumber) !== null) ? (string)$this->NewStreet_n1($buildingNumber) : ' ';
         return $this;
     }
-    
+
     /**
      * Set a post code of the customer
      * @param string $postCode Post code of the customer
@@ -276,7 +277,7 @@ class Customer extends Payer
         $this->postCode = (string)$this->NewPostcode($postCode);
         return $this;
     }
-    
+
     /**
      * Set a city of the customer
      * @param string $city City of the customer
@@ -291,7 +292,7 @@ class Customer extends Payer
         $this->city = (string)$this->NewCity($city);
         return $this;
     }
-    
+
     /**
      * Set a country of the customer
      * @param string $country Country of the customer
@@ -306,7 +307,7 @@ class Customer extends Payer
         $this->country = (string)$country;
         return $this;
     }
-    
+
     /**
      * Set a phone number of the customer
      * @param string $phone Phone number of the customer
@@ -321,7 +322,7 @@ class Customer extends Payer
         $this->phone = (string)trim($this->NewPhone($phone));
         return $this;
     }
-    
+
     /**
      * Set a language used by the customer
      * @param string $language Language used by the customer
@@ -336,17 +337,17 @@ class Customer extends Payer
         $this->language = (string)trim($language);
         return $this;
     }
-    
-    
+
+
 	/**
 	 * prepare data for the street so that it would be consistent with the validation
 	 */
 	public function NewStreet($value)
-		{	
+		{
 			$NewStreet1 = preg_replace('/[^\p{L}0-9\.\s\-\/_,]/u',' ',$value);
 			return $this->encoded_substrParams($NewStreet1,0,100,50);
 		}
-	
+
 	/**
 	 * prepare data for the street_n1 so that it would be consistent with the validation
 	 */
@@ -355,15 +356,15 @@ class Customer extends Payer
 			$NewStreet_n1a = preg_replace('/[^\p{L}0-9\s\-_\/]/u',' ',$value);
 			return $this->encoded_substrParams($NewStreet_n1a,0,30,24);
 		}
-	
+
 	/**
      * Try to extract a building number from the street name if it's an empty field
      */
     private function extractBnFromStreet()
-    {	
+    {
 		$Street1 = $this->NewStreet($this->street);
 		$Street_n1 = $this->NewStreet_n1($this->buildingNumber);
-		
+
         if (empty($Street_n1) && !empty($Street1)) {
 			preg_match("/\s[\p{L}0-9\s\-_\/]{1,15}$/u", $Street1, $matches);
             if (count($matches)>0) {
