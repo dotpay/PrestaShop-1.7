@@ -93,9 +93,9 @@ class Operation
     private $commissionAmount = null;
     
     /**
-     * @var boolean A flag if operation is marked as completed in Seller panel
+     * @var boolean|null A flag if operation is marked as completed in Seller panel
      */
-    private $completed = false;
+    private $completed = null;
     
     /**
      * @var int|null An account id of a seller
@@ -295,11 +295,32 @@ class Operation
     
     /**
      * Return a flag if operation is marked as completed in Seller panel
-     * @return boolean
+     * @return boolean|null
      */
     public function isCompleted()
     {
         return $this->completed;
+    }
+
+    /**
+     * Return a string representation of $this->isCompleted() for calculating signature.
+     *
+     * @return string
+     */
+    public function isCompletedString()
+    {
+        if($this->isCompleted() === null)
+        {
+            return "";
+        }
+        elseif($this->isCompleted() === true)
+        {
+            return "true";
+        }
+        else
+        {
+            return "false";
+        }
     }
     
     /**

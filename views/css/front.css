@@ -107,6 +107,8 @@ select[name="dotpay_card_list"] {
     border: 1px solid #2fb5d2;
     font-size: 14px;
     color: #0a4451;
+	height: 32px;
+	padding: 5px;
 }
 
 .dotpay-one-channel.row {

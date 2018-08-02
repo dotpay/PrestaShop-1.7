@@ -230,8 +230,7 @@ class Dotpay extends Channel
         foreach ($channelInfo->getForms() as $form) {
             if (isset($form['form_name']) && $form['form_name'] == 'agreement' && isset($form['fields'])) {
                 foreach ($form['fields'] as $field) {
-					//if ($field['required'] && $field['name'] != 'personal_data') {
-          if ($field['required']) {	
+					if ($field['required']) {	
                         $agreements[] = new Agreement($field);
                     }
                 }

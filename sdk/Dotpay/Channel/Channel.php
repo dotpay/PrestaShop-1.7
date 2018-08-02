@@ -38,67 +38,67 @@ use Dotpay\Html\Container\Form;
 class Channel
 {
     const CODE = 'channel';
-    
+
     /**
      * Name of cash channels group
      */
     const CASH_GROUP = 'cash';
-    
+
     /**
      * Name of transfer channels group
      */
     const TRANSFER_GROUP = 'transfers';
-    
+
     /**
      * @var int Code number of payment channel in Dotpay system
      */
     protected $code;
-    
+
     /**
      * @var array Array of values which can be set for saving some additional informations
      */
     protected $reqistry = [];
-    
+
     /**
      * @var Configuration Dotpay configuration object
      */
     protected $config;
-    
+
     /**
      * @var \Dotpay\Resource\Channel\ChannelInfo A channel info struct, downloaded from Dotpay server
      */
     protected $channelInfo;
-    
+
     /**
      * @var array An agreement struct, downloaded from Dotpay server
      */
     protected $agreements = [];
-    
+
     /**
      * @var boolean Flag of an availability of the channel
      */
     protected $available = false;
-    
+
     /**
      * @var Transaction Object with transaction details
      */
     protected $transaction;
-    
+
     /**
      * @var PaymentResource Payment resource which can be used for Payment API
      */
     protected $paymentResource;
-    
+
     /**
      * @var SellerResource Seller resource which can be used for Payment API
      */
     protected $sellerResource;
-    
+
     /**
      * @var string Title which can be displayed on the channel list
      */
     protected $title = '';
-    
+
     /**
      * @var Seller Object of used seller
      */
@@ -127,7 +127,7 @@ class Channel
         $this->transaction->getPayment()->setSeller($this->seller);
         $this->setChannelInfo($channelId);
     }
-    
+
     /**
      * Save the given value for the name
      * @param string $name The name of the value
@@ -139,7 +139,7 @@ class Channel
         $this->reqistry[$name] = $value;
         return $this;
     }
-    
+
     /**
      * Get the saved value by the given name
      * @param string $name Name of the saved value
@@ -166,7 +166,7 @@ class Channel
             return null;
         }
     }
-    
+
     /**
      * Return a readable name of the channel
      * @return string|null
@@ -179,7 +179,7 @@ class Channel
             return null;
         }
     }
-    
+
     /**
      * Return a name of a group to which it belongs the channel
      * @return string|null
@@ -192,7 +192,7 @@ class Channel
             return null;
         }
     }
-    
+
     /**
      * Return an URL of a image with logo of the payment channel
      * @return string|null
@@ -205,7 +205,7 @@ class Channel
             return null;
         }
     }
-    
+
     /**
      * Return a short string code of the payment channel
      * @return string
@@ -214,7 +214,7 @@ class Channel
     {
         return $this->code;
     }
-    
+
     /**
      * Return a title which can be displayed on the channel list
      * @return string
@@ -223,7 +223,7 @@ class Channel
     {
         return $this->title;
     }
-    
+
     /**
      * Set the given seller
      * @param SellerModel $seller Model of shop seller
@@ -234,7 +234,7 @@ class Channel
         $this->seller = $seller;
         return $this;
     }
-    
+
     /**
      * Check a visibility of the channel on a channels list
      * @return boolean
@@ -246,7 +246,7 @@ class Channel
                     $this->transaction->getPayment()->getOrder()->getCurrency()
                );
     }
-    
+
     /**
      * Check an availability of the channel
      * @return boolean
@@ -255,7 +255,7 @@ class Channel
     {
         return $this->available;
     }
-    
+
     /**
      * Check if the channel is enabled to using
      * @return boolean
@@ -265,7 +265,7 @@ class Channel
         return $this->isVisible() &&
                $this->isAvailable();
     }
-    
+
     /**
      * Return an array of fields which can be displayed on a list of payment channels.
      * They can contain aditional fields with information which are needed before continue a payment process.
@@ -276,7 +276,7 @@ class Channel
         $data = array();
         return $data;
     }
-    
+
     /**
      * Return view fields enriched by an additional piece of HTML code
      * @return array
@@ -285,7 +285,7 @@ class Channel
     {
         return $this->getViewFields();
     }
-    
+
     /**
      * Return array of hidden fields for a form to redirecting to a Dotpay site with all needed information about a current payment
      * @return array
@@ -319,11 +319,11 @@ class Channel
         $data['postcode'] = $this->transaction->getPayment()->getCustomer()->getPostCode();
         $data['country'] = $this->transaction->getPayment()->getCustomer()->getCountry();
         $data['bylaw'] = 1;
-        // $data['personal_data'] = 1;
+        $data['personal_data'] = 1;
         $data['channel'] = $this->getChannelId();
         return $data;
     }
-    
+
     /**
      * Return an array with all hidden fields including CHK
      * @return array
@@ -333,7 +333,7 @@ class Channel
         $data['chk'] = $this->getCHK($data);
         return $data;
     }
-    
+
     /**
      * Return a form with all hidden fields for payment
      * @return Form
@@ -349,7 +349,7 @@ class Channel
                     ->setMethod('post')
                     ->setAction($this->config->getPaymentUrl());
     }
-    
+
     /**
      * Return an array with agreement structs, downloaded from Dotpay server
      * @return array
@@ -358,7 +358,7 @@ class Channel
     {
         return $this->agreements;
     }
-    
+
     /**
      * Return object with transaction details
      * @return Transaction
@@ -367,7 +367,7 @@ class Channel
     {
         return $this->transaction;
     }
-    
+
     /**
      * Return a configuration object
      * @return Configuration
@@ -375,7 +375,7 @@ class Channel
     public function getConfig() {
         return $this->config;
     }
-    
+
     /**
      * Check if the channel can have an instruction
      * @return boolean
@@ -384,7 +384,7 @@ class Channel
     {
         return $this->config->getInstructionVisible() &&
                $this->sellerResource->isAccountRight() &&
-               ($this->getGroup() == self::CASH_GROUP || 
+               ($this->getGroup() == self::CASH_GROUP ||
                $this->getGroup() == self::TRANSFER_GROUP);
     }
 
@@ -398,7 +398,7 @@ class Channel
         $this->agreements[] = $agreement;
         return $this;
     }
-    
+
     /**
      * Set a title which can be displayed on the channel list
      * @param string $title Title which can be displayed on the channel list
@@ -409,7 +409,7 @@ class Channel
         $this->title = (string)$title;
         return $this;
     }
-    
+
     /**
      * Return saved Seller model
      * @return SellerModel
@@ -443,7 +443,7 @@ class Channel
             $this->available = false;
         }
     }
-    
+
     /**
      * Set the seller model with the correct data from plugin Configuration
      */
@@ -454,7 +454,7 @@ class Channel
             $this->config->getPin()
         ]);
     }
-    
+
     /**
      * Calculate CHK for the given data
      * @param array $inputParameters Array with transaction parameters
@@ -524,7 +524,7 @@ class Channel
             (isset($inputParameters['recurring_interval']) ? $inputParameters['recurring_interval'] : null).
             (isset($inputParameters['recurring_start']) ? $inputParameters['recurring_start'] : null).
             (isset($inputParameters['recurring_count']) ? $inputParameters['recurring_count'] : null);
-            
+
         return hash('sha256',$CHkInputString);
     }
 }

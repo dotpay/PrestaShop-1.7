@@ -48,14 +48,14 @@ $(document).ready(function(){
     $('input[name=payment-option]').change(function(){
         $('.agreements input[required]').prop('checked', true);
     });
-    
+
 	$("input.dotpay_blik_code").bind('keyup paste keydown', function(e) {
 		if (/\D/g.test(this.value))
 			{
 				this.value = this.value.replace(/\D/g, '');
 			}
 		});
-    
+		
     $("input.dotpay_blik_code").attr("pattern", "[0-9]{6}");
     $("input.dotpay_blik_code").attr("maxlength", "6");
 

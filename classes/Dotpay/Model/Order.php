@@ -27,7 +27,7 @@ class Order extends \Dotpay\Model\Order
      * @var float Anount of shipping
      */
     private $shippingAmount;
-
+    
     /**
      * Return an amount of shipping
      * @return float
@@ -36,7 +36,7 @@ class Order extends \Dotpay\Model\Order
     {
         return $this->shippingAmount;
     }
-
+    
     /**
      * Return an amount of an additional surcharge for display it on shop site
      * @param Configuration $config Plugin configuration
@@ -52,7 +52,7 @@ class Order extends \Dotpay\Model\Order
         }
         return $this->getFormatAmount($price, $currency);
     }
-
+    
     /**
      * Return an amount of an additional extracharge for add it to an order
      * @param Configuration $config Plugin configuration
@@ -73,7 +73,7 @@ class Order extends \Dotpay\Model\Order
         }
         return $this->getFormatAmount($price, $currency);
     }
-
+    
     /**
      * Returns amount after discount for Dotpay
      * @param Configuration $config Plugin configuration
@@ -96,7 +96,7 @@ class Order extends \Dotpay\Model\Order
         }
         return $price;
     }
-
+    
     /**
      * Returns amount in correct format
      * @param float $amount Amount of the order
@@ -124,7 +124,7 @@ class Order extends \Dotpay\Model\Order
         $amount = \Tools::displayPrice($amount);
         return preg_replace('/[^0-9.]/', '', str_replace(',', '.', $amount));
     }
-
+    
     /**
      * Set the given amount as shipping cost of the order
      * @param float $shippingAmount

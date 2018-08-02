@@ -49,8 +49,8 @@ class Customer extends Payer
         'cz',
         'cs',
         'hu',
-        'ru',
-        'ro'
+        'ro',
+        'ru'
     );
 
     /**

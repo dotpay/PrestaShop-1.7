@@ -102,7 +102,7 @@ class Notification
 	/**
 	 * prepare data for the name of the shop so that it would be consistent with the validation
 	 */
-	public function NewShopName($value)
+	public static function NewShopName($value)
 		{	
 			$NewShop_name1 = preg_replace('/[^\p{L}0-9\s\"\/\\:\.\$\+!#\^\?\-_@]/u','',$value);
 			return Customer::encoded_substrParams($NewShop_name1,0,300,60);
@@ -115,7 +115,7 @@ class Notification
      */
     public function getShopName()
     {
-		return $this->NewShopName($this->shopName);
+		return self::NewShopName($this->shopName);
     }
     
     /**
@@ -181,7 +181,7 @@ class Notification
             $this->getOperation()->getCurrency().
             $this->getOperation()->getWithdrawalAmount().
             $this->getOperation()->getCommissionAmount().
-            $this->getOperation()->isCompleted().
+            $this->getOperation()->isCompletedString().
             $this->getOperation()->getOriginalAmount().
             $this->getOperation()->getOriginalCurrency().
             $this->getOperation()->getDateTime()->format('Y-m-d H:i:s').
@@ -203,6 +203,7 @@ class Notification
             $this->getChannelId().
             $this->getChannelCountry().
             $this->getIpCountry();
+
         return hash('sha256', $sign);
     }
     

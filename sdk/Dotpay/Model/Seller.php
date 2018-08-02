@@ -114,7 +114,7 @@ class Seller
      */
     public function getInfo()
     {
-        return $this->info;
+        return Notification::NewShopName($this->info);
     }
     
     /**
