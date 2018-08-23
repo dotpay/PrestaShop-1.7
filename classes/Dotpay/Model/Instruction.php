@@ -38,7 +38,7 @@ class Instruction extends \Dotpay\Model\Instruction
     private $obtained = false;
     
     /**
-     * @var Order Object of Order, assigned to this instruction
+     * @var Order ObjectNode of Order, assigned to this instruction
      */
     private $order;
     

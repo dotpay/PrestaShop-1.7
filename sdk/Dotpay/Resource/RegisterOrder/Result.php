@@ -34,7 +34,7 @@ class Result
     private $statusUrl;
     
     /**
-     * @var Redirect Object which contains informations about redirecting to the page where the payment can be finished, if it's needed by the used payment channel
+     * @var Redirect ObjectNode which contains informations about redirecting to the page where the payment can be finished, if it's needed by the used payment channel
      */
     private $redirect = null;
     
@@ -112,7 +112,7 @@ class Result
     
     /**
      * Set an object which contains informations about redirecting to the finish page
-     * @param Redirect $redirect Object which contains informations about redirecting to the page where the payment can be finished
+     * @param Redirect $redirect ObjectNode which contains informations about redirecting to the page where the payment can be finished
      * @return Result
      */
     public function setRedirect(Redirect $redirect)

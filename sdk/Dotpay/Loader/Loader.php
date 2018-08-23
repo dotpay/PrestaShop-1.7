@@ -19,7 +19,7 @@ namespace Dotpay\Loader;
 
 use \ReflectionClass;
 use Dotpay\Loader\Xml\Param;
-use Dotpay\Loader\Xml\Object;
+use Dotpay\Loader\Xml\ObjectNode;
 use Dotpay\Exception\DotpayException;
 use Dotpay\Exception\Loader\ObjectNotFoundException;
 use Dotpay\Exception\Loader\ParamNotFoundException;
@@ -36,13 +36,13 @@ class Loader
     private static $instance = null;
     
     /**
-     * @var array List of Object elements which can contain instantiated objects.
+     * @var array List of ObjectNode elements which can contain instantiated objects.
      * Keys are class names.
      */
     private $objects = [];
     
     /**
-     * @var array List of Object elements which can contain instantiated objects.
+     * @var array List of ObjectNode elements which can contain instantiated objects.
      * Keys are aliases.
      */
     private $aliases = [];
@@ -124,15 +124,16 @@ class Loader
     
     /**
      * Set the given object with the given name and alias.
-     * Return the Object which represents the given object
+     * Return the ObjectNode which represents the given object
      * @param string $className Class name of the given object
      * @param object $object The object which is set
      * @param string|null $alias Alias of the given object
-     * @return Object
+     * @return ObjectNode
      */
     public function set($className, $object, $alias = null)
     {
-        $newObject = new Object($className, [], $alias);
+        $newObject = new ObjectNode
+        ($className, [], $alias);
         $newObject->setStoredInstance([], $object);
         $this->objects[$className] = $newObject;
         if ($alias !== null) {
@@ -146,7 +147,7 @@ class Loader
      * @param string $className The class name of the object
      * @param array $params The arameter list
      * @param string|null $alias The alias of the object
-     * @return Object
+     * @return ObjectNode
      */
     public function object($className, array $params = [], $alias = null)
     {
@@ -157,7 +158,7 @@ class Loader
             $objParam->setStoredValue($value);
             $normalizedParams[] = $objParam;
         }
-        $newObject = new Object($className, $normalizedParams, $alias);
+        $newObject = new ObjectNode($className, $normalizedParams, $alias);
         $this->objects[$className] = $newObject;
         if ($alias !== null) {
             $this->aliases[$alias] = $newObject;
@@ -167,10 +168,10 @@ class Loader
     
     /**
      * Set a value of the parameter which is identified by class name and parameter name.
-     * Return the Object whose value has been set.
+     * Return the ObjectNode whose value has been set.
      * @param string $name A name of the parameter, which is composed of a class name and a parameter name, separated by ":" character
      * @param mixed $value A value of the parameter
-     * @return Object
+     * @return ObjectNode
      * @throws ParamNotFoundException
      */
     public function parameter($name, $value)
@@ -186,7 +187,7 @@ class Loader
     /**
      * Return an object which class name or alias is given
      * @param string $name A class name or an alias of an object
-     * @return Object
+     * @return ObjectNode
      * @throws EmptyObjectNameException Thrown when object name is empty
      * @throws ObjectNotFoundException Thrown when object with the given name is not found
      */
@@ -205,12 +206,12 @@ class Loader
     }
     
     /**
-     * Return an instance of object which is represented by the given Object, instantiated using the given param list
-     * @param Object $object The Object instance which describes returned object
+     * Return an instance of object which is represented by the given ObjectNode, instantiated using the given param list
+     * @param ObjectNode $object The ObjectNode instance which describes returned object
      * @param array $params The param list
      * @return object|null
      */
-    private function getObjectInstance(Object $object, array $params = [])
+    private function getObjectInstance(ObjectNode $object, array $params = [])
     {
         $storedInstance = $object->getStoredInstance($params);
         if (empty($storedInstance) || $object->getAlwaysNew() == true) {

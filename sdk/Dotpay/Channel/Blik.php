@@ -46,7 +46,7 @@ class Blik extends Channel
     /**
      * Initialize a Blik channel
      * @param Configuration $config Dotpay configuration object
-     * @param Transaction $transaction Object with transaction details
+     * @param Transaction $transaction ObjectNode with transaction details
      * @param PaymentResource $paymentResource Payment resource which can be used for Payment API
      * @param SellerResource $sellerResource Seller resource which can be used for Seller API
      */

@@ -26,8 +26,9 @@ class PostCode implements IValidate {
      * @param mixed $value The given value
      * @return boolean
      */
-    public static function validate($value) {
-        return (bool)preg_match('/^[\d\w\s\-]{0,20}$/', $value);
+    public static function validate($value1) {
+		$value = trim($value1);
+        return (bool)preg_match('/^[\d\w\s\-]{0,20}$/', $value) || empty($value);
     }
 }
 

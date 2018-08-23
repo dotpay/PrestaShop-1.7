@@ -26,7 +26,8 @@ class Phone implements IValidate {
      * @param mixed $value The given value
      * @return boolean
      */
-    public static function validate($value) {
-        return (bool)preg_match('/^[\+\s0-9\-_]{3,20}$/', $value);
+    public static function validate($value1) {
+		$value = trim($value1);
+        return (bool)preg_match('/^[\+\s0-9\-_]{3,20}$/', $value) || empty($value);
     }
 }

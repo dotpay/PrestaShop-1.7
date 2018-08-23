@@ -31,7 +31,7 @@ class Cc extends Channel
     /**
      * Initialize a credit card channel
      * @param Configuration $config Dotpay configuration object
-     * @param Transaction $transaction Object with transaction details
+     * @param Transaction $transaction ObjectNode with transaction details
      * @param PaymentResource $paymentResource Payment resource which can be used for Payment API
      * @param SellerResource $sellerResource Seller resource which can be used for Seller API
      */

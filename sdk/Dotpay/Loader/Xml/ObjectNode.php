@@ -20,10 +20,10 @@ namespace Dotpay\Loader\Xml;
 use Dotpay\Exception\Loader\EmptyObjectNameException;
 
 /**
- * Object node in XML file with Dependency Injection rules.
+ * ObjectNode node in XML file with Dependency Injection rules.
  * It represents created object.
  */
-class Object
+class ObjectNode
 {
     /**
      * @var string Class name of the object
@@ -118,7 +118,7 @@ class Object
      * Set a value to the parameter which has the given name, if the parameter is in a set of named parameters
      * @param string $name A name of the parameter
      * @param mixed $value A value to set
-     * @return Object
+     * @return ObjectNode
      */
     public function setParamVal($name, $value)
     {
@@ -150,7 +150,7 @@ class Object
     }
     
     /**
-     * Return an object which was created with the given set of params and which is set as an one of instances inside the Object
+     * Return an object which was created with the given set of params and which is set as an one of instances inside the ObjectNode
      * @param array $params An array of params
      * @return object|null
      */
@@ -163,8 +163,8 @@ class Object
     /**
      * Set the instance of an object which was created with using the given set of params
      * @param array $params Params which were used to create the instance
-     * @param object $instance An instance of a object which is the instance of the class represents by the Object
-     * @return Object
+     * @param object $instance An instance of a object which is the instance of the class represents by the ObjectNode
+     * @return ObjectNode
      */
     public function setStoredInstance($params, $instance)
     {
@@ -174,7 +174,7 @@ class Object
     }
     
     /**
-     * Return a string which contains XML representation of the Object
+     * Return a string which contains XML representation of the ObjectNode
      * @return string
      */
     public function getXml()

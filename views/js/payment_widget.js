@@ -756,7 +756,7 @@ jQuery.extend({
 	isPlainObject: function( obj ) {
 		var key;
 
-		// Must be an Object.
+		// Must be an ObjectNode.
 		// Because of IE, we also have to check the presence of the constructor property.
 		// Make sure that DOM nodes and window objects don't pass through, as well
 		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
@@ -764,7 +764,7 @@ jQuery.extend({
 		}
 
 		try {
-			// Not own constructor property must be Object
+			// Not own constructor property must be ObjectNode
 			if ( obj.constructor &&
 				!hasOwn.call(obj, "constructor") &&
 				!hasOwn.call(obj.constructor.prototype, "isPrototypeOf") ) {
@@ -1036,7 +1036,7 @@ jQuery.extend({
 });
 
 // Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
+jQuery.each("Boolean Number String Function Array Date RegExp ObjectNode Error".split(" "), function(i, name) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 });
 
@@ -1362,7 +1362,7 @@ function Sizzle( selector, context, results, seed ) {
 
 /**
  * Create key-value caches of limited size
- * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
+ * @returns {Function(string, ObjectNode)} Returns the ObjectNode data after storing it on itself with
  *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
  *	deleting the oldest entry
  */
@@ -1945,7 +1945,7 @@ Sizzle.attr = function( elem, name ) {
 	}
 
 	var fn = Expr.attrHandle[ name.toLowerCase() ],
-		// Don't get fooled by Object.prototype properties (jQuery #13807)
+		// Don't get fooled by ObjectNode.prototype properties (jQuery #13807)
 		val = fn && hasOwn.call( Expr.attrHandle, name.toLowerCase() ) ?
 			fn( elem, name, !documentIsHTML ) :
 			undefined;
@@ -3545,10 +3545,10 @@ var rnotwhite = (/\S+/g);
 
 
 
-// String to Object options format cache
+// String to ObjectNode options format cache
 var optionsCache = {};
 
-// Convert String-formatted options into Object-formatted ones and store in cache
+// Convert String-formatted options into ObjectNode-formatted ones and store in cache
 function createOptions( options ) {
 	var object = optionsCache[ options ] = {};
 	jQuery.each( options.match( rnotwhite ) || [], function( _, flag ) {
@@ -3581,7 +3581,7 @@ function createOptions( options ) {
  */
 jQuery.Callbacks = function( options ) {
 
-	// Convert options from String-formatted to Object-formatted if needed
+	// Convert options from String-formatted to ObjectNode-formatted if needed
 	// (we check in cache first)
 	options = typeof options === "string" ?
 		( optionsCache[ options ] || createOptions( options ) ) :
@@ -4356,7 +4356,7 @@ function internalRemoveData( elem, name, pvt ) {
 jQuery.extend({
 	cache: {},
 
-	// The following elements (space-suffixed to avoid Object.prototype collisions)
+	// The following elements (space-suffixed to avoid ObjectNode.prototype collisions)
 	// throw uncatchable exceptions if you attempt to set expando properties
 	noData: {
 		"applet ": true,
@@ -4984,7 +4984,7 @@ jQuery.event = {
 		}
 		ontype = type.indexOf(":") < 0 && "on" + type;
 
-		// Caller can pass in a jQuery.Event object, Object, or just an event type string
+		// Caller can pass in a jQuery.Event object, ObjectNode, or just an event type string
 		event = event[ jQuery.expando ] ?
 			event :
 			new jQuery.Event( type, typeof event === "object" && event );
@@ -5176,7 +5176,7 @@ jQuery.event = {
 					for ( i = 0; i < delegateCount; i++ ) {
 						handleObj = handlers[ i ];
 
-						// Don't conflict with Object.prototype properties (#13203)
+						// Don't conflict with ObjectNode.prototype properties (#13203)
 						sel = handleObj.selector + " ";
 
 						if ( matches[ sel ] === undefined ) {
@@ -5668,9 +5668,9 @@ jQuery.fn.extend({
 
 		// Types can be a map of types/handlers
 		if ( typeof types === "object" ) {
-			// ( types-Object, selector, data )
+			// ( types-ObjectNode, selector, data )
 			if ( typeof selector !== "string" ) {
-				// ( types-Object, data )
+				// ( types-ObjectNode, data )
 				data = data || selector;
 				selector = undefined;
 			}
@@ -12094,7 +12094,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
   // often you call it. Useful for lazy initialization.
   _.once = _.partial(_.before, 2);
 
-  // Object Functions
+  // ObjectNode Functions
   // ----------------
 
   // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
@@ -12120,7 +12120,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
   }
 
   // Retrieve the names of an object's own properties.
-  // Delegates to **ECMAScript 5**'s native `Object.keys`
+  // Delegates to **ECMAScript 5**'s native `ObjectNode.keys`
   _.keys = function(obj) {
     if (!_.isObject(obj)) return [];
     if (nativeKeys) return nativeKeys(obj);
@@ -12310,7 +12310,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
         return '' + a === '' + b;
       case '[object Number]':
         // `NaN`s are equivalent, but non-reflexive.
-        // Object(NaN) is equivalent to NaN
+        // ObjectNode(NaN) is equivalent to NaN
         if (+a !== +a) return +b !== +b;
         // An `egal` comparison is performed for other numeric values.
         return +a === 0 ? 1 / +a === 1 / b : +a === +b;
@@ -12326,7 +12326,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
     if (!areArrays) {
       if (typeof a != 'object' || typeof b != 'object') return false;
 
-      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+      // Objects with different constructors are not equivalent, but `ObjectNode`s or `Array`s
       // from different frames are.
       var aCtor = a.constructor, bCtor = b.constructor;
       if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&

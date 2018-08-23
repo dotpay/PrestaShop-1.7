@@ -26,7 +26,7 @@
 <form class="payment-form" method="POST" action="{$channel->get('target')}">
     <div class="dotpay-one-channel row">
         {if !empty($script)}
-            <link href="{$dotpayUrl}widget/payment_widget.min.css" rel="stylesheet">
+            <link href="{$modulePath}views/css/payment_widget.min.css" rel="stylesheet">
             <script src="{$modulePath}views/js/payment_widget.js"></script>
             {$script nofilter}
         {/if}

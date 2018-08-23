@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.1.2';
+        $this->version = '1.1.3';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -1084,7 +1084,7 @@ class Dotpay extends PaymentModule
 
     /**
      * Return an array with arguments for the target url for payment
-     * @param Channel $channel Object of channel
+     * @param Channel $channel ObjectNode of channel
      * @return array
      */
     private function getArgumentsForChannelTarget(Channel $channel)

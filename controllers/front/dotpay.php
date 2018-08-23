@@ -53,7 +53,7 @@ abstract class DotpayController extends ModuleFrontController
     protected $config;
     
     /**
-     * @var Channel Object of initialized payment channel
+     * @var Channel ObjectNode of initialized payment channel
      */
     private $channel;
     

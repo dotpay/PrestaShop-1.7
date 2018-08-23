@@ -26,8 +26,9 @@ class BNumber implements IValidate {
      * @param mixed $value The given value
      * @return boolean
      */
-    public static function validate($value) {
-        return (bool)preg_match('/^[\p{L}0-9\s\-_\/]{1,30}$/u', $value);
+    public static function validate($value1) {
+		$value = trim($value1);
+        return (bool)preg_match('/^[\p{L}0-9\s\-_\/]{1,30}$/u', $value) || empty($value);
     }
 }
 

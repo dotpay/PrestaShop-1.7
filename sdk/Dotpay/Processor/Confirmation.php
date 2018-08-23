@@ -41,27 +41,27 @@ class Confirmation
     private $outputMessage;
     
     /**
-     * @var Configuration Object of Dotpay configuration
+     * @var Configuration ObjectNode of Dotpay configuration
      */
     protected $config;
     
     /**
-     * @var PaymentResource Object of payment resource
+     * @var PaymentResource ObjectNode of payment resource
      */
     protected $paymentApi;
     
     /**
-     * @var SellerApi Object of seller resource
+     * @var SellerApi ObjectNode of seller resource
      */
     protected $sellerApi;
     
     /**
-     * @var Payment Object with payment data
+     * @var Payment ObjectNode with payment data
      */
     private $payment;
     
     /**
-     * @var Notification Object with notification data
+     * @var Notification ObjectNode with notification data
      */
     private $notification;
     
@@ -82,9 +82,9 @@ class Confirmation
     
     /**
      * Initialize the processor
-     * @param Configuration $config Object of Dotpay configuration
-     * @param PaymentResource $paymentApi Object of payment resource
-     * @param SellerResource $sellerApi Object of seller resource
+     * @param Configuration $config ObjectNode of Dotpay configuration
+     * @param PaymentResource $paymentApi ObjectNode of payment resource
+     * @param SellerResource $sellerApi ObjectNode of seller resource
      */
     public function __construct(Configuration $config, PaymentResource $paymentApi, SellerResource $sellerApi)
     {

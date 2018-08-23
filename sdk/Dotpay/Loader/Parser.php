@@ -17,7 +17,7 @@
  */
 namespace Dotpay\Loader;
 
-use Dotpay\Loader\Xml\Object;
+use Dotpay\Loader\Xml\ObjectNode;
 use Dotpay\Loader\Xml\Param;
 use Dotpay\Exception\Loader\XmlNotFoundException;
 use \SimpleXMLElement;
@@ -33,7 +33,7 @@ class Parser
     private $xml;
     
     /**
-     * @var array An array of Object elements which represent parsed object nodes
+     * @var array An array of ObjectNode elements which represent parsed object nodes
      */
     private $objects = [];
     
@@ -51,7 +51,7 @@ class Parser
     }
     
     /**
-     * Return an array with Object elements created after parsing the XML file
+     * Return an array with ObjectNode elements created after parsing the XML file
      * @return array
      */
     public function getObjects()
@@ -63,7 +63,7 @@ class Parser
     }
     
     /**
-     * Parse the XML file and build a list of Object elements
+     * Parse the XML file and build a list of ObjectNode elements
      */
     private function parse()
     {
@@ -72,7 +72,7 @@ class Parser
             foreach ($xmlObject->param as $xmlParam) {
                 $params[] = new Param($xmlParam['class'], $xmlParam['name'], $xmlParam['value']);
             }
-            $this->objects[(string)$xmlObject['class']] = new Object($xmlObject['class'], $params, $xmlObject['alias'], $xmlObject['alwaysNew']);
+            $this->objects[(string)$xmlObject['class']] = new ObjectNode($xmlObject['class'], $params, $xmlObject['alias'], $xmlObject['alwaysNew']);
         }
     }
 }
