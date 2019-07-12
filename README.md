@@ -6,10 +6,10 @@
 
 
 ### Najnowsza wersja modułu oraz instrukcja instalacji:
-https://github.com/dotpay/PrestaShop-1.7.x/releases/latest
+https://github.com/dotpay/PrestaShop-1.7/releases/latest
 
 --
- Jeśli używasz starszej wersji PrestaShop 1.6.x, dedykowany moduł dla twojej wersji znajdziesz pod adresem: https://github.com/dotpay/PrestaShop
+ Jeśli używasz starszej wersji PrestaShop 1.6, dedykowany moduł dla twojej wersji znajdziesz pod adresem: https://github.com/dotpay/PrestaShop-1.6
 
 ---------------------------------------
 
@@ -17,8 +17,8 @@ https://github.com/dotpay/PrestaShop-1.7.x/releases/latest
 
 
 ### Latest plugin and installation manual version:
-https://github.com/dotpay/PrestaShop-1.7.x/releases/latest
+https://github.com/dotpay/PrestaShop-1.7/releases/latest
 
 
 --
-You can find module for older version PrestaShop 1.6.x: https://github.com/dotpay/PrestaShop
+You can find module for older version PrestaShop 1.6: https://github.com/dotpay/PrestaShop-1.6
