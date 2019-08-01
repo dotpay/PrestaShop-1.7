@@ -173,3 +173,7 @@ input[name=blik_code]:focus {
   border-color: #309b4e;
   background-color: #f7f7f9;
 }
+
+#dp_imgnoname.image-container {
+    top: 20px !important;
+}

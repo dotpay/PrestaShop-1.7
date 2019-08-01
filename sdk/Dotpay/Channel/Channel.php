@@ -286,6 +286,49 @@ class Channel
         return $this->getViewFields();
     }
 
+
+
+/**
+ * Returns data to 'customer' parameter (PayPo channel)
+ * @return string encoded base64
+ */
+public function PayerDatadostawaJsonBase64() {
+
+            $customer = array (
+                             "payer" => array(
+                                     "first_name" => $this->transaction->getPayment()->getCustomer()->getFirstName(),
+                                     "last_name" => $this->transaction->getPayment()->getCustomer()->getLastName(),
+                                     "email" => $this->transaction->getPayment()->getCustomer()->getEmail(),
+                                     "phone" => $this->transaction->getPayment()->getCustomer()->getPhone()
+                                      ),
+                             "order" => array(
+                                     "delivery_address" => array(
+
+                                                       "city" => $this->transaction->getPayment()->getCustomer()->getCityDelivery(),
+                                                       "street" => $this->transaction->getPayment()->getCustomer()->getStreetDelivery(),
+                                                       "building_number" => $this->transaction->getPayment()->getCustomer()->getBuildingNumber(),
+                                                       "postcode" => $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery(),
+                                                       "country" => $this->transaction->getPayment()->getCustomer()->getCountryDelivery()
+                                                                 )
+                                        )
+
+                             );
+
+
+                             if ($this->transaction->getPayment()->getCustomer()->getCustomerCreateDate() !== null && $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount() !== null)
+                             {
+                                $customer["registered_since"] = $this->transaction->getPayment()->getCustomer()->getCustomerCreateDate();
+                                $customer["order_count"] = $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount();
+                             }
+
+
+            $customer_base64 = base64_encode(json_encode($customer, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+    return $customer_base64;
+
+}
+
+
     /**
      * Return array of hidden fields for a form to redirecting to a Dotpay site with all needed information about a current payment
      * @return array
@@ -304,11 +347,11 @@ class Channel
         $data['currency'] = $this->transaction->getPayment()->getOrder()->getCurrency();
         $data['description'] = $this->transaction->getPayment()->getDescription();
         $data['lang'] = $this->transaction->getPayment()->getCustomer()->getLanguage();
-        $data['URL'] = $this->transaction->getBackUrl();
-        $data['URLC'] = $this->transaction->getConfirmUrl();
+        $data['url'] = $this->transaction->getBackUrl();
+        $data['urlc'] = $this->transaction->getConfirmUrl();
         $data['api_version'] = $this->config->getApi();
         $data['type'] = 4;
-        $data['ch_lock'] = 1;
+        $data['ch_lock'] = 0;
         $data['firstname'] = $this->transaction->getPayment()->getCustomer()->getFirstName();
         $data['lastname'] = $this->transaction->getPayment()->getCustomer()->getLastName();
         $data['email'] = $this->transaction->getPayment()->getCustomer()->getEmail();
@@ -321,6 +364,7 @@ class Channel
         $data['bylaw'] = 1;
         $data['personal_data'] = 1;
         $data['channel'] = $this->getChannelId();
+        $data['customer'] = $this->PayerDatadostawaJsonBase64();
         return $data;
     }
 
@@ -343,7 +387,7 @@ class Channel
         foreach ($this->getAllHiddenFields() as $name => $value) {
             $fields[] = new Input('hidden', $name, (string)$value);
         }
-        $fields[] = new Script(new PlainText('setTimeout(function(){document.getElementsByClassName(\'dotpay-form\')[0].submit();}, 1);'));
+        $fields[] = new Script(new PlainText('setTimeout(function(){document.getElementsByClassName(\'dotpay-form\')[0].submit();}, 0);'));
         $form = new Form($fields);
         return $form->setClass('dotpay-form')
                     ->setMethod('post')
@@ -430,6 +474,12 @@ class Channel
             $this->available = false;
             return;
         }
+        if ($this->paymentResource->checkChannel($this->transaction->getPayment(),$channelId) == false) {
+            $this->available = false;
+            return;
+        }
+
+
         if ($channelId !== null && !ChannelId::validate($channelId)) {
             throw new ChannelIdException($channelId);
         }
@@ -464,9 +514,9 @@ class Channel
         $CHkInputString =
             $this->seller->getPin().
             (isset($inputParameters['api_version']) ? $inputParameters['api_version'] : null).
-            (isset($inputParameters['charset']) ? $inputParameters['charset'] : null).
             (isset($inputParameters['lang']) ? $inputParameters['lang'] : null).
             (isset($inputParameters['id']) ? $inputParameters['id'] : null).
+            (isset($inputParameters['pid']) ? $inputParameters['pid'] : null).
             (isset($inputParameters['amount']) ? $inputParameters['amount'] : null).
             (isset($inputParameters['currency']) ? $inputParameters['currency'] : null).
             (isset($inputParameters['description']) ? $inputParameters['description'] : null).
@@ -476,10 +526,10 @@ class Channel
             (isset($inputParameters['ch_lock']) ? $inputParameters['ch_lock'] : null).
             (isset($inputParameters['channel_groups']) ? $inputParameters['channel_groups'] : null).
             (isset($inputParameters['onlinetransfer']) ? $inputParameters['onlinetransfer'] : null).
-            (isset($inputParameters['URL']) ? $inputParameters['URL'] : null).
+            (isset($inputParameters['url']) ? $inputParameters['url'] : null).
             (isset($inputParameters['type']) ? $inputParameters['type'] : null).
             (isset($inputParameters['buttontext']) ? $inputParameters['buttontext'] : null).
-            (isset($inputParameters['URLC']) ? $inputParameters['URLC'] : null).
+            (isset($inputParameters['urlc']) ? $inputParameters['urlc'] : null).
             (isset($inputParameters['firstname']) ? $inputParameters['firstname'] : null).
             (isset($inputParameters['lastname']) ? $inputParameters['lastname'] : null).
             (isset($inputParameters['email']) ? $inputParameters['email'] : null).
@@ -507,6 +557,8 @@ class Channel
             (isset($inputParameters['recipient_address_apartment']) ? $inputParameters['recipient_address_apartment'] : null).
             (isset($inputParameters['recipient_address_postcode']) ? $inputParameters['recipient_address_postcode'] : null).
             (isset($inputParameters['recipient_address_city']) ? $inputParameters['recipient_address_city'] : null).
+            (isset($inputParameters['application']) ? $inputParameters['application'] : null).
+            (isset($inputParameters['application_version']) ? $inputParameters['application_version'] : null).
             (isset($inputParameters['warranty']) ? $inputParameters['warranty'] : null).
             (isset($inputParameters['bylaw']) ? $inputParameters['bylaw'] : null).
             (isset($inputParameters['personal_data']) ? $inputParameters['personal_data'] : null).
@@ -520,10 +572,22 @@ class Channel
             (isset($inputParameters['credit_card_id']) ? $inputParameters['credit_card_id'] : null).
             (isset($inputParameters['blik_code']) ? $inputParameters['blik_code'] : null).
             (isset($inputParameters['credit_card_registration']) ? $inputParameters['credit_card_registration'] : null).
-            (isset($inputParameters['recurring_frequency']) ? $inputParameters['recurring_frequency'] : null).
-            (isset($inputParameters['recurring_interval']) ? $inputParameters['recurring_interval'] : null).
-            (isset($inputParameters['recurring_start']) ? $inputParameters['recurring_start'] : null).
-            (isset($inputParameters['recurring_count']) ? $inputParameters['recurring_count'] : null);
+            (isset($inputParameters['ignore_last_payment_channel']) ? $inputParameters['ignore_last_payment_channel'] : null).
+            (isset($inputParameters['vco_call_id']) ? $inputParameters['vco_call_id'] : null).
+            (isset($inputParameters['vco_update_order_info']) ? $inputParameters['vco_update_order_info'] : null).
+            (isset($inputParameters['vco_subtotal']) ? $inputParameters['vco_subtotal'] : null).
+            (isset($inputParameters['vco_shipping_handling']) ? $inputParameters['vco_shipping_handling'] : null).
+            (isset($inputParameters['vco_tax']) ? $inputParameters['vco_tax'] : null).
+            (isset($inputParameters['vco_discount']) ? $inputParameters['vco_discount'] : null).
+            (isset($inputParameters['vco_gift_wrap']) ? $inputParameters['vco_gift_wrap'] : null).
+            (isset($inputParameters['vco_misc']) ? $inputParameters['vco_misc'] : null).
+            (isset($inputParameters['vco_promo_code']) ? $inputParameters['vco_promo_code'] : null).
+            (isset($inputParameters['credit_card_security_code_required']) ? $inputParameters['credit_card_security_code_required'] : null).
+            (isset($inputParameters['credit_card_operation_type']) ? $inputParameters['credit_card_operation_type'] : null).
+            (isset($inputParameters['credit_card_avs']) ? $inputParameters['credit_card_avs'] : null).
+            (isset($inputParameters['credit_card_threeds']) ? $inputParameters['credit_card_threeds'] : null).
+            (isset($inputParameters['customer']) ? $inputParameters['customer'] : null).
+            (isset($inputParameters['gp_token']) ? $inputParameters['gp_token'] : null);
 
         return hash('sha256',$CHkInputString);
     }

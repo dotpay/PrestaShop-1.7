@@ -65,7 +65,7 @@ class Dotpay extends PaymentModule
 {
     protected $config_form = false;
 
-    const REPOSITORY_NAME = 'PrestaShop-1.7.x';
+    const REPOSITORY_NAME = 'PrestaShop-1.7';
 
     /**
      * @var Dotpay\Loader\Loader Instance of SDK Loader
@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.1.3';
+        $this->version = '1.2.0';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -166,7 +166,7 @@ class Dotpay extends PaymentModule
         try {
             $config = $this->config;
             $seller = $this->sdkLoader->get('Seller', array($this->config->getId(), $this->config->getPin()));
-            $customer = $this->sdkLoader->get('Customer', array('dotpay@dotpay.pl', 'Fistrname', 'Lastname'));
+            $customer = $this->sdkLoader->get('Customer', array('dotpay@dotpay.pl', 'Firstname', 'Lastname'));
             $customer->setLanguage($this->getLanguage());
             $order = $this->sdkLoader->get('Order', array(null, 301, 'PLN'));
             $payment = $this->sdkLoader->get('PaymentModel', array($customer, $order, ''));
@@ -352,7 +352,7 @@ class Dotpay extends PaymentModule
                                       'if you use older version, please contact the Customer Care to change your '.
                                       'API version to dev'
                                   )
-                                  .':&nbsp;<a href="'.$this->l('https://ssl.dotpay.pl/en/customer_care').
+                                  .':&nbsp;<a href="'.$this->l('https://www.dotpay.pl/en/contact/').
                                   '" target="_blank"><b>'.$this->l('Contact').'</b></a></span>',
                         'required' => true,
                         'disabled' => true,
@@ -370,17 +370,20 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_ID',
-                        'prefix' => '<i class="icon icon-male"></i>',
+                        'prefix' => '<i style="font-weight: bold; color: #10279b; font-size: 1.4em;">&#35;</i>',
                         'label' => $this->l('ID'),
                         'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-sm validate-gui',
-                        'desc' => $this->l('Copy from Dotpay user panel'),
+                        'desc' => $this->l('Copy only number (without "#" char) from the Dotpay user panel.'),
                         'required' => true
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_PIN',
-                        'prefix' => '<i class="icon icon-lock"></i>',
+                        'prefix' => '<i class="icon-key" style="color: #10279b;"></i>',
+                        'suffix' => '<i class="icon-eye-slash" id="eyelook" style="color: #2eacce; cursor : zoom-in;"></i>',
                         'label' => $this->l('PIN'),
+                        'maxlength' => 32,
                         'class' => 'fixed-width-xxl validate-gui',
                         'desc' => $this->l('Copy from Dotpay user panel'),
                         'required' => true
@@ -426,7 +429,7 @@ class Dotpay extends PaymentModule
                         )
                     ),array(
                         'type' => 'radio',
-                        'label' => '<span class="advanced-mode-switch">'.$this->l('Advanced Mode').'</span>',
+                        'label' => '<i class="icon-AdminTools" style="color: #10279b;"></i> <span class="dev-option advanced-mode-switch dotpayadvsett">'.$this->l('Advanced Mode').'</span>',
                         'name' => 'DP_ADV_MODE',
                         'is_bool' => true,
                         'desc' => $this->l('Show advanced plugin settings'),
@@ -467,20 +470,17 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_RENEW_DAYS',
-                        'prefix' => '<i class="icon icon-unlock"></i>',
-                        'label' => '<span class="renew-option">'.
-                                   $this->l(
-                                       'Number of days after creating an order when is possible to renew payments'
-                                   )
-                                   .'</span>',
-                        'size' => 6,
+                        'prefix' => '<i class="icon icon-calendar-o"></i>',
+                        'label' => '<span class="renew-option">'.$this->l('Number of days after creating an order when is possible to renew payments').'</span>',
+                        'size' => 3,
+                        'maxlength' => 3,
                         'class' => 'fixed-width-sm',
                         'desc' => $this->l('Enter for how many days customers will be able to renew their payments').
                                   '<br><b>'.$this->l('Leave blank if payment renew should not be restricted by time').
                                   '</b>',
                     ),array(
                         'type' => 'text',
-                        'prefix' => '<i class="icon icon-lock"></i>',
+                        'prefix' => '<i class="icon-money" style="color: #407786;"></i>',
                         'label' => '<span class="lastInSection">'.
                                    $this->l('Currencies for which main channel is disabled').'</span>',
                         'name' => 'DP_WIDGET_CURR',
@@ -589,14 +589,14 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_USERNAME',
-                        'prefix' => '<i class="icon icon-male"></i>',
+                        'prefix' => '<i class="icon-male" style="color: #9b6610;"></i>',
                         'label' => $this->l('Dotpay panel username'),
                         'class' => 'fixed-width-xxl',
                         'desc' => $this->l('Your username for Dotpay user panel')
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_PASSWORD',
-                        'prefix' => '<i class="icon icon-key"></i>',
+                        'prefix' => '<i class="icon-key" style="color: #9b6610;"></i>',
                         'label' => $this->l('Dotpay panel password'),
                         'class' => 'fixed-width-xxl password-field lastInSection',
                         'desc' => $this->l('Your password for Dotpay user panel'),
@@ -621,16 +621,18 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_FCC_ID',
-                        'prefix' => '<i class="icon icon-male"></i>',
+                        'prefix' => '<i style="font-weight: bold; color: #407786; font-size: 1.4em;">&#35;</i>',
                         'label' => $this->l('ID for foreign currencies account'),
                         'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-sm fcc-option validate-gui',
-                        'desc' => $this->l('Copy from Dotpay user panel').' <div id="infoID" /></div>',
+                        'desc' => $this->l('Copy only number (without "#" char) from the Dotpay user panel.').' <div id="infoID" /></div>',
                         'required' => true
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_FCC_PIN',
-                        'prefix' => '<i class="icon icon-key"></i>',
+                        'prefix' => '<i class="icon-key" style="color: #407786;"></i>',
+                        'maxlength' => 32,
                         'label' => $this->l('PIN for foreign currencies account'),
                         'class' => 'fixed-width-xxl fcc-option validate-gui',
                         'desc' => $this->l('Copy from Dotpay user panel').' <div id="infoPIN" /></div>',
@@ -638,7 +640,7 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_FCC_CURR',
-                        'prefix' => '<i class="icon icon-unlock"></i>',
+                        'prefix' => '<i class="icon-money" style="color: #407786;"></i>',
                         'label' => $this->l('Currencies used by foreign currencies account'),
                         'class' => 'fixed-width-xxl fcc-option lastInSection',
                         'desc' => $this->l('Enter currency codes separated by commas, for example: EUR,USD,GBP').
@@ -654,7 +656,7 @@ class Dotpay extends PaymentModule
                                   $this->l('Enabling this option needs to configure the seller account in Dotpay').
                                   '<br /><b>'.
                                   $this->l('Please contact with the Dotpay Customer Service before using this option').
-                                  '&nbsp;'.'<a href="https://www.dotpay.pl//kontakt/biuro-obslugi-klienta/">'.
+                                  '&nbsp;'.'<a href="'.$this->l('https://www.dotpay.pl/en/contact/').'">'.
                                   $this->l('Contact').'</a></b><br />'.
                                   $this->l('Any value will not be add on shop site'),
                         'values' => array(
@@ -668,22 +670,31 @@ class Dotpay extends PaymentModule
                                 'label' => $this->l('Disable')
                             )
                         )
-                    ),array(
+                    ),
+ 
+                    array(
                         'type' => 'text',
                         'name' => 'DP_SUR_AMOUNT',
-                        'prefix' => '<i class="icon icon-money"></i>',
+                        'prefix' => '<i class="icon icon-money" style="color: #5498b0; font-weight: bold;"></i>',
                         'label' => $this->l('Show an information about increasing amount of order'),
+                        'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-lg surcharge-option validate-gui',
                         'desc' => $this->l('Value of additional fee for given currency (eg. 5.23)')
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_SUR_PERC',
-                        'prefix' => '<i class="icon icon-th"></i>',
+                        'prefix' => '<i style="font-weight: bold; color: #5498b0; font-size: 1.4em;">&#37;</i>',
                         'label' => $this->l('Show an information about increasing amount of order (in %)'),
+                        'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-lg surcharge-option lastInSection validate-gui',
                         'desc' => $this->l('Value of additional fee for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
-                    ),array(
+                    ),
+                    
+                /*
+                    array(
                         'type' => 'radio',
                         'label' => $this->l('Extracharge option'),
                         'name' => 'DP_EXCHARGE',
@@ -708,15 +719,19 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_EX_AMOUNT',
-                        'prefix' => '<i class="icon icon-money"></i>',
+                        'prefix' => '<i class="icon icon-money" style="color: #5498b0; font-weight: bold;"></i>',
                         'label' => $this->l('Increase amount of order'),
+                        'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-lg excharge-option validate-gui',
                         'desc' => $this->l('Value of additional fee for given currency (eg. 5.23)')
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_EX_PERC',
-                        'prefix' => '<i class="icon icon-th"></i>',
+                        'prefix' => '<i style="font-weight: bold; color: #5498b0; font-size: 1.4em;">&#37;</i>',
                         'label' => $this->l('Increase amount of order (in %)'),
+                        'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-lg excharge-option lastInSection validate-gui',
                         'desc' => $this->l('Value of additional fee for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
@@ -724,7 +739,7 @@ class Dotpay extends PaymentModule
                         'type' => 'radio',
                         'label' => $this->l('Discount option of shipping costs'),
                         'name' => 'DP_REDUCT_SHIP',
-                        'prefix' => '<i class="icon icon-th"></i>',
+                        'prefix' => '<i style="font-weight: bold; color: #5498b0; font-size: 1.4em;">&#37;</i>',
                         'is_bool' => true,
                         'class' => 'discount-enable-option',
                         'desc' => $this->l('Enable discount for Dotpay payment method'),
@@ -742,19 +757,26 @@ class Dotpay extends PaymentModule
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_RS_AMOUNT',
-                        'prefix' => '<i class="icon icon-money"></i>',
+                        'prefix' => '<i class="icon icon-money" style="color: #5498b0; font-weight: bold;"></i>',
                         'label' => $this->l('Reduce amount of shipping costs'),
+                        'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-lg reduct-option validate-gui',
                         'desc' => $this->l('Value of discount amount (in current price)')
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_RS_PERC',
-                        'prefix' => '<i class="icon icon-th"></i>',
+                        'prefix' => '<i style="font-weight: bold; color: #5498b0; font-size: 1.4em;">&#37;</i>',
                         'label' => $this->l('Reduce amount of shipping costs (in %)'),
+                        'size' => 6,
+                        'maxlength' => 6,
                         'class' => 'fixed-width-lg reduct-option validate-gui lastInSection',
                         'desc' => $this->l('Value of discount for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
-                    ),array(
+                    ),
+                    
+                    */
+                  array(
                         'label' => $this->l('Isolated channels on the store page'),
                         'type' => 'text',
                         'name' => 'DP_CHANNELS',
@@ -769,7 +791,7 @@ class Dotpay extends PaymentModule
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
-                    'class' => 'save-dotpay-settings'
+                    'class' => 'btn btn-success center-block',
                 ),
             ),
         );
@@ -902,6 +924,12 @@ class Dotpay extends PaymentModule
         try {
             $this->initializeChannelsDataFromCart($params);
 
+            $cart = $this->context->cart;
+            $var_id_address = $cart->id_address_invoice;
+            $var_id_address_del = $cart->id_address_delivery;
+            $address = new Address($var_id_address);
+            $address_deliv = new Address($var_id_address_del);
+
             $channelsList = $this->getChannels();
             $order = $this->sdkLoader->get('Order');
             $exAmount = $order->getExtrachargeAmount($this->config);
@@ -937,6 +965,7 @@ class Dotpay extends PaymentModule
                         'This store uses the Dotpay test payment mode. Payments are only simulated and your order '.
                         'will not be processed!'
                     ),
+                    'jakisTest' => $address->address1.' deliv: '.$address_deliv->address1,
                 ));
                 $newOption = new PaymentOption();
                 $newOption->setCallToActionText($channel->getTitle())
@@ -1061,7 +1090,8 @@ class Dotpay extends PaymentModule
                 )
             );
             $channelList->addChannel($channel);
-        }
+
+    }
 
         $dotpay = $this->sdkLoader->get('DotpayChannel');
         $dotpay->setTitle($this->l("Dotpay"))

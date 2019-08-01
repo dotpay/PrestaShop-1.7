@@ -35,12 +35,12 @@ abstract class Resource
      * @var Configuration Configuration of Dotpay payments
      */
     protected $config;
-    
+
     /**
      * @var Curl Tool for using the cURL library
      */
     protected $curl;
-    
+
     /**
      * @var array Information about last request
      */
@@ -56,7 +56,7 @@ abstract class Resource
         $this->config = $config;
         $this->curl = $curl;
     }
-    
+
     /**
      * Return an object with a tool for using the cURL library
      * @return Curl
@@ -65,7 +65,7 @@ abstract class Resource
     {
         return $this->curl;
     }
-    
+
     /**
      * Close the resource
      */
@@ -74,7 +74,7 @@ abstract class Resource
         $this->curl->close();
         unset($this->curl);
     }
-    
+
     /**
      * Return a parsed response from the external server
      * @param string $url Url of a destination request
@@ -119,7 +119,7 @@ abstract class Resource
                 throw new ServerException($this->curl->error(), $httpCode);
         }
     }
-    
+
     /**
      * Send a post data to the destination point and return a response
      * @param string $url Url of a destination request
@@ -136,7 +136,7 @@ abstract class Resource
                    ->addOption(CURLOPT_USERPWD, $this->config->getUsername().':'.$this->config->getPassword());
         return $this->getContent($url, false);
     }
-    
+
     /**
      * Return a string which contain a header with Accept rule
      * @return string

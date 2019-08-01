@@ -94,25 +94,13 @@ class Confirmation
         $this->outputMessage = '';
         $clientIp = $this->getClientIp();
         
-        if ($_SERVER['REQUEST_METHOD'] == 'GET' &&
-            ($clientIp == $config::OFFICE_IP ||
-             ($clientIp == $config::LOCAL_IP &&
-              $config->getTestMode()
-             )
-            )
-            
-        ) {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && $clientIp == $config::OFFICE_IP ) 
+        {
             $this->completeInformations();
             throw new ConfirmationInfoException($this->outputMessage);
-        } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' &&
-                    ($clientIp == $config::CALLBACK_IP ||
-                     ($clientIp == $config::LOCAL_IP &&
-                      $config->getTestMode()
-                     )
-                    )
-                   )
-                 ) {
-            throw new IncorrectRequestException('IP: '.$this->getClientIp(true).' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
+        } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' && $clientIp == $config::CALLBACK_IP ))
+        {
+            throw new IncorrectRequestException('IP: '.$this->getClientIp('true').' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
         }
     }
     
@@ -211,9 +199,12 @@ class Confirmation
 				}
 		
         $this->addOutputMessage('--- Dotpay Diagnostic Information ---')
-             ->addOutputMessage('PHP Version: '.  phpversion())
-             ->addOutputMessage('Sdk Version: '.$config::SDK_VERSION)
-             ->addOutputMessage('Enabled: '.(int)$config->getEnable(), true) 		 
+             ->addOutputMessage('Enabled: '.(int)$config->getEnable(), true)
+             ->addOutputMessage('--- System Info ---')
+             ->addOutputMessage('PrestaShop Version: '._PS_VERSION_)
+             ->addOutputMessage('Sdk Version: '.$config::SDK_VERSION) 	
+             ->addOutputMessage('Module Version: '.$this->config->getPluginVersion(), true)
+             ->addOutputMessage('PHP Version: '.  phpversion())	 
              ->addOutputMessage('--- Dotpay PLN ---')
              ->addOutputMessage('Id: '.$config->getId())
              ->addOutputMessage('Correct Id: '. $CorrectId)
@@ -269,15 +260,8 @@ class Confirmation
     {
         $config = $this->config;
         $clientIp = $this->getClientIp();
-        if (
-            !($clientIp == $config::CALLBACK_IP ||
-                ($this->config->getTestMode() &&
-                 ($clientIp == $config::OFFICE_IP ||
-                  $clientIp == $config::LOCAL_IP
-                 )
-                )
-            )
-        ) {
+        if ($clientIp != $config::CALLBACK_IP) 
+        {
             throw new ConfirmationDataException("ERROR (IP ADDRESSES: ".$this->getClientIp(true).")");
         }
         return true;
@@ -417,27 +401,22 @@ class Confirmation
      * Return ip address from is the confirmation request
      * @return string
      */
-	protected function getClientIp($list_ip=null)
-     {   
-		$ipaddress = '';
-
+    public function getClientIp($list_ip = null)
+    {
+        $ipaddress = '';
         // CloudFlare support
         if (array_key_exists('HTTP_CF_CONNECTING_IP', $_SERVER)) {
             // Validate IP address (IPv4/IPv6)
             if (filter_var($_SERVER['HTTP_CF_CONNECTING_IP'], FILTER_VALIDATE_IP)) {
-                $ipaddress = $_SERVER['HTTP_CF_CONNECTING_IP']; 
-                return $ipaddress;   
+                $ipaddress = $_SERVER['HTTP_CF_CONNECTING_IP'];
+                return $ipaddress;
             }
         }
         if (array_key_exists('X-Forwarded-For', $_SERVER)) {
             $_SERVER['HTTP_X_FORWARDED_FOR'] = $_SERVER['X-Forwarded-For'];
         }
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] 
-			&& (!isset($_SERVER['REMOTE_ADDR'])
-            || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.16.*/i', trim($_SERVER['REMOTE_ADDR']))
-            || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
-            
-			if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR']) {
+            if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
                 $ipaddress = $ips[0];
             } else {
@@ -446,22 +425,17 @@ class Confirmation
         } else {
             $ipaddress = $_SERVER['REMOTE_ADDR'];
         }
-        
-        if($ipaddress === '0:0:0:0:0:0:0:1' || $ipaddress === '::1') {
-            $ipaddress = self::LOCAL_IP;
-        }       
-        
-        if(isset($list_ip) && $list_ip != null){
-
-            return 
-			(isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? "HTTP_X_FORWARDED_FOR ->".implode(" | ",$_SERVER['HTTP_CF_CONNECTING_IP']).", " : null).
-            (isset($_SERVER['HTTP_CF_CONNECTING_IP']) ? "HTTP_CF_CONNECTING_IP ->".$_SERVER['HTTP_CF_CONNECTING_IP'].", " : null).
-            (isset($_SERVER['REMOTE_ADDR']) ? "REMOTE_ADDR ->".$_SERVER['REMOTE_ADDR'].", " : " REMOTE_ADDR null ");
+        if (isset($list_ip) && $list_ip != null) {
+            if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+                return  $_SERVER["HTTP_X_FORWARDED_FOR"];
+            } else if (array_key_exists('HTTP_CF_CONNECTING_IP', $_SERVER)) {
+                return $_SERVER["HTTP_CF_CONNECTING_IP"];
+            } else if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+                return $_SERVER["REMOTE_ADDR"];
+            }
         } else {
-
-           return $ipaddress; 
-        } 
-        
+            return $ipaddress;
+        }
     }
 	
 	

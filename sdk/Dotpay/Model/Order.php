@@ -114,7 +114,9 @@ class Order
      * @throws AmountException Thrown when the given amount is incorrect
      */
     public function setAmount($amount)
-    {
+    {   
+        $amount = number_format($amount, 2, '.', ' ');
+        
         if (!Amount::validate($amount)) {
             throw new AmountException($amount);
         }

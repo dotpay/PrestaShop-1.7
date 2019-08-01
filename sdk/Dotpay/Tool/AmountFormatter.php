@@ -34,7 +34,13 @@ class AmountFormatter
         'SEK' => 2,
         'UAH' => 2,
         'RON' => 2,
-        'PLN' => 2
+        'PLN' => 2, 
+        'NOK' => 2,
+        'BGN' => 2,
+        'CHF' => 2,
+        'HRK' => 2,
+        'HUF' => 2,
+        'RUB' => 2
     ];
     
     /**

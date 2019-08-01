@@ -26,7 +26,7 @@
 
 {block name="content"}
 
-    <h2 class="page-heading">{l s='Manage your saved credit cards' mod='dotpay'}</h2>
+    <h2 class="page-heading"><i class="material-icons" style="color:#7a7a7a;">payment</i> {l s='Manage your saved credit cards' mod='dotpay'}</h2>
 
     {if $cards}
     <p class="alert alert-success">{l s='Below is a list of your credit cards registered in this shop. Data identifying these cards are stored in a secure manner in Dotpay. This allows you to make payments with one click. At any time, you can deregister their cards.' mod='dotpay'}</p>

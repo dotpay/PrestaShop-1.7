@@ -22,6 +22,7 @@ use Dotpay\Exception\Payment\BlockedAccountException;
 use Dotpay\Exception\Payment\DisabledChannelException;
 use Dotpay\Exception\Payment\HashNotEqualException;
 use Dotpay\Exception\Payment\HighAmountException;
+use Dotpay\Exception\Payment\UrlcInvalidException;
 use Dotpay\Exception\Payment\InactiveAccountException;
 use Dotpay\Exception\Payment\LowAmountException;
 use Dotpay\Exception\Payment\ExpiredException;
@@ -51,6 +52,7 @@ class Back {
      * @throws HighAmountException Thrown when amount is too high
      * @throws BadDataFormatException Thrown when format of request data is bad
      * @throws HashNotEqualException Thrown when request has been modified during transmission
+     * @throws UrlcInvalidException Thrown when SSL ptotocol is required
      * @throws UnrecognizedException Thrown when unrecognized error occured
      */
     public function execute() {
@@ -76,6 +78,8 @@ class Back {
                 throw new BadDataFormatException();
             case 'HASH_NOT_EQUAL_CHK':
                 throw new HashNotEqualException();
+            case 'URLC_INVALID':
+                throw new UrlcInvalidException();     
             default:
                 throw new UnrecognizedException();
         }

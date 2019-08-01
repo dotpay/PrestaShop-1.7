@@ -63,6 +63,7 @@ class Info
         return $this->forms;
     }
 
+
     /**
      * Return an array of channels wrapped in OneChannel classes
      * @param array $excludedChannels List of channel ids which should be excluded from the channel array

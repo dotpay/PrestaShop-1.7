@@ -33,7 +33,7 @@ class Payment extends Resource
      * @var array List of channels lists which are gotten from server for specific orders
      */
     private $buffer;
-    
+
     /**
      * Return the Info structure which contains list of channels for the given payment details
      * @param ModelPayment $payment Payment details
@@ -58,7 +58,7 @@ class Payment extends Resource
         }
         return $this->buffer[$id];
     }
-    
+
     /**
      * Clear the buffer of past requests
      * @return Payment
@@ -81,19 +81,21 @@ class Payment extends Resource
         $url = $this->config->getPaymentUrl().
                'payment_api/channels/'.
                '?id='.$id.
+               '&amount=301'.
+               '&currency=PLN'.
                '&format=json';
         $content = $this->getContent($url);
         if (!is_array($content)) {
             throw new TypeNotCompatibleException(gettype($content));
         }
-        if (isset($content['error_code']) && $content['error_code'] == 'UNKNOWN_ACCOUNT') {
+        if (isset($content['error_code']) && ($content['error_code'] == 'UNKNOWN_ACCOUNT' || $content['error_code'] == 'BLOCKED_ACCOUNT' || $content['error_code'] != 'UNKNOWN_CHANNEL')) {
             unset($content);
             return false;
         }
         unset($content);
         return true;
     }
-    
+
     /**
      * Return an url to Dotpay API for the given payment details
      * @param ModelPayment $payment Payment details
@@ -117,4 +119,27 @@ class Payment extends Resource
                '&lang='.$lang.
                '&format=json';
     }
+
+
+    /**
+     * Checks whether a given channel is available for a specific order (amount and currency)
+     * @return bool
+     */
+    public function checkChannel(ModelPayment $payment, $chid)
+    {
+        $ischannel = false;  
+        $content = $this->getContent($this->getUrl($payment));      
+          foreach($content['channels'] as $kan){
+            if($kan['id'] == $chid && $kan['is_disable'] == 'False') { 
+                $ischannel =  true;
+                break; 
+            }
+        }
+        unset($content);
+        return $ischannel;
+    }
+
+
+
+
 }

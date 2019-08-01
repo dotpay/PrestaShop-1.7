@@ -26,22 +26,22 @@ class Payment
      * @var Seller|null A Seller model for the payment
      */
     private $seller = null;
-    
+
     /**
      * @var Customer A Customer model for the payment
      */
     private $customer;
-    
+
     /**
      * @var Order An Order model for the payment
      */
     private $order;
-    
+
     /**
      * @var string A description of the payment
      */
     private $description;
-    
+
     /**
      * Initialize the model
      * @param Customer $customer Customer model for the payment
@@ -54,7 +54,7 @@ class Payment
         $this->setOrder($order);
         $this->setDescription($description);
     }
-    
+
     /**
      * Return a Seller model for the payment
      * @return Seller|null
@@ -63,7 +63,7 @@ class Payment
     {
         return $this->seller;
     }
-    
+
     /**
      * Return a Customer model for the payment
      * @return Customer
@@ -72,7 +72,17 @@ class Payment
     {
         return $this->customer;
     }
-    
+
+    /**
+     * Return a Customer model for the payment
+     * @return Customer
+     */
+    public function getCustomerDeliv()
+    {
+        return $this->customer;
+    }
+
+
     /**
      * Return a Order model for the payment
      * @return Order
@@ -81,7 +91,7 @@ class Payment
     {
         return $this->order;
     }
-    
+
     /**
      * Return a description of the payment
      * @return string
@@ -90,7 +100,7 @@ class Payment
     {
         return $this->description;
     }
-    
+
     /**
      * Return an identifier of the payment, which depends on seller id, order amount, order currency and customer language
      * @return string
@@ -100,7 +110,7 @@ class Payment
         $sellerId = ($this->getSeller())?$this->getSeller()->getId():'';
         return $sellerId.$this->getOrder()->getAmount().$this->getOrder()->getCurrency().$this->getCustomer()->getLanguage();
     }
-    
+
     /**
      * Set a Seller model for the payment
      * @param Seller $seller A Seller model for the payment
@@ -111,7 +121,7 @@ class Payment
         $this->seller = $seller;
         return $this;
     }
-    
+
     /**
      * Set a Customer model for the payment
      * @param Customer $customer A Customer model for the payment
@@ -122,7 +132,7 @@ class Payment
         $this->customer = $customer;
         return $this;
     }
-    
+
     /**
      * Set a Order model for the payment
      * @param Order $order An Order model for the payment
@@ -133,7 +143,7 @@ class Payment
         $this->order = $order;
         return $this;
     }
-    
+
     /**
      * Set a description of the payment
      * @param string $description A description of the payment

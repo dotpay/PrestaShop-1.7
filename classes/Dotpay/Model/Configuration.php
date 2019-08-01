@@ -270,8 +270,9 @@ class Configuration extends \Dotpay\Model\Configuration
     public function setExchargeAmount($exchargeAmount)
     {
         if ($this->getExtracharge()) {
-            if (!Amount::validate($exchargeAmount)) {
-                throw new AmountException($exchargeAmount);
+            if (trim((float)$exchargeAmount) > 0 && !Amount::validate((float)$exchargeAmount)) {
+                //throw new AmountException($exchargeAmount);
+                $this->exchargeAmount = 0.0;
             }
             $this->exchargeAmount = $this->makeCorrectNumber($exchargeAmount);
         }
@@ -311,8 +312,9 @@ class Configuration extends \Dotpay\Model\Configuration
     public function setReductionAmount($reductionAmount)
     {
         if ($this->getReduction()) {
-            if (!Amount::validate($reductionAmount)) {
-                throw new AmountException($reductionAmount);
+            if (trim((float)$reductionAmount) > 0 && !Amount::validate((float)$reductionAmount)) {
+               // throw new AmountException($reductionAmount);
+                $this->reductionAmount = 0.0;
             }
             $this->reductionAmount = $this->makeCorrectNumber($reductionAmount);
         }

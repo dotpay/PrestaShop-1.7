@@ -50,7 +50,8 @@ class Customer extends Payer
         'cs',
         'hu',
         'ro',
-        'ru'
+        'ru',
+        'uk'
     );
 
     /**
@@ -62,36 +63,47 @@ class Customer extends Payer
      * @var string Street name of the customer
      */
     private $street = '';
+    private $street_delivery = '';
 
     /**
      * @var string Building number of the customer
      */
     private $buildingNumber = '';
+    private $buildingNumberDelivery = '';
 
     /**
      * @var string Post code of the customer
      */
     private $postCode = '';
+    private $postCodeDelivery = '';
 
     /**
      * @var string City of the customer
      */
     private $city = '';
+    private $city_delivery = '';
 
     /**
      * @var string Country of the customer
      */
     private $country = '';
+    private $country_delivery = '';
 
     /**
      * @var string Phone number of the customer
      */
     private $phone = '';
+    private $phone_delivery = '';
 
     /**
      * @var string Language used by the customer
      */
     private $language = '';
+
+/**
+ * others
+**/
+    private $customer_create_date = null;
 
     /**
      * Return an id of the customer in a shop
@@ -125,6 +137,26 @@ class Customer extends Payer
 		}
 
 
+    /**
+     * Return the creation date of the customer's account in PS
+     * @return string
+     */
+    public function getCustomerCreateDate()
+    {
+        return $this->customer_create_date;
+    }
+
+
+    /**
+     * Returns number of all orders for customer since his registration
+     * @return int
+     */
+    public function getCustomerOrdersCount() {
+
+        return $this->customer_order_count;
+
+    }
+
 
    /**
      * Return a street name of the customer
@@ -136,6 +168,12 @@ class Customer extends Payer
         return $this->street;
     }
 
+    public function getStreetDelivery()
+    {
+        $this->extractBnFromStreet(1);
+        return $this->street_delivery;
+    }
+
     /**
      * Return a building number of the customer
      * @return string
@@ -144,6 +182,12 @@ class Customer extends Payer
     {
         $this->extractBnFromStreet();
         return $this->buildingNumber;
+    }
+
+    public function getBuildingNumberDelivery()
+    {
+        $this->extractBnFromStreet(1);
+        return $this->buildingNumberDelivery;
     }
 
 
@@ -165,6 +209,10 @@ class Customer extends Payer
         return $this->NewPostcode($this->postCode);
     }
 
+    public function getPostCodeDelivery()
+    {
+        return $this->NewPostcode($this->postCodeDelivery);
+    }
 
 
 	/**
@@ -185,6 +233,11 @@ class Customer extends Payer
         return $this->NewCity($this->city);
     }
 
+    public function getCityDelivery()
+    {
+        return $this->NewCity($this->city_delivery);
+    }
+
     /**
      * Return a country of the customer
      * @return string
@@ -194,6 +247,10 @@ class Customer extends Payer
         return $this->country;
     }
 
+    public function getCountryDelivery()
+    {
+        return $this->country_delivery;
+    }
 
 	/**
 	 * prepare data for the phone so that it would be consistent with the validation
@@ -211,6 +268,11 @@ class Customer extends Payer
     public function getPhone()
     {
         return $this->NewPhone($this->phone);
+    }
+
+    public function getPhoneDelivery()
+    {
+        return $this->NewPhone($this->phone_delivery);
     }
 
     /**
@@ -234,17 +296,60 @@ class Customer extends Payer
     }
 
     /**
+     * Set the date of creation of the customer's account
+     */
+    public function setCustomerCreateDate($date)
+
+    {
+        $format = "Y-m-d H:i:s";
+
+        if(date($format, strtotime($date)) == date($date))
+        {
+            $this->customer_create_date = date("Y-m-d", strtotime($date));
+        } else {
+            $this->customer_create_date = null;
+        }
+
+    return $this;
+
+    }
+
+    /**
+     * Set the number of orders created by the customer
+     */
+    public function setCustomerOrdersCount($orders)
+
+    {
+        if((int)$orders > 0)
+        {
+            $this->customer_order_count = (int)$orders;
+        } else {
+            $this->customer_order_count = 1;
+        }
+
+    return $this;
+
+    }
+
+
+    /**
      * Set a street name of the customer
      * @param string $street Street name of the customer
      * @return Customer
      * @throws StreetException Thrown when the given street is incorrect
      */
-    public function setStreet($street)
+    public function setStreet($street,$address_deliv = null)
     {
         if (!Street::validate($this->NewStreet($street))) {
             throw new StreetException($street);
         }
-        $this->street = (string)$this->NewStreet($street);
+        if($address_deliv == 1)
+        {
+            $this->street_delivery = (string)$this->NewStreet($street);
+        }else{
+            $this->street = (string)$this->NewStreet($street);
+        }
+
         return $this;
     }
 
@@ -254,12 +359,18 @@ class Customer extends Payer
      * @return Customer
      * @throws BNumberException Thrown when the given building number is incorrect
      */
-    public function setBuildingNumber($buildingNumber)
+    public function setBuildingNumber($buildingNumber,$address_deliv = null)
     {
         if (!BNumber::validate($this->NewStreet_n1($buildingNumber))) {
             throw new BNumberException($buildingNumber);
         }
-        $this->buildingNumber = ((string)$this->NewStreet_n1($buildingNumber) !== null) ? (string)$this->NewStreet_n1($buildingNumber) : ' ';
+        if($address_deliv == 1)
+        {
+            $this->buildingNumberDelivery = ((string)$this->NewStreet_n1($buildingNumber) !== null) ? (string)$this->NewStreet_n1($buildingNumber) : ' ';
+        }else{
+            $this->buildingNumber = ((string)$this->NewStreet_n1($buildingNumber) !== null) ? (string)$this->NewStreet_n1($buildingNumber) : ' ';
+        }
+
         return $this;
     }
 
@@ -269,27 +380,34 @@ class Customer extends Payer
      * @return Customer
      * @throws PostCodeException Thrown when the given post code is incorrect
      */
-    public function setPostCode($postCode)
+    public function setPostCode($postCode,$address_deliv = null)
     {
         if (!PostCode::validate($this->NewPostcode($postCode))) {
             throw new PostCodeException($postCode);
         }
-        $this->postCode = (string)$this->NewPostcode($postCode);
+        if($address_deliv == 1)
+        {
+            $this->postCodeDelivery = (string)$this->NewPostcode($postCode);
+        }else{
+            $this->postCode = (string)$this->NewPostcode($postCode);
+        }
+
         return $this;
     }
 
-    /**
-     * Set a city of the customer
-     * @param string $city City of the customer
-     * @return Customer
-     * @throws CityException Thrown when the given city is incorrect
-     */
-    public function setCity($city)
+
+    public function setCity($city,$address_deliv = null)
     {
         if (!City::validate($this->NewCity($city))) {
             throw new CityException($city);
         }
-        $this->city = (string)$this->NewCity($city);
+        if($address_deliv == 1)
+        {
+            $this->city_delivery = (string)$this->NewCity($city);
+        }else{
+            $this->city = (string)$this->NewCity($city);
+        }
+
         return $this;
     }
 
@@ -299,14 +417,22 @@ class Customer extends Payer
      * @return Customer
      * @throws CountryException Thrown when the given country is incorrect
      */
-    public function setCountry($country)
+    public function setCountry($country, $address_deliv = null)
     {
         if (!Country::validate($country)) {
             throw new CountryException($country);
         }
+            if($address_deliv == 1)
+            {
+                $this->country_delivery = (string)$country;
+            }else{
+                $this->country = (string)$country;
+            }
         $this->country = (string)$country;
         return $this;
     }
+
+
 
     /**
      * Set a phone number of the customer
@@ -314,12 +440,18 @@ class Customer extends Payer
      * @return Customer
      * @throws PhoneException Thrown when the given phone number is incorrect
      */
-    public function setPhone($phone)
+    public function setPhone($phone, $address_deliv = null)
     {
         if (!Phone::validate($this->NewPhone($phone))) {
             throw new PhoneException($phone);
         }
-        $this->phone = (string)trim($this->NewPhone($phone));
+        if($address_deliv == 1)
+        {
+            $this->phone_delivery = (string)trim($this->NewPhone($phone));
+        }else{
+            $this->phone = (string)trim($this->NewPhone($phone));
+        }
+
         return $this;
     }
 
@@ -360,19 +492,39 @@ class Customer extends Payer
 	/**
      * Try to extract a building number from the street name if it's an empty field
      */
-    private function extractBnFromStreet()
+    private function extractBnFromStreet($address_deliv = null)
     {
-		$Street1 = $this->NewStreet($this->street);
-		$Street_n1 = $this->NewStreet_n1($this->buildingNumber);
+        if($address_deliv == 1)
+        {
+            $Street1 = $this->NewStreet($this->street_delivery);
+            $Street_n1 = $this->NewStreet_n1($this->buildingNumberDelivery);
+        }else{
+            $Street1 = $this->NewStreet($this->street);
+            $Street_n1 = $this->NewStreet_n1($this->buildingNumber);
+        }
+
 
         if (empty($Street_n1) && !empty($Street1)) {
 			preg_match("/\s[\p{L}0-9\s\-_\/]{1,15}$/u", $Street1, $matches);
-            if (count($matches)>0) {
-                $this->setBuildingNumber(trim($matches[0]));
-                $this->setStreet(str_replace($matches[0], '', $Street1));
-            } else {
-			    $this->setStreet(trim($Street1));
-			}
+
+            if($address_deliv == 1)
+            {
+                if (count($matches)>0) {
+                    $this->setBuildingNumber(trim($matches[0]),1);
+                    $this->setStreet(str_replace($matches[0], '', $Street1),1);
+                } else {
+                    $this->setStreet(trim($Street1),1);
+                }
+            }else{
+                if (count($matches)>0) {
+                    $this->setBuildingNumber(trim($matches[0]));
+                    $this->setStreet(str_replace($matches[0], '', $Street1));
+                } else {
+                    $this->setStreet(trim($Street1));
+                }
+            }
+
+
         }
     }
 }

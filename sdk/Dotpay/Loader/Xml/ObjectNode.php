@@ -29,32 +29,32 @@ class ObjectNode
      * @var string Class name of the object
      */
     private $className;
-    
+
     /**
      * @var array Array of Param object which are used during creation the object
      */
     private $parameters = [];
-    
+
     /**
      * @var array Array of named prameters which contain Param objects
      */
     private $namedParameters = [];
-    
+
     /**
      * @var string|null A short name of the object. It's an alias on the main class name.
      */
     private $alias;
-    
+
     /**
      * @var boolean A flag if the instance should be always new
      */
     private $alwaysNew = false;
-    
+
     /**
      * @var array Array of stored instances of the object for different sets of params used for an initialization
      */
     private $storedInstance = [];
-    
+
     /**
      * Initialize the object
      * @param string $className Class name of the object
@@ -80,7 +80,7 @@ class ObjectNode
         $this->alias = (string)$alias;
         $this->alwaysNew = (bool)$alwaysNew;
     }
-    
+
     /**
      * Return a class name of the object
      * @return string
@@ -89,7 +89,7 @@ class ObjectNode
     {
         return $this->className;
     }
-    
+
     /**
      * Return an array of all Param objects for the object
      * @return array
@@ -98,7 +98,7 @@ class ObjectNode
     {
         return $this->parameters;
     }
-    
+
     /**
      * Return a value of a parameter which has the given name, if the parameter is in a set of named parameters
      * @param string $name Name of the parameter
@@ -113,7 +113,7 @@ class ObjectNode
         }
         return null;
     }
-    
+
     /**
      * Set a value to the parameter which has the given name, if the parameter is in a set of named parameters
      * @param string $name A name of the parameter
@@ -130,7 +130,7 @@ class ObjectNode
         }
         return $this;
     }
-    
+
     /**
      * Return an alias of the object
      * @return string|null
@@ -139,7 +139,7 @@ class ObjectNode
     {
         return $this->alias;
     }
-    
+
     /**
      * Return a flag if the instance should be always new
      * @return boolean
@@ -148,7 +148,7 @@ class ObjectNode
     {
         return $this->alwaysNew;
     }
-    
+
     /**
      * Return an object which was created with the given set of params and which is set as an one of instances inside the ObjectNode
      * @param array $params An array of params
@@ -159,7 +159,7 @@ class ObjectNode
         $paramId = sha1($this->getParamsId($params));
         return isset($this->storedInstance[$paramId])?$this->storedInstance[$paramId]:null;
     }
-    
+
     /**
      * Set the instance of an object which was created with using the given set of params
      * @param array $params Params which were used to create the instance
@@ -172,7 +172,7 @@ class ObjectNode
         $this->storedInstance[$paramId] = $instance;
         return $this;
     }
-    
+
     /**
      * Return a string which contains XML representation of the ObjectNode
      * @return string
@@ -193,7 +193,7 @@ class ObjectNode
         $element .= '</object>';
         return $element;
     }
-    
+
     /**
      * Return an identificator of the given data. It's a substitute of full serialization.
      * @param mixed $input Input data

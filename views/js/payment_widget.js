@@ -65,7 +65,7 @@ var requirejs, require, define;
      * @param {String} name the relative name
      * @param {String} baseName a real name that the name arg is relative
      * to.
-     * @returns {String} normalized name 
+     * @returns {String} normalized name
      */
     function normalize(name, baseName) {
         var nameParts, nameSegment, mapValue, foundMap, lastIndex,
@@ -107,9 +107,9 @@ var requirejs, require, define;
                             //correctly to disk. Otherwise, there is likely
                             //no path mapping for a path starting with '..'.
                             //This can still fail, but catches the most reasonable
-                            //uses of .. 
+                            //uses of ..
 
-// 
+//
 
                             break;
                         } else if (i > 0) {
@@ -10975,7 +10975,11 @@ define('widgetsCommon',['jquery', 'xhr', 'config'], function ($, xhr, config) {
                 switch(widget) {
                     case 'FormWidget':
                         var tooltipMessage = this.setTooltip(value.not_online_message);
-                        return "<div class='channel-container " + channelNotOnlineClass + "'>" + tooltipMessage + "<div class='image-container'><img src='" + value.logo + "'/></div><div class='input-container'><input type='radio' id='" + value.id + "' value='" + value.id + "' name='channel'  class='channel-input'/></div><div class='label-container'><label for='" + value.id + "'>" + value.name + "</label></div></div>";
+                        var withName = "<div class='channel-container " + channelNotOnlineClass + "'>" + tooltipMessage + "<div class='image-container'><img src='" + value.logo + "' ></div><div class='input-container'><input type='radio' id='" + value.id + "' value='" + value.id + "' name='channel'  class='channel-input' /></div><div class='label-container'><label for='" + value.id + "'>" + value.name + "(" + value.group + ")</label></div></div>";
+						
+						var withoutName = "<div class='channel-container " + channelNotOnlineClass + "'>" + tooltipMessage + "<div class='image-container' id='dp_imgnoname'><img src='" + value.logo + "' title='" + value.name + " ("+ value.group_name +")' alt='" + value.name + " ("+ value.group_name +")' /></div><div class='input-container'><input type='radio' id='" + value.id + "' value='" + value.id + "' name='channel'  class='channel-input' /></div>";
+                        //view title or not channel like description in box container
+                        return withoutName;
                     break;
                     case 'selectWidget':
                         return "<option class='" + channelNotOnlineClass + "' value='" + value.id + "'>" + value.name + "</option>";
@@ -11044,14 +11048,20 @@ define('widgetsCommon',['jquery', 'xhr', 'config'], function ($, xhr, config) {
                     case 'R':
                         convertedGroupsNames.push('installment');
                     break;
-                    case 'I':
+                    case 'M':
                         convertedGroupsNames.push('mobile_transfers');
                     break;
                     case 'W':
                         convertedGroupsNames.push('purses');
                     break;
-                    case 'R':
+                    case 'P':
                         convertedGroupsNames.push('transfers');
+					break;
+					case 'O':
+                        convertedGroupsNames.push('posponed_payments');
+					break;
+					case 'I':
+                        convertedGroupsNames.push('other');
                     break;
                     default:
                         convertedGroupsNames = channelGroups;
@@ -11140,6 +11150,7 @@ define('formWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler']
         formWidget: function (data) {
             errorHandler.apiResponseErrorHandler(data);
 
+			//pokaz liste kanalow
             $_dp('<div>', {
                 'class': config.widget.widgetClass,
                 html: widgetsCommon.prepareChannelsList(data, 'FormWidget')
@@ -11157,7 +11168,7 @@ define('formWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler']
                     'channel':$_dp('.channel-input', this).val()
                 });
             });
-            
+
             $_dp('.'+config.widget.widgetClass).click(function(e){
                 e.preventDefault();
             });

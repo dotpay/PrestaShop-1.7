@@ -30,6 +30,7 @@
             <script src="{$modulePath}views/js/payment_widget.js"></script>
             {$script nofilter}
         {/if}
+
         <div class="channel-data">
 			{if $isTestMode}
                 <p class="alert alert-danger"><strong>{$testModeMessage1|escape:'htmlall':'UTF-8'}</strong> {$testModeMessage2|escape:'htmlall':'UTF-8'}</p>

@@ -3,7 +3,7 @@
 global $_MODULE;
 $_MODULE = array();
 $_MODULE['<{dotpay}prestashop>dotpay_5bd740935ffd9dcbc20599b88a0bc448'] = 'Płatności Dotpay';
-$_MODULE['<{dotpay}prestashop>dotpay_613ad84122b7229c9bcfffead88188b2'] = 'Ten moduł pozwala dokonywać płatności przy pomocy usług firmy Dotpay';
+$_MODULE['<{dotpay}prestashop>dotpay_613ad84122b7229c9bcfffead88188b2'] = 'Ten moduł pozwala dokonywać płatności przy pomocy bramki płatności Dotpay';
 $_MODULE['<{dotpay}prestashop>dotpay_43f6117df8511c7cd181669d92432f84'] = 'Czy na pewno chcesz odinstalować moduł płatności Dotpay?';
 $_MODULE['<{dotpay}prestashop>dotpay_92d4773a9f32fc3333cb8238471cf763'] = 'Musisz odblokować rozszerzenie cURL na swoim serwerze, aby  zainstalować tą wtyczkę';
 $_MODULE['<{dotpay}prestashop>dotpay_d903fe77e52f341cb89d595ff4de7e6c'] = 'Nieprawidłowy ID (wymagane 6 cyfr)';
@@ -17,11 +17,12 @@ $_MODULE['<{dotpay}prestashop>dotpay_b9f5c797ebbf55adccdd8539a65a0241'] = 'Wył�
 $_MODULE['<{dotpay}prestashop>dotpay_f077eee6613cddcdfc3af244e4563af3'] = 'Wybierz używaną wersję API';
 $_MODULE['<{dotpay}prestashop>dotpay_249360208dfdcf66e63a3ec032ebd32e'] = 'dev jest jedyną wersją używaną w tej wtyczce';
 $_MODULE['<{dotpay}prestashop>dotpay_16c8c5e3b9d396baae2c71bb17c893ff'] = 'Jeżeli używasz starszej wersji, proszę skontaktuj się z Biurem Obsługi Klienta, aby zmienić ją na dev';
-$_MODULE['<{dotpay}prestashop>dotpay_b96c8d5c9a1c08148c542da61c3ee3bb'] = 'https://www.dotpay.pl//kontakt/biuro-obslugi-klienta/';
+$_MODULE['<{dotpay}prestashop>dotpay_4b29bf90f2d9ff8b2c70565ea7817920'] = 'https://www.dotpay.pl/kontakt/biuro-obslugi-klienta/';
 $_MODULE['<{dotpay}prestashop>dotpay_bbaff12800505b22a853e8b7f4eb6a22'] = 'Kontakt';
 $_MODULE['<{dotpay}prestashop>dotpay_f4e26b834d58d1cabbd670278fe330c9'] = 'dev (numer ID ma 6 cyfr)';
 $_MODULE['<{dotpay}prestashop>dotpay_b718adec73e04ce3ec720dd11a06a308'] = 'Numer ID';
 $_MODULE['<{dotpay}prestashop>dotpay_6bd80fb6b48fa5920237ad8613991e05'] = 'Skopiuj z Panelu klienta Dotpay';
+$_MODULE['<{dotpay}prestashop>dotpay_b73dec5ed06d30a1e3baf55f80a2d12e'] = 'Skopiuj z Panelu klienta Dotpay numer konta (bez znaku \"#\")';
 $_MODULE['<{dotpay}prestashop>dotpay_cdbc895d08b5d92db04174533a8548f7'] = 'Kod PIN';
 $_MODULE['<{dotpay}prestashop>dotpay_4245499695408b974322be6f01b0d17a'] = 'Tryb testowy';
 $_MODULE['<{dotpay}prestashop>dotpay_8d2793a4310a7f20f7072a3f71586a6b'] = 'Używam konta testowego w Dotpay';

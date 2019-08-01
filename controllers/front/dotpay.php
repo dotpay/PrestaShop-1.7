@@ -36,27 +36,28 @@ abstract class DotpayController extends ModuleFrontController
      * @var Loader Instance of SDK Loader
      */
     protected $loader;
-    
+
     /**
      * @var Cart Prestashop Cart object
      */
     private $cartObject;
-    
+
     /**
      * @var \Prestashop\Dotpay\Model\Order Plugin Order object
      */
     private $order;
-    
+
     /**
      * @var Configuration Configuration of plugin
      */
     protected $config;
-    
+
     /**
      * @var Channel ObjectNode of initialized payment channel
      */
     private $channel;
-    
+
+
     /**
      * Initialize the constructor
      */
@@ -66,7 +67,7 @@ abstract class DotpayController extends ModuleFrontController
         $this->loader = Loader::load();
         $this->config = $this->loader->get('Config');
     }
-    
+
     /**
      * Initialize data for Dotpay Order
      * @param boolean $afterOrder Flag if the initialization is done after creating an order
@@ -74,18 +75,30 @@ abstract class DotpayController extends ModuleFrontController
     protected function initializeOrderData($afterOrder = false)
     {
         $originalCustomer = new Customer($this->getCart()->id_customer);
+        $ordersCustomer = Order::getCustomerOrders((int)$originalCustomer->id);
         $this->loader->parameter('Customer:email', $originalCustomer->email);
         $this->loader->parameter('Customer:firstName', $originalCustomer->firstname);
         $this->loader->parameter('Customer:lastName', $originalCustomer->lastname);
         $address = new Address($this->getCart()->id_address_invoice);
+        $address_delivery = new Address($this->getCart()->id_address_delivery);
         $country = new Country((int)($address->id_country));
+        $country_delivery1 = new Country((int)($address_delivery->id_country));
         $customer = $this->loader->get('Customer');
         $customer->setId($originalCustomer->id)
                  ->setStreet($address->address1.' '.$address->address2)
+                 ->setStreet($address_delivery->address1.' '.$address_delivery->address2,1)
                  ->setPostCode($address->postcode)
+                 ->setPostCode($address_delivery->postcode,1)
                  ->setCity($address->city)
+                 ->setCity($address_delivery->city,1)
                  ->setCountry($country->iso_code)
+                 ->setCountry($country_delivery1->iso_code,1)
+                 ->setCustomerCreateDate($originalCustomer->date_add)
+                 ->setCustomerOrdersCount(count($ordersCustomer))
                  ->setLanguage($this->getLanguage());
+        if ($address_delivery->phone) {
+            $customer->setPhone($address_delivery->phone,1);
+        }
         if ($address->phone) {
             $customer->setPhone($address->phone);
         }
@@ -110,16 +123,18 @@ abstract class DotpayController extends ModuleFrontController
         $this->loader->parameter('Order:amount', $orderAmount);
         $this->loader->parameter('Order:currency', $currency->iso_code);
         $this->loader->parameter('PaymentModel:description', '');
-        
+
         $this->order = $this->loader->get('Order');
         $this->order->setShippingAmount($this->getCart()->getOrderTotal(true, Cart::ONLY_SHIPPING));
     }
-    
-	
+
+
+
+
   	/**
      * Returns correct SERVER NAME or HOSTNAME
      * @return string
-     */ 
+     */
 public function getHost()
     {
 		$possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
@@ -138,7 +153,7 @@ public function getHost()
 			if (array_key_exists($source, $sourceTransformations))
 			{
 				$host = $sourceTransformations[$source]($host);
-			} 
+			}
 		}
 		// Remove port number from host
 		$host = preg_replace('/:\d+$/', '', $host);
@@ -152,7 +167,7 @@ public function getHost()
     {
         return (bool) preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/', $value);
     }
-	
+
 
 	/**
      * Prepare the Dotpay Channel for the given order
@@ -206,15 +221,15 @@ public function getHost()
             default:
                 die($this->module->l('Unrecognized method'));
         }
-		
+
 		if ($this->validateHostname($this->getHost()))
 			{
 				$server_name = $this->getHost();
 			} else {
 				$server_name = "HOSTNAME";
 			}
-		
-		
+
+
         $this->getChannel()->getSeller()->setInfo(\Configuration::get('PS_SHOP_NAME'));
         $this->getOrder()->setId($order->id)
                          ->setReference($order->reference);
@@ -256,10 +271,10 @@ public function getHost()
             array('ajax' => '1'),
             $this->module->isSSLEnabled()
         ));
-        
+
         $this->getChannel()->getTransaction()->setControl($control);
     }
-    
+
     /**
      * Return the prepared channel
      * @return Channel
@@ -280,7 +295,7 @@ public function getHost()
         }
         return $this->cartObject;
     }
-    
+
     /**
      * Return an object of Prestashop Currency
      * @return Currency
@@ -289,7 +304,7 @@ public function getHost()
     {
         return new Currency($this->getCart()->id_currency);
     }
-    
+
     /**
      * Return configuration of the plugin
      * @return Configuration
@@ -298,7 +313,7 @@ public function getHost()
     {
         return $this->config;
     }
-    
+
     /**
      * Return the Prestashop Order object
      * @return \Prestashop\Dotpay\Model\Order
@@ -307,7 +322,7 @@ public function getHost()
     {
         return $this->order;
     }
-    
+
     /**
      * Returns language code for customer language
      * @return string
@@ -321,7 +336,7 @@ public function getHost()
             return "en";
         }
     }
-    
+
     /**
      * Set the given card object
      * @param Cart $cart Cart object
@@ -330,7 +345,7 @@ public function getHost()
     {
         $this->cartObject = $cart;
     }
-    
+
     /**
      * Returns a correct and well-formatted amount, which is based on input parameter
      * @param float $amount Amount of order
@@ -344,4 +359,7 @@ public function getHost()
         } while ($count > 0);
         return $amount;
     }
+
+
+
 }

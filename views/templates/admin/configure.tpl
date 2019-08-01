@@ -132,7 +132,7 @@
             <br />
             <p style="color: #555;">
                 {l s='You can download the latest version from' mod='dotpay'}
-                <a href=""https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{l s='this page' mod='dotpay'}</a>.
+                <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{l s='this page' mod='dotpay'}</a>.
             </p>
         </div>
     {elseif $canNotCheckPlugin}
@@ -185,7 +185,7 @@
     var badID = '{/literal}{$badIdMessage|escape:'htmlall':'UTF-8'}{literal}';
     var badPIN = '{/literal}{$badPinMessage|escape:'htmlall':'UTF-8'}{literal}';
     var valueLowerThanZero = '{/literal}{$valueLowerThanZero|escape:'htmlall':'UTF-8'}{literal}';
-    
+
     function setFieldsForRenew() {
         if($('.renew-enable-option input[name="DP_RENEW"]:checked').val()=='1') {
             $('.renew-option').parents('.form-group').show();
@@ -193,7 +193,7 @@
             $('.renew-option').parents('.form-group').hide();
         }
     }
-    
+
     function setFieldsForFCC() {
         if($('.fcc-enable-option input[name="DP_FCC"]:checked').val()=='1') {
             $('.fcc-option').parents('.form-group').show();
@@ -201,7 +201,7 @@
             $('.fcc-option').parents('.form-group').hide();
         }
     }
-    
+
     function setFieldsForSurCh() {
         if($('.surcharge-enable-option input[name="DP_SURCHARGE"]:checked').val()=='1') {
             $('.surcharge-option').parents('.form-group').show();
@@ -209,7 +209,7 @@
             $('.surcharge-option').parents('.form-group').hide();
         }
     }
-    
+
     function setFieldsForExCh() {
         if($('.excharge-enable-option input[name="DP_EXCHARGE"]:checked').val()=='1') {
             $('.excharge-option').parents('.form-group').show();
@@ -217,7 +217,7 @@
             $('.excharge-option').parents('.form-group').hide();
         }
     }
-    
+
     function setFieldsForDiscount() {
         if($('.discount-enable-option input[name="DP_REDUCT_SHIP"]:checked').val()=='1') {
             $('.reduct-option').parents('.form-group').show();
@@ -225,19 +225,19 @@
             $('.reduct-option').parents('.form-group').hide();
         }
     }
-    
+
     function disableSubmit(mode) {
         $("#module_form_submit_btn").prop("disabled", mode);
     }
-    
+
     function prepareValidation() {
         $('.form-group').find('.col-lg-9').append('<span class="errorMessage"></span>');
     }
-    
+
     function setError(obj, message) {
         obj.parents('.form-group').find('.errorMessage').html(message);
     }
-    
+
     function validateId(idElem, empty) {
         var idLength = idElem.val().length;
         if(empty===true && idLength === 0) {
@@ -251,7 +251,7 @@
             return 0;
         }
     }
-    
+
     function validatePin(pinElem, empty) {
         var pinLength = pinElem.val().length;
         if(empty===true && pinLength === 0) {
@@ -265,7 +265,23 @@
             return 0;
         }
     }
-    
+
+    function PINvisibleEye() {
+
+         $("i#eyelook").click(function() {
+
+             $('i#eyelook').toggleClass("icon-eye-slash icon-eye");
+             var input = $('input#DP_PIN');
+             if (input.attr("type") == "password") {
+                 input.attr("type", "text");
+                  $('i#eyelook').attr('style', 'color : #97224b; cursor : zoom-out;');
+             } else {
+                 input.attr("type", "password");
+                 $('i#eyelook').attr('style', 'color : #2eacce; cursor : zoom-in;');
+             }
+         });
+    }
+
     function validateLTZ(obj) {
         if(parseFloat(obj.val())<0) {
             setError(obj, valueLowerThanZero);
@@ -275,7 +291,7 @@
             return 0;
         }
     }
-    
+
     function validateGUI(check) {
         if(check == undefined)
             var check = 0;
@@ -295,60 +311,207 @@
         else
             disableSubmit(false);
     }
-    
+
     function setVisibilityForAdvancedMode() {
         if($('[name=DP_ADV_MODE]:checked').val() == '1')
             $('#advanced-settings').css('display','block');
         else
             $('#advanced-settings').css('display','none');
     }
-    
+
     $(document).ready(function(){
         $('.password-field').attr('type', 'password');
         $('.lastInSection').parents('.form-group').after('<hr />');
-        
+
+        $('input#DP_PIN').attr("type", "password");
+
         $('<div id="advanced-settings"></div>').insertAfter($('.advanced-mode-switch').parents('.form-group'));
         $('#advanced-settings').nextAll().detach().appendTo('#advanced-settings');
         $('<hr style="height: 2px; background-color: #2eacce;" />').prependTo('#advanced-settings');
         $('[name=DP_ADV_MODE]').change(setVisibilityForAdvancedMode);
+        PINvisibleEye();
         setVisibilityForAdvancedMode();
         setFieldsForDiscount();
         setFieldsForSurCh();
         setFieldsForExCh();
         setFieldsForFCC();
         setFieldsForRenew();
-        
+
+
+        //remove spaces from PIN input
+
+            $("input#DP_PIN").bind('keyup paste keydown', function(e) {
+              $(this).val(function(_, v){
+                  return v.replace(/\s+/g, '');
+              });
+          });
+
+          $("input#DP_FCC_PIN").bind('keyup paste keydown', function(e) {
+              $(this).val(function(_, v){
+                  return v.replace(/\s+/g, '');
+              });
+          });
+
+
+          // remove spaces from ID input
+
+           $("input#DP_ID").attr("pattern", "[0-9]{4,6}");
+           $("input#DP_ID").attr("maxlength", "6");
+           $("input#DP_ID").bind('keyup paste keydown', function(e) {
+              if (/\D/g.test(this.value)) {
+                  // Filter non-digits from input value.
+                  this.value = this.value.replace(/\D/g, '');
+                  }
+              });
+
+          $("input#DP_FCC_ID").attr("pattern", "[0-9]{4,6}");
+          $("input#DP_FCC_ID").attr("maxlength", "6");
+          $("input#DP_FCC_ID").bind('keyup paste keydown', function(e) {
+             if (/\D/g.test(this.value)) {
+                 // Filter non-digits from input value.
+                 this.value = this.value.replace(/\D/g, '');
+                 }
+          });
+
+          //currency
+          $("input#DP_WIDGET_CURR").attr("pattern", "^([A-Z]{3}?\,?)+([A-Z]{3})$");
+
+          $('input#DP_WIDGET_CURR').bind('keyup blur', function () {
+              $(this).val($(this).val().replace(/[^A-Z,]/g, ''))
+          });
+
+
+          $("input#DP_FCC_CURR").attr("pattern", "^([A-Z]{3}?\,?)+([A-Z]{3})$");
+
+          $('input#DP_FCC_CURR').bind('keyup blur', function () {
+              $(this).val($(this).val().replace(/[^A-Z,]/g, ''))
+          });
+
+
+          $("input#DP_RENEW_DAYS").attr("pattern", "[0-9]{0,3}");
+          $("input#DP_RENEW_DAYS").bind('keyup paste keydown', function(e) {
+             if (/\D/g.test(this.value)) {
+                 // Filter non-digits from input value.
+                 this.value = this.value.replace(/\D/g, '');
+             }
+             });
+
+           //username and password
+
+           
+          $("input#DP_USERNAME").bind('keyup paste keydown', function(e) {
+              $(this).val(function(_, v){
+                  return v.replace(/\s+/g, '');
+              });
+          });
+
+          
+          $("input#DP_PASSWORD").bind('keyup paste keydown', function(e) {
+              $(this).val(function(_, v){
+                  return v.replace(/\s+/g, '');
+              });
+          }); 
+
+
+          $("input#DP_EX_AMOUNT").attr("pattern", "^0$|^0\.(0)([1-9])$|^0\.(([1-9])(\d)?)$|^([1-9])((\.\d{1,2})?)$|^((?!0)(\d){1,5})((\.\d{1,2})?)$|^(1(\d{5})(.\d{1,2})?)$|^(200000(.[0]{1,2})?)$");    
+          $("input#DP_SUR_AMOUNT").attr("pattern", "^0$|^0\.(0)([1-9])$|^0\.(([1-9])(\d)?)$|^([1-9])((\.\d{1,2})?)$|^((?!0)(\d){1,5})((\.\d{1,2})?)$|^(1(\d{5})(.\d{1,2})?)$|^(200000(.[0]{1,2})?)$"); 
+          $("input#DP_RS_AMOUNT").attr("pattern", "^0$|^0\.(0)([1-9])$|^0\.(([1-9])(\d)?)$|^([1-9])((\.\d{1,2})?)$|^((?!0)(\d){1,5})((\.\d{1,2})?)$|^(1(\d{5})(.\d{1,2})?)$|^(200000(.[0]{1,2})?)$"); 
+
+          $("input#DP_SUR_PERC").attr("pattern", "^0$|^0\.(0)([1-9])$|^0\.(([1-9])(\d)?)$|^([1-9])((\.\d{1,2})?)$|^((?!0)(\d){1,2})((\.\d{1,2})?)$|^(100(.[0]{1,2})?)$"); 
+          $("input#DP_EX_PERC").attr("pattern", "^0$|^0\.(0)([1-9])$|^0\.(([1-9])(\d)?)$|^([1-9])((\.\d{1,2})?)$|^((?!0)(\d){1,2})((\.\d{1,2})?)$|^(100(.[0]{1,2})?)$"); 
+          $("input#DP_RS_PERC").attr("pattern", "^0$|^0\.(0)([1-9])$|^0\.(([1-9])(\d)?)$|^([1-9])((\.\d{1,2})?)$|^((?!0)(\d){1,2})((\.\d{1,2})?)$|^(100(.[0]{1,2})?)$"); 
+          
+          $('input#DP_EX_AMOUNT').bind('keyup blur paste', function () {
+                    var valid = /^\d{0,6}(\.\d{0,2})?$/.test( this.value.replace('.', '') ),
+                        val = this.value.replace('.', '');
+                    if( !valid ) {
+                        this.value = val.substring(0, val.length-1);
+                    } else if( val.length > 2 ) {
+                        this.value = val.substring(0,val.length-2)+"."+val.substring(val.length-2);
+                    }
+          });
+          $('input#DP_SUR_AMOUNT').bind('keyup blur paste', function () {
+                    var valid = /^\d{0,6}(\.\d{0,2})?$/.test( this.value.replace('.', '') ),
+                        val = this.value.replace('.', '');
+                    if( !valid ) {
+                        this.value = val.substring(0, val.length-1);
+                    } else if( val.length > 2 ) {
+                        this.value = val.substring(0,val.length-2)+"."+val.substring(val.length-2);
+                    }
+          });
+          $('input#DP_RS_AMOUNT').bind('keyup blur paste', function () {
+                    var valid = /^\d{0,6}(\.\d{0,2})?$/.test( this.value.replace('.', '') ),
+                        val = this.value.replace('.', '');
+                    if( !valid ) {
+                        this.value = val.substring(0, val.length-1);
+                    } else if( val.length > 2 ) {
+                        this.value = val.substring(0,val.length-2)+"."+val.substring(val.length-2);
+                    }
+          });
+
+
+        $('input#DP_SUR_PERC').on("keypress keyup blur",function (event) {
+                    var valid = /^\d{0,6}(\.\d{0,2})?$/.test( this.value.replace('.', '') ),
+                        val = this.value.replace('.', '');
+                    if( !valid ) {
+                        this.value = val.substring(0, val.length-1);
+                    } else if( val.length > 2 ) {
+                        this.value = val.substring(0,val.length-2)+"."+val.substring(val.length-2);
+                    }
+                });
+
+        $('input#DP_EX_PERC').on("keypress keyup blur",function (event) {
+                    var valid = /^\d{0,6}(\.\d{0,2})?$/.test( this.value.replace('.', '') ),
+                        val = this.value.replace('.', '');
+                    if( !valid ) {
+                        this.value = val.substring(0, val.length-1);
+                    } else if( val.length > 2 ) {
+                        this.value = val.substring(0,val.length-2)+"."+val.substring(val.length-2);
+                    }
+                });
+
+        $('input#DP_RS_PERC').on("keypress keyup blur",function (event) {
+                    var valid = /^\d{0,6}(\.\d{0,2})?$/.test( this.value.replace('.', '') ),
+                        val = this.value.replace('.', '');
+                    if( !valid ) {
+                        this.value = val.substring(0, val.length-1);
+                    } else if( val.length > 2 ) {
+                        this.value = val.substring(0,val.length-2)+"."+val.substring(val.length-2);
+                    }
+                });
+
+
         prepareValidation();
         var check = validateId($('#DP_ID'), true) + validatePin($('#DP_PIN'), true);
         if(check)
             disableSubmit(true);
-        
+
         $('.renew-enable-option input[name="DP_RENEW"]').change(function(){
             setFieldsForRenew();
             validateGUI();
         });
-        
+
         $('.fcc-enable-option input[name="DP_FCC"]').change(function(){
             setFieldsForFCC();
             validateGUI();
         });
-        
+
         $('.surcharge-enable-option input[name="DP_SURCHARGE"]').change(function(){
             setFieldsForSurCh();
         });
-        
+
         $('.excharge-enable-option input[name="DP_EXCHARGE"]').change(function(){
             setFieldsForExCh();
         });
-        
+
         $('.discount-enable-option input[name="DP_REDUCT_SHIP"]').change(function(){
             setFieldsForDiscount();
         });
-        
+
         $('.validate-gui').change(function(){
             validateGUI();
         });
-        
+
         $.dpChannelChooser();
     });
 </script>

@@ -35,7 +35,7 @@ class Configuration
     /**
      * Version of the SDK
      */
-    const SDK_VERSION = '1.0.7';
+    const SDK_VERSION = '1.0.9';
 
     /**
      * Url of Dotpay payment production server
@@ -68,11 +68,6 @@ class Configuration
     const OFFICE_IP = '77.79.195.34';
 
     /**
-     * Address IP of the localhost
-     */
-    const LOCAL_IP = '127.0.0.1';
-
-    /**
      * Id of One Click card channel
      */
     const OC_CHANNEL = 248;
@@ -91,6 +86,7 @@ class Configuration
      * Id of BLIK channel
      */
     const BLIK_CHANNEL = 73;
+
 
     /**
      * Class name of the HTML container which contains aDotpay widget on a payment site
@@ -115,7 +111,13 @@ class Configuration
         'SEK',
         'UAH',
         'RON',
-        'PLN'
+        'PLN',
+        'NOK',
+        'BGN',
+        'CHF',
+        'HRK',
+        'HUF',
+        'RUB'
     ];
 
     /**
