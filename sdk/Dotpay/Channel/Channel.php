@@ -321,6 +321,11 @@ public function PayerDatadostawaJsonBase64() {
                                 $customer["order_count"] = $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount();
                              }
 
+                             if ($this->transaction->getPayment()->getOrder()->getReference() !== null && $this->transaction->getPayment()->getOrder()->getId() !== null)
+                             {
+                                $customer["order"]["id"] = $this->transaction->getPayment()->getOrder()->getReference().'/'.$this->transaction->getPayment()->getOrder()->getId();
+                             }
+
 
             $customer_base64 = base64_encode(json_encode($customer, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
