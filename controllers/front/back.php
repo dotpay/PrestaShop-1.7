@@ -25,6 +25,8 @@ require_once('dotpay.php');
  */
 class DotpayBackModuleFrontController extends DotpayController
 {
+    private $idCart;
+    
     /**
      * Set additional media in template
      * @return boolean
@@ -44,6 +46,15 @@ class DotpayBackModuleFrontController extends DotpayController
     }
     
     /**
+     * Cart id available for external modules
+     * @return integer
+     */
+    public function getCartId()
+    {
+        return $this->idCart;
+    }
+    
+    /**
      * Proces coming back from a Dotpay server
      */
     public function initContent()
@@ -60,6 +71,7 @@ class DotpayBackModuleFrontController extends DotpayController
         }
         $orderId = Tools::getValue('order');
         $order = new Order($orderId);
+        $this->idCart = (int) $order->id_cart;
         $backProcessor = new Back(Tools::getValue('error_code'));
         try {
             $backProcessor->execute();
