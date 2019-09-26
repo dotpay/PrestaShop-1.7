@@ -115,7 +115,7 @@ class Order
      */
     public function setAmount($amount)
     {   
-        $amount = number_format($amount, 2, '.', ' ');
+        $amount = number_format($amount, 2, '.', '');
         
         if (!Amount::validate($amount)) {
             throw new AmountException($amount);

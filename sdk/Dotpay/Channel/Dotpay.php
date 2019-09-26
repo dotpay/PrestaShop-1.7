@@ -150,8 +150,8 @@ class Dotpay extends Channel
         $config = $this->config;
         $script = [
             'sellerAccountId' => $this->config->getId(),
-            'amount' => $this->transaction->getPayment()->getOrder()->getAmount(),
-            'currency' => $this->transaction->getPayment()->getOrder()->getCurrency(),
+            'amount' => (!empty($this->transaction->getPayment()->getOrder()->getAmount()) ? $this->transaction->getPayment()->getOrder()->getAmount() : '100'),
+            'currency' => (!empty($this->transaction->getPayment()->getOrder()->getCurrency()) ? $this->transaction->getPayment()->getOrder()->getCurrency() : 'PLN'),
             'lang' => $this->transaction->getPayment()->getCustomer()->getLanguage(),
             'widgetFormContainerClass' => $config::WIDGET_CLASS_CONTAINER,
             'offlineChannel' => 'mark',

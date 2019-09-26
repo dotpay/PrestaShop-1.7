@@ -98,7 +98,7 @@ class Confirmation
         {
             $this->completeInformations();
             throw new ConfirmationInfoException($this->outputMessage);
-        } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' && $clientIp == $config::CALLBACK_IP ))
+        } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' && ($clientIp == $config::CALLBACK_IP || $_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP)))
         {
             throw new IncorrectRequestException('IP: '.$this->getClientIp('true').' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
         }
