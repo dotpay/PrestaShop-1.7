@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.0';
+        $this->version = '1.2.1';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -671,7 +671,7 @@ class Dotpay extends PaymentModule
                             )
                         )
                     ),
- 
+
                     array(
                         'type' => 'text',
                         'name' => 'DP_SUR_AMOUNT',
@@ -692,7 +692,7 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('Value of additional fee for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
                     ),
-                    
+
                 /*
                     array(
                         'type' => 'radio',
@@ -774,7 +774,7 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('Value of discount for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
                     ),
-                    
+
                     */
                   array(
                         'label' => $this->l('Isolated channels on the store page'),
