@@ -29,7 +29,7 @@ class DotpayRenewModuleFrontController extends DotpayController
     public function postProcess()
     {
         parent::postProcess();
-        
+
         if ((int) Tools::getValue('order_id')) {
             if ($renewCart = Cart::getCartByOrderId(Tools::getValue('order_id'))) {
                 $context = $this->context;
@@ -39,7 +39,7 @@ class DotpayRenewModuleFrontController extends DotpayController
                 $context->cart->save();
                 CartRule::autoAddToCart($context);
                 $context->cookie->write();
-                Tools::redirect('index.php?controller=order');
+                Tools::redirect('index.php?controller=order&renew=1');
                 die();
             }
         }

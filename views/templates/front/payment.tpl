@@ -22,6 +22,7 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <form class="payment-form" method="POST" action="{$channel->get('target')}">
     <div class="dotpay-one-channel row">

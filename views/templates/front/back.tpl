@@ -190,5 +190,5 @@
         </script>
     {/literal}
 {/if}
-<a href="{$link->getPageLink('index', true, null)}" class="btn btn-warning dotpay-back-button">{l s='Back to main mage' mod='dotpay'}</a>
+<a href="{$link->getPageLink('index', true, null)}" class="btn btn-warning dotpay-back-button">{l s='Back to main page' mod='dotpay'}</a>
 {/block}

@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.1';
+        $this->version = '1.2.2';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -1201,7 +1201,9 @@ class Dotpay extends PaymentModule
 
             if ($this->config->ifOrderCanBeRenewed(new DateTime($order->date_add))) {
                 $this->smarty->assign(array(
-                    'isRenew' => $order->current_state == $this->config->getWaitingStatus(),
+                      //  'isRenew' => $order->current_state == $this->config->getWaitingStatus(),
+                    // renew payment for rejected and processing statuses:
+                    'isRenew' => ($order->current_state == $this->config->getWaitingStatus() || $order->current_state == _PS_OS_ERROR_),
                     'paymentUrl' => $context->link->getModuleLink('dotpay', 'renew', array('order_id'=>$order->id)),
                     'moduleDir2' => $this->_path,
                     'DotpayTrId' => $Dotpay_transaction_id

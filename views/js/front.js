@@ -38,6 +38,18 @@ function checkOrderConfirmButton() {
     $('#payment-confirmation button').attr('disabled', checkRequired() || checkBlikCode());
 }
 
+//get variable from url
+
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+
+
+var renewpay = getURLParameter('renew');
+
 $(document).ready(function(){
     var requiredInputs = $('#checkout-payment-step input[required]').not('[name=payment-option]');
     requiredInputs.change(function(e){
@@ -55,7 +67,7 @@ $(document).ready(function(){
 				this.value = this.value.replace(/\D/g, '');
 			}
 		});
-		
+
     $("input.dotpay_blik_code").attr("pattern", "[0-9]{6}");
     $("input.dotpay_blik_code").attr("maxlength", "6");
 
@@ -63,4 +75,14 @@ $(document).ready(function(){
     $('input.dotpay_blik_code').change(function(){
         checkOrderConfirmButton();
     });
+
+//only for renew payment
+if(renewpay == 1 ){
+    $("h5.aeuc_scart").attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
+    $( "div.cart-summary-products" ).find( "ul.media-list > li.media div.media-left a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
+    $("div.block-promo ").remove();
+    $( "div.order-confirmation-table" ).find( "div.details a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
+}
+
+
 });
