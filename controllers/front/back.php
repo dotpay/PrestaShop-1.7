@@ -73,7 +73,7 @@ class DotpayBackModuleFrontController extends DotpayController
                 $params = array();
                 $params['total_to_pay'] = $order->getOrdersTotalPaid();
                 $params['currency'] = $currency->sign;
-                $params['objOrder'] = $order;
+                $params['order'] = $order;
                 $params['currencyObj'] = $currency;
 
                 $hiddenHookData = Hook::exec('displayPaymentReturn', $params, $this->module->id);

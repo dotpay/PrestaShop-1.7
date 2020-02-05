@@ -15,7 +15,7 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 function checkRequired() {
-    var requiredInputs = $('#checkout-payment-step input[required]').not('[name=payment-option]');
+    var requiredInputs = $('#checkout-payment-step .dotpay-one-channel input[required][type=checkbox]').not('[name=payment-option]');
     var unchecked = 0;
         requiredInputs.each(function(){
             if($(this).prop('checked') == false) {

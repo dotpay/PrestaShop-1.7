@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.2';
+        $this->version = '1.2.3';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -691,10 +691,7 @@ class Dotpay extends PaymentModule
                         'class' => 'fixed-width-lg surcharge-option lastInSection validate-gui',
                         'desc' => $this->l('Value of additional fee for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
-                    ),
-
-                /*
-                    array(
+                    ),array(
                         'type' => 'radio',
                         'label' => $this->l('Extracharge option'),
                         'name' => 'DP_EXCHARGE',
@@ -773,10 +770,7 @@ class Dotpay extends PaymentModule
                         'class' => 'fixed-width-lg reduct-option validate-gui lastInSection',
                         'desc' => $this->l('Value of discount for given currency in % (eg. 1.90)').'<br><b>'.
                                   $this->l('Bigger amount will be chosen').'</b>',
-                    ),
-
-                    */
-                  array(
+                    ),array(
                         'label' => $this->l('Isolated channels on the store page'),
                         'type' => 'text',
                         'name' => 'DP_CHANNELS',
@@ -1141,21 +1135,21 @@ class Dotpay extends PaymentModule
             $this->sdkLoader->parameter('Customer:email', $originalCustomer->email);
             $this->sdkLoader->parameter('Customer:firstName', $originalCustomer->firstname);
             $this->sdkLoader->parameter('Customer:lastName', $originalCustomer->lastname);
-            $customer = $this->sdkLoader->get('Customer');
-            $customer->setLanguage($this->getLanguage());
-            $currency = new Currency($params['cart']->id_currency);
-            $this->sdkLoader->parameter('Order:id', null);
-            $this->sdkLoader->parameter('Order:amount', $params['cart']->getOrderTotal());
-            $this->sdkLoader->parameter('Order:currency', $currency->iso_code);
-            $this->sdkLoader->parameter('PaymentModel:description', '');
-            $order = $this->sdkLoader->get('Order');
-            $order->setShippingAmount($params['cart']->getOrderTotal(true, Cart::ONLY_SHIPPING));
             unset($originalCustomer);
-            unset($customer);
-            unset($currency);
-         } else if(Context::getContext()->customer->isLogged()) {
+        } else if (Context::getContext()->customer->isLogged()) {
             throw new IncompleteDataException('Customer id');
         }
+        $customer = $this->sdkLoader->get('Customer');
+        $customer->setLanguage($this->getLanguage());
+        $currency = new Currency($params['cart']->id_currency);
+        $this->sdkLoader->parameter('Order:id', null);
+        $this->sdkLoader->parameter('Order:amount', $params['cart']->getOrderTotal());
+        $this->sdkLoader->parameter('Order:currency', $currency->iso_code);
+        $this->sdkLoader->parameter('PaymentModel:description', '');
+        $order = $this->sdkLoader->get('Order');
+        $order->setShippingAmount($params['cart']->getOrderTotal(true, Cart::ONLY_SHIPPING));
+        unset($customer);
+        unset($currency);
     }
 
     /**
