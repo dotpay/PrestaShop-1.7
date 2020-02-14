@@ -19,6 +19,7 @@ namespace Dotpay\Resource;
 
 use Dotpay\Model\Payment as ModelPayment;
 use Dotpay\Resource\Channel\Info;
+use Dotpay\Model\Configuration;
 use Dotpay\Resource\Channel\OneChannel;
 use Dotpay\Exception\Resource\ApiException;
 use Dotpay\Exception\BadReturn\TypeNotCompatibleException;
@@ -70,31 +71,84 @@ class Payment extends Resource
         return $this;
     }
 
+
+
+    
     /**
      * Check if the seller with the given id exists in Dotpay system
-     * @param int $id Seller id
-     * @return boolean
+     * @param int $id Seller id, $more_view ['error_code' - present error code,'receiver' - present name of the Dotpay account]
+     * @return boolean, string, array
      * @throws TypeNotCompatibleException Thrown when a response from Dotpay server is in incompatible type
      */
-    public function checkSeller($id)
+    public function checkSeller($id,$more_view)
     {
+
         $url = $this->config->getPaymentUrl().
                'payment_api/channels/'.
                '?id='.$id.
                '&amount=301'.
                '&currency=PLN'.
                '&format=json';
+
         $content = $this->getContent($url);
-        if (!is_array($content)) {
+        if (!is_array($content))
+        {
             throw new TypeNotCompatibleException(gettype($content));
+
+        } else {
+
+
+            if($more_view == 'check')
+            {
+                if (isset($content['error_code'])) 
+               {
+                   unset($content);
+                   return false;
+               }else {
+                unset($content);
+                return true;
+               }
+
+            }
+
+            else if($more_view == 'error_code') 
+            {   
+                if(isset($content['error_code'])) 
+                {
+                    return (array('error_code' => $content['error_code'],'detail' => $content['detail']));
+                    unset($content);
+                }else {
+                    unset($content);
+                    return false;
+                }
+   
+           } 
+           
+           else if($more_view == 'receiver')
+           {   
+               if(isset($content['payment_details']['receiver'])) 
+               {
+                   return $content['payment_details']['receiver'];
+                   unset($content);
+               }else {
+                   unset($content);
+                   return false;
+               }
+
+            
+          } else {
+
+                   unset($content);
+                   return false;
+   
+           }
+
+
         }
-        if (isset($content['error_code']) && ($content['error_code'] == 'UNKNOWN_ACCOUNT' || $content['error_code'] == 'BLOCKED_ACCOUNT' || $content['error_code'] != 'UNKNOWN_CHANNEL')) {
-            unset($content);
-            return false;
-        }
-        unset($content);
-        return true;
+
+
     }
+
 
     /**
      * Return an url to Dotpay API for the given payment details

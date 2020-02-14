@@ -17,7 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author    PrestaShop SA <contact@prestashop.com>
+*  @author    PrestaShop SA < contact@prestashop.com >
 *  @copyright 2007-2018 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -27,13 +27,7 @@
 <div class="panel"><div class="dotpay-offer">
     <h3>{l s='Registration' mod='dotpay'}</h3>
     <p>{l s='In response to the market\'s needs Dotpay has been delivering innovative Internet payment services providing the widest e-commerce solution offer for years. The domain is money transfers between a buyer and a merchant within a complex service based on counselling and additional security. Within an offer of Internet payments Dotpay offers over 140 payment channels including: mobile payments, instalments, cash, e-wallets, transfers and credit card payments.' mod='dotpay'}</p>
-    <p>{l s='To all new clients who have filled in a form and wish to accept payments we offer promotional conditions:' mod='dotpay'}</p>
-    <ul>
-        <li><b>1,9%</b> {l s='commission on Internet payments (not less than PLN 0.30) ' mod='dotpay'}</li>
-        <li>{l s='instalment payments' mod='dotpay'} <b>{l s='without any commission!' mod='dotpay'}</b></li>
-        <li>{l s='an activation fee - only PLN 10' mod='dotpay'}</li>
-        <li><b>{l s='without any additional fees' mod='dotpay'}</b> {l s='for refunds and withdrawals!' mod='dotpay'}</li>
-    </ul>
+   
     <p>{l s='In short, minimizing effort and work time you will increase your sales possibilities. Do not hesitate and start your account now!' mod='dotpay'}</p>
     <div class="cta-button-container">
         <a href="http://www.dotpay.pl/prestashop/" class="cta-button">{l s='Register now!' mod='dotpay'}</a>
@@ -50,27 +44,51 @@
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Module is active. ' mod='dotpay'}</h2>
                 <br />
-                <p style="color: #555;"><b>{l s='If you do not recive payment information, please check URLC configuration in your Dotpay user panel. Check also if your shop sees Dotpay IP address properly.' mod='dotpay'}</b></p>
+                    {if $SellerIDName !== false}
+                        <p style="color: #1f4622; font-size: 1.3em;">{l s='The module has been configured for the account:' mod='dotpay'} <span style="color: #018c0b; font-weight: bold;">{$SellerIDName} (ID #{$SellerID})</span>
+                        <em style="color: #627a82; font-weight: normal;"> &#8594; 
+                        {if $testMode}{l s='testing environment' mod='dotpay'} {else} {l s='production environment' mod='dotpay'}{/if}
+                        </em>
+                        </p><br /><br />
+                    {/if}
+                <p style="color: #ac1212;"><b>{l s='If you do not recive payment information, please check URLC configuration in your Dotpay user panel. Check also if your shop sees Dotpay IP address properly.' mod='dotpay'}</b></p>
                 <p style="color: #D27C82;"><b>{if $testMode}{l s='Module is in TEST mode. All payment information is fake!' mod='dotpay'}{/if}</b></p><br><br>
                 <p style="color: #D27C82;"><b>{if $oldVersion}{l s='Please update your PrestaShop installation to the latest version if you want to use the newest features!' mod='dotpay'}{/if}</b></p>
             </div>
         {else}
-            <div class="alert alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Module is not active. Please check your configuration.' mod='dotpay'}</h2>
-                <br />
-                <p style="color: #555;"><b>{l s='ID and PIN can be found in Dotpay panel in Settings in the top bar. ID number is a 6-digit string after # in a "Shop" column.' mod='dotpay'}</b></p>
-                <br />
-            </div>
+
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Module is not active. Please check your configuration.' mod='dotpay'}</h2>
+                    <br />
+                    <p style="color: #555;"><b>{l s='ID and PIN can be found in Dotpay panel in Settings in the top bar. ID number is a 6-digit string after # in a "Shop" column.' mod='dotpay'}</b></p>
+                    <br />
+                </div>
         {/if}
         {if $testSellerId === false}
-            <div class="alert alert-danger">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'}</h2>
-                <br />
-                <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p>
-                <br />
-            </div>
+
+             {if $errorCodeID === false}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'}</h2>
+                    <br />
+                    <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p>
+                    <br />
+                </div>
+            {else}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Problem with Your seller ID !' mod='dotpay'}</h2>
+                    <br />
+                    <h2 style="color: #a25d5d;"><b>[{$errorCodeID.error_code}]</b></h2><br />
+                    <h3 style="color: #b31a1a;"><b>{$errorCodeID.detail}</b></h3>
+                    {if $errorCodeID.error_code == UNKNOWN_ACCOUNT}
+                    <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p><br />
+                    <p style="color: #b31a1a;">{if $testMode}{l s='Module is in TEST mode. If you entered a production account ID, set below test mode for' mod='dotpay'} <b>{l s='NO' mod='dotpay'}</b>.{/if}</p><br>
+                    {/if}
+                    <br />
+                </div>
+            {/if}
         {/if}
         {if $testApiAccount }
             <div class="alert alert-danger">
@@ -115,6 +133,10 @@
         <p>{l s='Your shop is going to automatically send URLC address to Dotpay.' mod='dotpay'}</p><br>
         <p><b style="color: brown;">{l s='Only thing You have to do is log in to the Dotpay user panel and untick "Block external URLC" option in Settings -> Notifications -> Urlc configuration -> Edit.' mod='dotpay'}</b></p>
         <p><b style="color: brown;">{l s='If your shop does not use HTTPS protocol you should also disable HTTPS verify and SSL certificate verify.' mod='dotpay'}</b></p>
+        <br />
+        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersionGH}/Dotpay_PrestaShop_module-manual_v{$moduleVersionGH}_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
+    
+    
     </div>
 </div>
 
@@ -164,7 +186,7 @@
                 <br />
             </div>
         {/if}
-        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersionGH}/Dotpay_PrestaShop_module-manual_v{$moduleVersionGH}_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
+
     </div>
 </div>
 <p id="scroll-to-save">

@@ -102,7 +102,7 @@ class Notification
 	/**
 	 * prepare data for the name of the shop so that it would be consistent with the validation
 	 */
-	public static function NewShopName($value)
+	public function NewShopName($value)
 		{	
 			$NewShop_name1 = preg_replace('/[^\p{L}0-9\s\"\/\\:\.\$\+!#\^\?\-_@]/u','',$value);
 			return Customer::encoded_substrParams($NewShop_name1,0,300,60);

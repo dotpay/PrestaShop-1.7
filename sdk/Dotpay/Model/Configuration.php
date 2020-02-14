@@ -78,7 +78,7 @@ class Configuration
     const FCC_CHANNEL = 248;
 
     /**
-     * Id of standard chard channel
+     * Id of standard card channel
      */
     const CC_CHANNEL = 246;
 

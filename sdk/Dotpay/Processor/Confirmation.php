@@ -171,10 +171,22 @@ class Confirmation
     protected function completeInformations()
     {
         $config = $this->config;
-		
+
+            if($this->paymentApi->checkSeller($config->getId(),'receiver'))
+            {
+                $seller_receiver = " [ ".$this->paymentApi->checkSeller($config->getId(),'receiver'). "]";
+            }else {
+                $seller_receiver = "";
+            }
+
+            if(isset($this->paymentApi->checkSeller($config->getId(),'error_code')['error_code']) && $this->paymentApi->checkSeller($config->getId(),'error_code')['error_code'] !== null){
+                $error_code = "[".$this->paymentApi->checkSeller($config->getId(),'error_code')['error_code']."] - ".$this->paymentApi->checkSeller($config->getId(),'error_code')['detail'];
+            }else {
+                $error_code = "";
+            }
 
 			if(trim($config->getId()) !== null && (int)$config->getEnable() == 1){
-					$CorrectId = (int)$this->paymentApi->checkSeller($config->getId());
+					$CorrectId = (int)$this->paymentApi->checkSeller($config->getId(),'check') .' '.$error_code;
 			}else{
 					$CorrectId = '&lt;empty or not active module&gt;';
 				}
@@ -187,7 +199,7 @@ class Confirmation
 
 			
 			if(trim($config->getFccId()) !== null && (int)$config->getFccVisible() == 1){
-					$FCC_CorrectId = (int)$this->paymentApi->checkSeller($config->getFccId());
+					$FCC_CorrectId = (int)$this->paymentApi->checkSeller($config->getFccId(),'check');
 			}else{
 					$FCC_CorrectId = '&lt;empty or not active function&gt;';
 				}
@@ -206,7 +218,7 @@ class Confirmation
              ->addOutputMessage('Module Version: '.$this->config->getPluginVersion(), true)
              ->addOutputMessage('PHP Version: '.  phpversion())	 
              ->addOutputMessage('--- Dotpay PLN ---')
-             ->addOutputMessage('Id: '.$config->getId())
+             ->addOutputMessage('Id: '.$config->getId().' '.$seller_receiver)
              ->addOutputMessage('Correct Id: '. $CorrectId)
              ->addOutputMessage('Correct Pin: '.$CorrectPin)
              ->addOutputMessage('API Version: '.$config->getApi())

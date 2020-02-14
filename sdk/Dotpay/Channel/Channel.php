@@ -294,44 +294,56 @@ class Channel
  */
 public function PayerDatadostawaJsonBase64() {
 
-            $customer = array (
-                             "payer" => array(
-                                     "first_name" => $this->transaction->getPayment()->getCustomer()->getFirstName(),
-                                     "last_name" => $this->transaction->getPayment()->getCustomer()->getLastName(),
-                                     "email" => $this->transaction->getPayment()->getCustomer()->getEmail(),
-                                     "phone" => $this->transaction->getPayment()->getCustomer()->getPhone()
-                                      ),
-                             "order" => array(
-                                     "delivery_address" => array(
+    if ($this->transaction->getPayment()->getCustomer()->getFirstName() != "" && $this->transaction->getPayment()->getCustomer()->getLastName() != "" && $this->transaction->getPayment()->getCustomer()->getEmail() != "" && $this->transaction->getPayment()->getCustomer()->getCityDelivery() != "" && $this->getShippingStreetAndStreetN1() != "" && $this->transaction->getPayment()->getCustomer()->getBuildingNumber() && $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery())
+    {
 
-                                                       "city" => $this->transaction->getPayment()->getCustomer()->getCityDelivery(),
-                                                       "street" => $this->transaction->getPayment()->getCustomer()->getStreetDelivery(),
-                                                       "building_number" => $this->transaction->getPayment()->getCustomer()->getBuildingNumber(),
-                                                       "postcode" => $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery(),
-                                                       "country" => $this->transaction->getPayment()->getCustomer()->getCountryDelivery()
-                                                                 )
-                                        )
+        $customer = array (
+            "payer" => array(
+                "first_name" => $this->transaction->getPayment()->getCustomer()->getFirstName(),
+                "last_name" => $this->transaction->getPayment()->getCustomer()->getLastName(),
+                "email" => $this->transaction->getPayment()->getCustomer()->getEmail()
+            ),
+            "order" => array(
+                "delivery_address" => array(
 
-                             );
+                    "city" => $this->transaction->getPayment()->getCustomer()->getCityDelivery(),
+                    "street" => $this->transaction->getPayment()->getCustomer()->getStreetDelivery(),
+                    "building_number" => $this->transaction->getPayment()->getCustomer()->getBuildingNumber(),
+                    "postcode" => $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery(),
+                    "country" => $this->transaction->getPayment()->getCustomer()->getCountryDelivery()
+                )
+            )
+        );
+
+        if ($this->transaction->getPayment()->getCustomer()->getCustomerCreateDate() !== null && $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount() !== null)
+        {
+           $customer["registered_since"] = $this->transaction->getPayment()->getCustomer()->getCustomerCreateDate();
+           $customer["order_count"] = $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount();
+        }
+
+        if ($this->transaction->getPayment()->getCustomer()->getPhone() != "") {
+            $customer["payer"]["phone"] = $this->transaction->getPayment()->getCustomer()->getPhone();
+        }
 
 
-                             if ($this->transaction->getPayment()->getCustomer()->getCustomerCreateDate() !== null && $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount() !== null)
-                             {
-                                $customer["registered_since"] = $this->transaction->getPayment()->getCustomer()->getCustomerCreateDate();
-                                $customer["order_count"] = $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount();
-                             }
-
-                             if ($this->transaction->getPayment()->getOrder()->getReference() !== null && $this->transaction->getPayment()->getOrder()->getId() !== null)
-                             {
-                                $customer["order"]["id"] = $this->transaction->getPayment()->getOrder()->getReference().'/'.$this->transaction->getPayment()->getOrder()->getId();
-                             }
+        if ($this->transaction->getPayment()->getOrder()->getReference() !== null && $this->transaction->getPayment()->getOrder()->getId() !== null)
+        {
+           $customer["order"]["id"] = $this->transaction->getPayment()->getOrder()->getReference().'/'.$this->transaction->getPayment()->getOrder()->getId();
+        }
 
 
-            $customer_base64 = base64_encode(json_encode($customer, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        $customer_base64 = base64_encode(json_encode($customer, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
-    return $customer_base64;
+
+        return $customer_base64;
+
+    } else {
+
+        return null;
+    }
 
 }
+
 
 
     /**

@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.3';
+        $this->version = '1.2.4';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -203,7 +203,10 @@ class Dotpay extends PaymentModule
             $testCorrectSellerForApi = true;
             $availableChannels = $this->getChannelList($paymentResource);
             try {
-                $testSellerId = $paymentResource->checkSeller($this->config->getId());
+                $testSellerId = $paymentResource->checkSeller($this->config->getId(),'check');
+                $testSellerIderror = $paymentResource->checkSeller($this->config->getId(),'error_code');
+                $DotpayIDSellerName = $paymentResource->checkSeller($this->config->getId(),'receiver');
+                $DotpayIDSeller = $this->config->getId();
                 $testApiAccount = $sellerResource->isAccountRight();
                 $testSellerPin = $sellerResource->checkPin();
             } catch (AccountNotFoundException $e) {
@@ -215,6 +218,16 @@ class Dotpay extends PaymentModule
             if (!isset($testSellerId)) {
                 $testSellerId = false;
             }
+            if (!isset($testSellerIderror)) {
+                $testSellerIderror = false;
+            }
+            if (!isset($DotpayIDSellerName)) {
+                $DotpayIDSellerName = false;
+            }
+            if (trim($this->config->getId()) == "") {
+                $DotpayIDSeller = false;
+            }
+            
             if (!isset($testApiAccount)) {
                 $testApiAccount = false;
             }
@@ -253,6 +266,9 @@ class Dotpay extends PaymentModule
                 'phpVersion' => PHP_VERSION,
                 'minorPhpVersion' => '5.6',
                 'confOK' => $this->config->isGoodAccount() && $this->config->getEnable(),
+                'errorCodeID' => $testSellerIderror,
+                'SellerIDName' => $DotpayIDSellerName,
+                'SellerID' => $DotpayIDSeller,
                 'moduleVersionGH' => $number,
                 'moduleVersion' => $this->version,
                 'testSellerId' => $testSellerId,
