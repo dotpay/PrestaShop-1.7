@@ -294,7 +294,7 @@ class Channel
  */
 public function PayerDatadostawaJsonBase64() {
 
-    if ($this->transaction->getPayment()->getCustomer()->getFirstName() != "" && $this->transaction->getPayment()->getCustomer()->getLastName() != "" && $this->transaction->getPayment()->getCustomer()->getEmail() != "" && $this->transaction->getPayment()->getCustomer()->getCityDelivery() != "" && $this->getShippingStreetAndStreetN1() != "" && $this->transaction->getPayment()->getCustomer()->getBuildingNumber() && $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery())
+    if ($this->transaction->getPayment()->getCustomer()->getFirstName() != "" && $this->transaction->getPayment()->getCustomer()->getLastName() != "" && $this->transaction->getPayment()->getCustomer()->getEmail() != "" && $this->transaction->getPayment()->getCustomer()->getCityDelivery() != "" && $this->transaction->getPayment()->getCustomer()->getStreetDelivery() != "" && $this->transaction->getPayment()->getCustomer()->getBuildingNumber() && $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery())
     {
 
         $customer = array (
@@ -309,8 +309,7 @@ public function PayerDatadostawaJsonBase64() {
                     "city" => $this->transaction->getPayment()->getCustomer()->getCityDelivery(),
                     "street" => $this->transaction->getPayment()->getCustomer()->getStreetDelivery(),
                     "building_number" => $this->transaction->getPayment()->getCustomer()->getBuildingNumber(),
-                    "postcode" => $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery(),
-                    "country" => $this->transaction->getPayment()->getCustomer()->getCountryDelivery()
+                    "postcode" => $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery()
                 )
             )
         );
@@ -323,6 +322,10 @@ public function PayerDatadostawaJsonBase64() {
 
         if ($this->transaction->getPayment()->getCustomer()->getPhone() != "") {
             $customer["payer"]["phone"] = $this->transaction->getPayment()->getCustomer()->getPhone();
+        }
+
+        if ($this->transaction->getPayment()->getCustomer()->getCountryDelivery() != "") {
+            $customer["order"]["delivery_address"]["country"] = $this->transaction->getPayment()->getCustomer()->getCountryDelivery();
         }
 
 

@@ -78,15 +78,29 @@
             {else}
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Problem with Your seller ID !' mod='dotpay'}</h2>
-                    <br />
-                    <h2 style="color: #a25d5d;"><b>[{$errorCodeID.error_code}]</b></h2><br />
-                    <h3 style="color: #b31a1a;"><b>{$errorCodeID.detail}</b></h3>
-                    {if $errorCodeID.error_code == UNKNOWN_ACCOUNT}
-                    <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p><br />
-                    <p style="color: #b31a1a;">{if $testMode}{l s='Module is in TEST mode. If you entered a production account ID, set below test mode for' mod='dotpay'} <b>{l s='NO' mod='dotpay'}</b>.{/if}</p><br>
-                    {/if}
-                    <br />
+                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Problem with Your seller ID !' mod='dotpay'} #{$SellerID}</h2>
+
+                     {if is_numeric($SellerID) && (float)(int)$SellerID === (float)$SellerID && $SellerID|count_characters:false == 6 } 
+                       
+                        <br />
+                        <h2 style="color: #a25d5d;"><b>[{$errorCodeID.error_code}]</b></h2><br />
+                        <h3 style="color: #b31a1a;"><b>{$errorCodeID.detail}</b></h3>
+                        {if $errorCodeID.error_code == "UNKNOWN_ACCOUNT"}
+                        <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p><br />
+                        <p style="color: #b31a1a;">
+                            {if $testMode}{l s='Module is in TEST mode. If you entered a production account ID, set below test mode for' mod='dotpay'} 
+                                <b>{l s='NO' mod='dotpay'}</b>.
+                            {/if}</p><br>
+                        {/if}
+                        <br />
+                     
+                     {else} 
+                     {if $SellerID|count_characters:false != 6}
+                        <p style="color: #b31a1a;"><b>{l s='ID number is a 6-digit string. You have entered:' mod='dotpay'}  <em>{$SellerID|count_characters:false}</em></b>.</p><br />
+                     {/if}
+                        {l s='Your seller ID is incorrect.' mod='dotpay'}
+                     {/if}
+					
                 </div>
             {/if}
         {/if}

@@ -92,7 +92,7 @@ class Seller
     
     /**
      * Return a username of Dotpay seller dashboard
-     * @return strung
+     * @return string
      */
     public function getUsername()
     {
