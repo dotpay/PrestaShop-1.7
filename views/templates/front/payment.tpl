@@ -48,12 +48,18 @@
             {if $totalAmount > 0}
                 <p class="alert-total">{$totalMessage|escape:'htmlall':'UTF-8'}: {$totalAmount|escape:'htmlall':'UTF-8'}&nbsp;{$currency|escape:'htmlall':'UTF-8'}</p>
             {/if}
+            
             {foreach from=$channel->getViewFieldsHtml() item=field}
 				{$field nofilter}
             {/foreach}
             {if $channel->getChannelId() != null}
             <input type="hidden" name="channel" value="{$channel->getChannelId()}" />
             {/if}
+
+            <p class="alert alert-info" style="display: none;" id="dp_NoWidget"><strong>{$NOchannelsMessage1|escape:'htmlall':'UTF-8'}<br> {$NOchannelsMessage2|escape:'htmlall':'UTF-8'}</strong><br><small>{$NOchannelsMessage3|escape:'htmlall':'UTF-8'}</small></p>
+
+            <p class="alert alert-warning" style="display: none;" id="dp_NoSelected"><strong>{$NOchannelsSelectedMessage1|escape:'htmlall':'UTF-8'}<br> {$NOchannelsSelectedMessage2|escape:'htmlall':'UTF-8'}</strong></p>
+
         </div>
 
         <div class="agreements">

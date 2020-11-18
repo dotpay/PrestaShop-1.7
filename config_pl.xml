@@ -2,8 +2,8 @@
 <module>
     <name>dotpay</name>
     <displayName><![CDATA[Płatności Dotpay]]></displayName>
-    <version><![CDATA[1.2.4.1]]></version>
-    <description><![CDATA[Ten moduł pozwala dokonywać płatności za pomocą Dotpay]]></description>
+    <version><![CDATA[1.2.5]]></version>
+    <description><![CDATA[Ten moduł pozwala dokonywać płatności przy pomocy bramki płatności Dotpay]]></description>
     <author><![CDATA[Dotpay]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
 	<confirmUninstall><![CDATA[Czy na pewno chcesz odinstalować moduł płatności Dotpay?]]></confirmUninstall>

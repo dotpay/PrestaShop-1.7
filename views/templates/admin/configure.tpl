@@ -23,18 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $regMessEn}
-<div class="panel"><div class="dotpay-offer">
-    <h3>{l s='Registration' mod='dotpay'}</h3>
-    <p>{l s='In response to the market\'s needs Dotpay has been delivering innovative Internet payment services providing the widest e-commerce solution offer for years. The domain is money transfers between a buyer and a merchant within a complex service based on counselling and additional security. Within an offer of Internet payments Dotpay offers over 140 payment channels including: mobile payments, instalments, cash, e-wallets, transfers and credit card payments.' mod='dotpay'}</p>
-   
-    <p>{l s='In short, minimizing effort and work time you will increase your sales possibilities. Do not hesitate and start your account now!' mod='dotpay'}</p>
-    <div class="cta-button-container">
-        <a href="http://www.dotpay.pl/prestashop/" class="cta-button">{l s='Register now!' mod='dotpay'}</a>
-    </div>
-</div></div>
-{/if}
-
 <div class="panel">
     <div class="dotpay-config">
         <h3>{l s='Information' mod='dotpay'}</h3>

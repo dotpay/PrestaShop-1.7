@@ -70,6 +70,7 @@ class Configuration extends \Dotpay\Model\Configuration
         'DP_ID' => 'Id',
         'DP_PIN'=> 'Pin',
         'DP_TEST_MODE' => 'TestMode',
+        'DP_DEF_CURRENCY' => 'DefaultCurrency',
         'DP_WIDGET_EN' => 'WidgetVisible',
         'DP_ADV_MODE' => 'AdvancedMode',
         'DP_RENEW' => 'Renew',

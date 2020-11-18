@@ -94,6 +94,9 @@ class Notification extends \Dotpay\Model\Notification
         if (Tools::getValue('geoip_country')) {
             $this->setIpCountry(Tools::getValue('geoip_country'));
         }
+        if (Tools::getValue('operation_seller_code')) {
+            $this->setSellerCode(Tools::getValue('operation_seller_code'));
+        }
         if (Tools::getValue('signature')) {
             $this->setSignature(Tools::getValue('signature'));
         }

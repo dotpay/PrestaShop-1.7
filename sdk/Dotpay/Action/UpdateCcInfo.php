@@ -36,7 +36,7 @@ class UpdateCcInfo extends Action {
      * @param CreditCard $cc Credit card object
      * @return UpdateCcInfo
      */
-    public function setCreditCard(CreditCard $cc) {
+    public function setCreditCard(CreditCard $cc = null) {
         return $this->setOneArgument($cc);
     }
 }

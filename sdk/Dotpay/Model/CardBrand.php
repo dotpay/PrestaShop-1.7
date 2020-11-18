@@ -54,6 +54,7 @@ class CardBrand
     public function __construct($name, $image, $codeName = null)
     {
         $this->setName($name);
+        if(!is_null($image) && $image)
         $this->setImage($image);
         $this->setCodeName($codeName);
     }

@@ -223,6 +223,7 @@ class Confirmation
              ->addOutputMessage('Correct Pin: '.$CorrectPin)
              ->addOutputMessage('API Version: '.$config->getApi())
              ->addOutputMessage('Test Mode: '.(int)$config->getTestMode())
+             ->addOutputMessage('Default currency: '.$config->getDefaultCurrency())
              ->addOutputMessage('Refunds: '.(int)$config->getRefundsEnable())
              ->addOutputMessage('Widget: '.(int)$config->getWidgetVisible())
              ->addOutputMessage('Widget currencies: '.$config->getWidgetCurrencies())

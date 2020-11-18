@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.4.1';
+        $this->version = '1.2.5';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -163,12 +163,18 @@ class Dotpay extends PaymentModule
      */
     private function getChannelList($paymentResource)
     {
+        if($this->config->getDefaultCurrency() !== ""){
+            $defcurrency = $this->config->getDefaultCurrency();
+        }else{
+            $defcurrency = "PLN";
+        }
+
         try {
             $config = $this->config;
             $seller = $this->sdkLoader->get('Seller', array($this->config->getId(), $this->config->getPin()));
             $customer = $this->sdkLoader->get('Customer', array('dotpay@dotpay.pl', 'Firstname', 'Lastname'));
             $customer->setLanguage($this->getLanguage());
-            $order = $this->sdkLoader->get('Order', array(null, 301, 'PLN'));
+            $order = $this->sdkLoader->get('Order', array(null, 317, $defcurrency));
             $payment = $this->sdkLoader->get('PaymentModel', array($customer, $order, ''));
             $payment->setSeller($seller);
             $info = $paymentResource->getChannelInfo($payment);
@@ -252,6 +258,7 @@ class Dotpay extends PaymentModule
                 'moduleDir' => $this->_path,
                 'regMessEn' => $this->config->getTestMode() || !$this->config->isGoodAccount(),
                 'testMode' => $this->config->getTestMode(),
+                'DefaultCurrency' => $this->config->getDefaultCurrency(),
                 'badIdMessage' => $this->l('Incorrect ID (required 6 digits)'),
                 'badPinMessage' => $this->l('Incorrect PIN (minimum 16 and maximum 32 alphanumeric characters)'),
                 'valueLowerThanZero' => $this->l('The value must be greater than zero.'),
@@ -410,7 +417,7 @@ class Dotpay extends PaymentModule
                         'is_bool' => true,
                         'desc' => $this->l('I\'m using Dotpay test account (test ID)').
                                   '<br><b>'.$this->l('Required Dotpay test account:').
-                                  ' <a href="https://ssl.dotpay.pl/test_seller/test/registration/?affilate_id='.
+                                  ' <a href="https://www.dotpay.pl/developer/sandbox/pl/?affiliate_id='.
                                   'prestashop_module" target="_blank" title="'.
                                   $this->l('Dotpay test account registration').'">'.$this->l('registration').'</b></a>',
                         'values' => array(
@@ -424,6 +431,83 @@ class Dotpay extends PaymentModule
                                 'label' => $this->l('Disable')
                             )
                         )
+                   
+                    ),array(
+                        'type' => 'select',
+                        'class' => 'fixed-width-xxl',
+                        'label' => $this->l('Set default currency for this account (ID)'),
+                        'name' => 'DP_DEF_CURRENCY',
+                        'required' => true,
+                        'disabled' => false,
+                        'class' => 'api-select',
+                        'options' => array(
+                            'query' => array(
+                                array(
+                                    'id_option_cyrrency' => 'PLN',
+                                    'name_option_cyrrency' => 'PLN',
+                                ),
+                                array(
+                                    'id_option_cyrrency' => 'EUR',
+                                    'name_option_cyrrency' => 'EUR',
+                                ),
+                                array(
+                                    'id_option_cyrrency' => 'USD',
+                                    'name_option_cyrrency' => 'USD',
+                                ),
+                                array(
+                                    'id_option_cyrrency' => 'GBP',
+                                    'name_option_cyrrency' => 'GBP',
+                                ),                                
+                                array(
+                                    'id_option_cyrrency' => 'JPY',
+                                    'name_option_cyrrency' => 'JPY',
+                                ) ,
+								array(
+                                    'id_option_cyrrency' => 'CZK',
+                                    'name_option_cyrrency' => 'CZK',
+                                ) ,
+                                array(
+                                    'id_option_cyrrency' => 'SEK',
+                                    'name_option_cyrrency' => 'SEK',
+                                ) ,
+								array(
+                                    'id_option_cyrrency' => 'UAH',
+                                    'name_option_cyrrency' => 'UAH',
+                                ) ,
+                                array(
+                                    'id_option_cyrrency' => 'RON',
+                                    'name_option_cyrrency' => 'RON',
+                                ) ,
+								array(
+                                    'id_option_cyrrency' => 'NOK',
+                                    'name_option_cyrrency' => 'NOK',
+                                ) ,
+								array(
+                                    'id_option_cyrrency' => 'BGN',
+                                    'name_option_cyrrency' => 'BGN',
+                                ) ,
+                                array(
+                                    'id_option_cyrrency' => 'CHF',
+                                    'name_option_cyrrency' => 'CHF',
+                                ) ,
+								array(
+                                    'id_option_cyrrency' => 'HRK',
+                                    'name_option_cyrrency' => 'HRK',
+                                ) ,
+								array(
+                                    'id_option_cyrrency' => 'HUF',
+                                    'name_option_cyrrency' => 'HUF',
+                                ) ,
+                                array(
+                                    'id_option_cyrrency' => 'RUB',
+                                    'name_option_cyrrency' => 'RUB',
+                                )                                   
+                            ),
+                            'id' => 'id_option_cyrrency',
+                            'name' => 'name_option_cyrrency'
+                        ),
+                   
+                   
                     ),array(
                         'type' => 'switch',
                         'label' => $this->l('Enabling Dotpay widget'),
@@ -975,7 +1059,11 @@ class Dotpay extends PaymentModule
                         'This store uses the Dotpay test payment mode. Payments are only simulated and your order '.
                         'will not be processed!'
                     ),
-                    'jakisTest' => $address->address1.' deliv: '.$address_deliv->address1,
+                    'NOchannelsMessage1' => $this->l('You chose the fast and secure payments via Dotpay.'),
+                    'NOchannelsMessage2' => $this->l('Continue to choose your payment method on the Dotpay website.'),
+                    'NOchannelsMessage3' => $this->l('Or choose a different payment method.'),
+                    'NOchannelsSelectedMessage1' => $this->l('No payment channel selected!'),
+                    'NOchannelsSelectedMessage2' => $this->l('You must select one of the available payment channels to continue payment.'),
                 ));
                 $newOption = new PaymentOption();
                 $newOption->setCallToActionText($channel->getTitle())

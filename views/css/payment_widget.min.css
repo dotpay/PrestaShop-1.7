@@ -160,6 +160,17 @@
     filter: none
 }
 
+
+.dp_checkedchannel {
+    font-size: 1em;
+    background-color: #e3f7fd;
+    color: #254b85;
+}
+
+.channel-selected-change{
+    text-align: center;
+}
+
 .dotpay-one-channel p.error-alert {
     font-size: 1.4em;
     text-align: center;
@@ -176,7 +187,7 @@
     max-width: 960px;
     margin: 0 auto;
     float: none;
-    text-align: left;
+    text-align: center;
     min-height: 40px
 }
 
@@ -211,9 +222,9 @@
 
 .dotpay-one-channel .channels-wrapper .image-container {
     display: block;
-    width: 100%;
+    width: 90%;
     text-align: center;
-    top: 3px
+    top: 12px
 }
 
 .dotpay-one-channel .channels-wrapper .image-container img {
@@ -224,8 +235,9 @@
     display: block;
     width: 15px;
     left: 10px;
-    top: 20px;
-    margin: 0
+    top: 5px;
+    margin: 0;
+    visibility:hidden
 }
 
 .dotpay-one-channel .channels-wrapper .label-container {
@@ -252,6 +264,9 @@
     .dotpay-one-channel .channel-container {
         width: 100%
     }
+    .only-dotpay-logo {
+        padding-top:5px
+       }
 }
 
 @media (min-width: 400px) {
@@ -275,6 +290,9 @@
 @media (min-width: 1000px) {
     .dotpay-one-channel .channel-container {
         width: 15.66%
+    }
+    .only-dotpay-logo {
+        padding-top: 15px;
     }
 }
 

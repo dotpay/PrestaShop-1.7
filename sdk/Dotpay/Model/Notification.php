@@ -59,6 +59,12 @@ class Notification
     private $ipCountry = '';
     
     /**
+     * @var string code for a rejected transaction that describes the possible reason for a transaction being refused (Optional parameter)
+     */
+    private $sellerCode = '';
+    
+
+    /**
      * @var CreditCard|null CreditCard object if payment was realize by credit card and this information is allowed to send
      */
     private $creditCard = null;
@@ -144,7 +150,18 @@ class Notification
     {
         return $this->ipCountry;
     }
+   
+    /**
+     * Return a code for a rejected transaction that describes the possible reason for a transaction being refused (Optional parameter)
+     * @return string
+     */
+    public function getSellerCode()
+    {
+        return $this->sellerCode;
+    }    
+
     
+
     /**
      * Return a CreditCard object if payment was realize by credit card and this information is allowed to send
      * @return CreditCard|null
@@ -177,12 +194,12 @@ class Notification
             $this->getOperation()->getNumber().
             $this->getOperation()->getType().
             $this->getOperation()->getStatus().
-            $this->getOperation()->getAmount().
+            (is_null($this->getOperation()->getAmount()) ? null : number_format($this->getOperation()->getAmount(),2, '.', '')).
             $this->getOperation()->getCurrency().
-            $this->getOperation()->getWithdrawalAmount().
-            $this->getOperation()->getCommissionAmount().
+            (is_null($this->getOperation()->getWithdrawalAmount()) ? null : number_format($this->getOperation()->getWithdrawalAmount(),2, '.', '')).
+            (is_null($this->getOperation()->getCommissionAmount()) ? null : number_format($this->getOperation()->getCommissionAmount(),2, '.', '')).
             $this->getOperation()->isCompletedString().
-            $this->getOperation()->getOriginalAmount().
+            (is_null($this->getOperation()->getOriginalAmount()) ? null : number_format($this->getOperation()->getOriginalAmount(),2, '.', '')).
             $this->getOperation()->getOriginalCurrency().
             $this->getOperation()->getDateTime()->format('Y-m-d H:i:s').
             $this->getOperation()->getRelatedNumber().
@@ -202,7 +219,8 @@ class Notification
         $sign.=
             $this->getChannelId().
             $this->getChannelCountry().
-            $this->getIpCountry();
+            $this->getIpCountry().
+            $this->getSellerCode();
 
         return hash('sha256', $sign);
     }
@@ -280,7 +298,19 @@ class Notification
         $this->ipCountry = (string)$ipCountry;
         return $this;
     }
-    
+  
+     /**
+     * Set a code for a rejected transaction that describes the possible reason for a transaction being refused
+     * @param string $sellerCode code for a rejected transaction that describes the possible reason for a transaction being refused
+     * @return Notification
+     */
+    public function setSellerCode($sellerCode)
+    {
+        $this->sellerCode = (string)$sellerCode;
+        return $this;
+    }   
+
+
     /**
      * Set a CreditCard object if payment was realize by credit card and this information is allowed to send
      * @param CreditCard $creditCard CreditCard object if payment was realize by credit card and this information is allowed to send

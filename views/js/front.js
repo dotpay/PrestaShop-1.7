@@ -25,6 +25,8 @@ function checkRequired() {
         return unchecked > 0;
 }
 
+
+
 function checkBlikCode() {
     if($('.dotpay_blik_code').parents('.payment-form').parent().css('display') != 'block') {
         return false;
@@ -34,8 +36,10 @@ function checkBlikCode() {
     return !(value.length == 6 && !isNaN(parseInt(value)) && parseInt(value) == value);
 }
 
+
+
 function checkOrderConfirmButton() {
-    $('#payment-confirmation button').attr('disabled', checkRequired() || checkBlikCode());
+    $('#payment-confirmation button').attr('disabled', checkRequired() || checkBlikCode() );
 }
 
 //get variable from url
@@ -50,9 +54,21 @@ function getURLParameter(name) {
 
 var renewpay = getURLParameter('renew');
 
+function checkSelectedBylaw2() {
+    var unchecked = $("#agreement_bylaw > input[type=checkbox]:checked").length;
+        return unchecked > 0;
+}
+
+
 $(document).ready(function(){
+
     var requiredInputs = $('#checkout-payment-step input[required]').not('[name=payment-option]');
     requiredInputs.change(function(e){
+        //var CheckedChannel2 = $('div.channel-container.selected').find('img').attr('title'); 
+        //  if(CheckedChannel2.length > 1){  
+         if(!checkSelectedBylaw2()){  
+            console.log('%cNOT selected accept Dotpay sp. z o.o. Regulations of Payments','background:red;color:#fff')
+        }
         checkOrderConfirmButton();
         e.stopPropagation();
     });
@@ -83,6 +99,7 @@ if(renewpay == 1 ){
     $("div.block-promo ").remove();
     $( "div.order-confirmation-table" ).find( "div.details a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
 }
+
 
 
 });

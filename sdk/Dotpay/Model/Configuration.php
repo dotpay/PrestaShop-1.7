@@ -161,6 +161,13 @@ class Configuration
     private $testMode = false;
 
     /**
+     * @var boolean Default currency for ID
+     */
+    private $DefaultCurrency = 'PLN';
+    
+
+
+    /**
      * @var boolean Flag if One Click card channel is visible
      */
     private $ocVisible = false;
@@ -355,6 +362,16 @@ class Configuration
     {
         return $this->testMode;
     }
+
+    /**
+     * Get default currency for ID
+     * @return boolean
+     */
+    public function getDefaultCurrency()
+    {
+        return $this->DefaultCurrency;
+    }
+
 
     /**
      * Check if the One Click card channel is set as visible
@@ -768,6 +785,20 @@ class Configuration
         $this->testMode = (bool)$testMode;
         return $this;
     }
+
+
+    /**
+     * Set the list of codes of default currencies for ID
+     * @param string $DefaultCurrency
+     * @return Configuration
+     */
+    public function setDefaultCurrency($DefaultCurrency)
+    {
+            $this->DefaultCurrency = trim(strtoupper($DefaultCurrency));
+
+        return $this;
+    }
+
 
     /**
      * Set the flag which informs if One Click card channel is visible

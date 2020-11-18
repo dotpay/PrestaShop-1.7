@@ -83,11 +83,17 @@ class Payment extends Resource
     public function checkSeller($id,$more_view)
     {
 
+        if($this->config->getDefaultCurrency() !== ""){
+            $defcurrency = $this->config->getDefaultCurrency();
+        }else{
+            $defcurrency = "PLN";
+        }
+
         $url = $this->config->getPaymentUrl().
                'payment_api/channels/'.
                '?id='.$id.
-               '&amount=301'.
-               '&currency=PLN'.
+               '&amount=317.02'.
+               '&currency='.$defcurrency.
                '&format=json';
 
         $content = $this->getContent($url);
