@@ -15,14 +15,20 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 function checkRequired() {
-    var requiredInputs = $('#checkout-payment-step .dotpay-one-channel input[required][type=checkbox]').not('[name=payment-option]');
+    var requiredInputs = $.merge($(
+		'#checkout-payment-step .dotpay-one-channel input[required][type=checkbox]'
+    ).not(
+        '[name=payment-option]'
+    ), $(
+        '#conditions-to-approve input[required][type=checkbox]'
+    ));
     var unchecked = 0;
-        requiredInputs.each(function(){
-            if($(this).prop('checked') == false) {
-                ++unchecked;
-            }
-        });
-        return unchecked > 0;
+	requiredInputs.each(function(){
+		if($(this).prop('checked') == false) {
+			++unchecked;
+		}
+	});
+	return unchecked > 0;
 }
 
 
