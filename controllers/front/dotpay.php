@@ -130,45 +130,6 @@ abstract class DotpayController extends ModuleFrontController
 
 
 
-
-  	/**
-     * Returns correct SERVER NAME or HOSTNAME
-     * @return string
-     */
-public function getHost()
-    {
-		$possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
-		$sourceTransformations = array(
-			"HTTP_X_FORWARDED_HOST" => function($value) {
-				$elements = explode(',', $value);
-				return trim(end($elements));
-			}
-		);
-		$host = '';
-		foreach ($possibleHostSources as $source)
-		{
-			if (!empty($host)) break;
-			if (empty($_SERVER[$source])) continue;
-			$host = $_SERVER[$source];
-			if (array_key_exists($source, $sourceTransformations))
-			{
-				$host = $sourceTransformations[$source]($host);
-			}
-		}
-		// Remove port number from host
-		$host = preg_replace('/:\d+$/', '', $host);
-		return trim($host);
-    }
-
-    /**
-	 * The validator checks if the given URL address is correct.
-	 */
-	public function validateHostname($value)
-    {
-        return (bool) preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/', $value);
-    }
-
-
 	/**
      * Prepare the Dotpay Channel for the given order
      * @param Order $order Prestashop Order object
@@ -222,19 +183,13 @@ public function getHost()
                 die($this->module->l('Unrecognized method'));
         }
 
-		if ($this->validateHostname($this->getHost()))
-			{
-				$server_name = $this->getHost();
-			} else {
-				$server_name = "HOSTNAME";
-			}
-
 
         $this->getChannel()->getSeller()->setInfo(\Configuration::get('PS_SHOP_NAME'));
         $this->getOrder()->setId($order->id)
                          ->setReference($order->reference);
         $description = $this->module->l("Order ID:").' '.$order->reference;
-        $control = $this->getOrder()->getId().'|'.$server_name.'|PrestaShop '._PS_VERSION_.' module: '.$this->module->version;
+        $control = $this->getOrder()->getId().'|domain:'.$this->getConfig()->geShoptHost().'|PrestaShop v'._PS_VERSION_.' module: '.$this->module->version;
+        
         if ($this->getConfig()->getSurcharge()) {
             $description .= ' ('.
                             $this->module->l("convenience fee - not included").

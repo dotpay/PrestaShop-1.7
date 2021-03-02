@@ -56,7 +56,7 @@
         copy.removeClass(settings.chooserTemplate).addClass(settings.chooserElement);
         copy.find('option').attr('selected', false);
         if (id !== '') {
-            copy.find('option[value='+id+']').attr('selected', true);
+            copy.find('option[value="'+id+'"]').attr('selected', true);
             copy.find('select').val(id).change();
         }
         return copy;
@@ -86,7 +86,7 @@
         var newSelect = createSelect('');
         var setValues = $('.'+settings.channelListInput).val().split(',');
         for(var i in setValues) {
-            newSelect.find('option[value='+setValues[i]+']').attr('disabled','true');
+            newSelect.find('option[value="'+setValues[i]+'"]').attr('disabled','true');
         }
         var element = $('.'+settings.chooserElement+':last');
         if (element.length === 0) {
@@ -109,7 +109,7 @@
             if($(this).val()) {
                 for(var i in setValues) {
                     if ($(this).val() !== setValues[i]) {
-                        $(this).find('option[value='+setValues[i]+']').attr('disabled','true');
+                        $(this).find('option[value="'+setValues[i]+'"]').attr('disabled','true');
                     }
                 }
             }

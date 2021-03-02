@@ -337,7 +337,7 @@
     }
 
     function setVisibilityForAdvancedMode() {
-        if($('[name=DP_ADV_MODE]:checked').val() == '1')
+        if($('[name^="DP_ADV_MODE"]:checked').val() == '1')
             $('#advanced-settings').css('display','block');
         else
             $('#advanced-settings').css('display','none');
@@ -352,7 +352,7 @@
         $('<div id="advanced-settings"></div>').insertAfter($('.advanced-mode-switch').parents('.form-group'));
         $('#advanced-settings').nextAll().detach().appendTo('#advanced-settings');
         $('<hr style="height: 2px; background-color: #2eacce;" />').prependTo('#advanced-settings');
-        $('[name=DP_ADV_MODE]').change(setVisibilityForAdvancedMode);
+        $('[name^="DP_ADV_MODE"]').change(setVisibilityForAdvancedMode);
         PINvisibleEye();
         setVisibilityForAdvancedMode();
         setFieldsForDiscount();

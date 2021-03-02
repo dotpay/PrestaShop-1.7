@@ -91,7 +91,7 @@ class Configuration
     /**
      * Class name of the HTML container which contains aDotpay widget on a payment site
      */
-    const WIDGET_CLASS_CONTAINER = 'dotpay-widget-container';
+    const WIDGET_CLASS_CONTAINER = 'dotpay-form-widget-container';
 
     public static $SPECIAL_CHANNELS = [
         248,
@@ -1094,4 +1094,46 @@ class Configuration
     public function __set($name, $value) {
         $this->$name = $value;
     }
+
+
+    /**
+     * Returns correct SERVER NAME or HOSTNAME
+     * @return string
+     */
+    public function geShoptHost()
+    {
+        $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
+        $sourceTransformations = array(
+            "HTTP_X_FORWARDED_HOST" => function($value) {
+                $elements = explode(',', $value);
+                return trim(end($elements));
+            }
+        );
+        $host = '';
+        foreach ($possibleHostSources as $source)
+        {
+            if (!empty($host)) break;
+            if (empty($_SERVER[$source])) continue;
+            $host = $_SERVER[$source];
+            if (array_key_exists($source, $sourceTransformations))
+            {
+                $host = $sourceTransformations[$source]($host);
+            }
+        }
+        // Remove port number from host
+        $host = preg_replace('/:\d+$/', '', $host);
+    //    return trim($host);
+
+            if((bool) preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/', trim($host))){
+                $server_name = trim($host);
+            } else {
+                $server_name = "HOSTNAME";
+            }
+            
+     return $server_name;   
+
+    }
+
+
+
 }

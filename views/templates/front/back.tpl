@@ -137,6 +137,15 @@
 			margin-right: 20px;
 		}
 
+        #dp_countdown{
+            background-color: #e8f4f7;
+            border-color: #99afb9;
+            color: #2e2974;
+            font-size: 0.9em;
+            border-radius: 6px;
+            box-sizing: inherit;
+            min-width: 65px;
+          }
 
     </style>
 {/literal}
@@ -171,8 +180,9 @@
                     notFound: "{/literal}{$notFoundMessage|escape:'htmlall':'UTF-8'}{literal}",
                     basic: "{/literal}{$basicMessage|escape:'htmlall':'UTF-8'}{literal}",
                     status: "{/literal}{$statusMessage|escape:'htmlall':'UTF-8'}{literal}",
-                    timeout: "{/literal}{$timeoutMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    timeout: "{/literal}{$timeoutMessage|unescape: 'html' nofilter}{literal}",
                     pending: "{/literal}{$waitingMessage nofilter}{literal}",
+                    pendingend: "{/literal}{$waitingMessageEnd nofilter}{literal}",
                     success: "{/literal}{$successMessage|escape:'htmlall':'UTF-8'}{literal}",
                     error: "{/literal}{$errorMessage|escape:'htmlall':'UTF-8'}{literal}",
                     tooMany: "{/literal}{$tooManyPaymentsMessage|escape:'htmlall':'UTF-8'}{literal}",

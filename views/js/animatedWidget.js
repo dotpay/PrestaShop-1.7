@@ -21,7 +21,7 @@
         selectedChannelContainerClass: "selectedChannelContainer",
         messageContainerClass: "selected-channel-message",
         collapsibleWidgetTitleClass: "collapsibleWidgetTitle",
-        widgetContainerClass: "dotpay-widget-container"
+        widgetContainerClass: "dotpay-form-widget-container"
     };
 
     var settings = {};
@@ -46,35 +46,38 @@
         return this;
     }
     function connectEventToWidget() {
-        $('.channel-container').on('click', function(e) {
-            $('.dp_channel-input', this).prop('checked', true);
-            var id = $(this).find('.dp_channel-input').val();
-            if(id == undefined)
-                return false;
-            var container = copyChannelContainer(id);
-            $('.'+settings.selectedChannelContainerClass+' div').remove();
-            container.insertBefore($('.'+settings.selectedChannelContainerClass+' hr'));
+        setTimeout(function(){ 
+                $('.channel-container').on('click', function(e) {
+                        $('.dp_channel-input', this).prop('checked', true);
+                        var id = $(this).find('.dp_channel-input').val();
+                        if(id == undefined)
+                            return false;
+                        var container = copyChannelContainer(id);
+                        $('.'+settings.selectedChannelContainerClass+' div').remove();
+                        container.insertBefore($('.'+settings.selectedChannelContainerClass+' hr'));
+                        $('div.dotpay-channels-selection:not(:first)').remove();
+                        toggleWidgetView();
+                        e.preventDefault();
 
-            toggleWidgetView();
-            e.preventDefault();
+                        var CheckedChannel = $('div.channel-container.selected').find('img').attr('title');
+                        console.log('%cSelected Payment Method: ' + CheckedChannel, 'background: #cfcfcf; color: #4c605c');
 
-            var CheckedChannel = $('div.channel-container.selected').find('img').attr('title');
-            console.log('%cSelected Payment Method: ' + CheckedChannel, 'background: #cfcfcf; color: #4c605c');
-            if(CheckedChannel.length > 1){
-                $('#dp_NoSelected').hide();
-                if($('.dp_checkedchannel').length > 0){
-                    $('span.dp_checkedchannel').html(CheckedChannel +'<br>');
-                }else {
-                    $('<span class="dp_checkedchannel">'+ CheckedChannel +'<br></span>').insertBefore('.channel-selected-change');
-                }
+                        if(CheckedChannel.length > 1){
+                            $('p#dp_NoSelected').hide();
+                            if($('.dp_checkedchannel').length > 0){
+                                $('span.dp_checkedchannel').html(CheckedChannel +'<br>');
+                            }else {
+                                $('<span class="dp_checkedchannel">'+ CheckedChannel +'<br></span>').insertBefore('.channel-selected-change');
+                            }
 
 
-            }  else {
-                $('#dp_NoSelected').show();
-            }
-            
-            
-        });
+                        }  else {
+                            $('p#dp_NoSelected').show();
+                        }
+                    
+                    
+                });
+      }, 1200);   
     }
 
     function copyChannelContainer(id) {
@@ -135,13 +138,12 @@ $(document).ready(function(){
 
     }, 1200);
 
-
+    $('div.dotpay-channels-selection:not(:first)').remove();
 
 
 });
 
 if (typeof jQuery != 'undefined') {
-    jQuery(document).ready(function () {   
 
        setTimeout(function(){
             jQuery(document).ready(function () {
@@ -169,6 +171,30 @@ if (typeof jQuery != 'undefined') {
    
                             console.log('%cSelected Payment Method: ' + CheckedPaymentMethodTitle, 'background: #cfcfcf; color: blue;');  
 
+                            //for blik
+                            if(CheckedPaymentMethodTitle == 'BLIK' ){
+
+                                var value_blik_code = jQuery('input[name="blik_code"]').val();
+                                
+                                if (!(value_blik_code.length == 6 && !isNaN(parseInt(value_blik_code)) && parseInt(value_blik_code) == value_blik_code)){
+                                        jQuery('div#payment-confirmation > div > button').prop('disabled', true);
+                                        console.log('Empty blik code');
+                                
+                                        jQuery('input.dotpay_blik_code').keyup(function(){
+
+                                            if(value_blik_code.length == 6 && !isNaN(parseInt(value_blik_code)) && parseInt(value_blik_code) == value_blik_code){
+                                                console.log('Code blik entered.');
+                                                jQuery('div#payment-confirmation > div > button').prop('disabled', false);
+                                            }
+                                        });
+                           
+                                        }
+                                        jQuery('p#dp_NoSelected').hide();
+                            }
+                                        
+
+
+
                             if(DotpayMainMethodChecked >0 && IfDotpayMainMethodChecked == true) {
 
                                     console.log('%cDotpay main method is checked.','background: #cfcfcf; color: green;'); 
@@ -176,19 +202,24 @@ if (typeof jQuery != 'undefined') {
 
                                     if(allVisibleChannels > 0)
                                     {
-                                                                                
+                                        jQuery('p#dp_NoSelected').show();                                          
                                         jQuery('p#dp_NoWidget').hide();
                         
                                         if(jQuery('div.selectedChannelContainer.channels-wrapper > .channel-container').length > 0){
                                             console.log('Selected channel: '+jQuery('div.selectedChannelContainer.channels-wrapper > .channel-container').length);
-                                            jQuery('#dp_NoSelected').hide();
+                                            jQuery('p#dp_NoSelected').hide();
                                         }else{
-                                            jQuery('#dp_NoSelected').show();
+                                            jQuery('p#dp_NoSelected').show();
                                             jQuery( "#payment-confirmation > div > button" ).prop('disabled', true);
                                             console.log('No payment channel selected');
                                             
                                         }
                                     
+                                        jQuery.each(dotpayWidgetConfig.disabledChannels, function(index, dpDisabledCh){
+                                            console.log('%cRemove from widget method: %c ' +dpDisabledCh+ ' %c, method available separately.','background: #cfcfcf; color: #ee4a37;font-weight: normal;','font-weight: bold;background: #00ffff; color: #a51c7b','background: #cfcfcf; color: #ee4a37;font-weight: normal;');
+                                            jQuery( "input#" + dpDisabledCh + ".dp_channel-input" ).closest( "div[id^='dp_channel_'].channel-container" ).hide();
+                                        });
+
                                     } else {
                                         jQuery('p#dp_NoWidget').show();
                                                                        
@@ -203,8 +234,11 @@ if (typeof jQuery != 'undefined') {
                                 });  
 
                                
+                                }else{
+                                    jQuery('p#dp_NoSelected').hide();
+                                    
                                 }
-                         }, 200);    
+                         }, 500);    
 
               
                
@@ -214,12 +248,9 @@ if (typeof jQuery != 'undefined') {
         });
 
 
-
-
         });
 
 
-
     }, 300);
-    });
+
 }

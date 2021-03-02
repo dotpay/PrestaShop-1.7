@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.5';
+        $this->version = '1.2.6';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -355,46 +355,21 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('You can hide Dotpay payments without uninstalling the module'),
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'enabled_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enabled')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'enabled_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disabled')
                             )
-                        ),
-                    ),array(
-                        'type' => 'select',
-                        'class' => 'fixed-width-xxl',
-                        'label' => $this->l('Select used Dotpay API version'),
-                        'name' => 'DP_API',
-                        'desc' => '<b>'.$this->l('dev is only one version used in this plugin').
-                                  '</b><br /><span id="message-for-old-version">'.
-                                  $this->l(
-                                      'if you use older version, please contact the Customer Care to change your '.
-                                      'API version to dev'
-                                  )
-                                  .':&nbsp;<a href="'.$this->l('https://www.dotpay.pl/en/contact/').
-                                  '" target="_blank"><b>'.$this->l('Contact').'</b></a></span>',
-                        'required' => true,
-                        'disabled' => true,
-                        'class' => 'api-select',
-                        'options' => array(
-                            'query' => array(
-                                array(
-                                    'id_option_api' => 'dev',
-                                    'name_option_api' => $this->l('dev (ID has 6 digits)')
-                                )
-                            ),
-                            'id' => 'id_option_api',
-                            'name' => 'name_option_api'
                         ),
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_ID',
                         'prefix' => '<i style="font-weight: bold; color: #10279b; font-size: 1.4em;">&#35;</i>',
                         'label' => $this->l('ID'),
+                        'hint' => $this->l('The ID is 6 digits copied from the administration panel'),
                         'size' => 6,
                         'maxlength' => 6,
                         'class' => 'fixed-width-sm validate-gui',
@@ -422,11 +397,11 @@ class Dotpay extends PaymentModule
                                   $this->l('Dotpay test account registration').'">'.$this->l('registration').'</b></a>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'test_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'test_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -518,11 +493,11 @@ class Dotpay extends PaymentModule
                                   '</b>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'widget_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'widget_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -535,11 +510,11 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('Show advanced plugin settings'),
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'adv_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'adv_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -558,11 +533,11 @@ class Dotpay extends PaymentModule
                         'name' => 'DP_RENEW',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'renew_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'renew_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -596,11 +571,11 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('Enable payment cards as separate channel'),
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'cc_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'cc_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -614,11 +589,11 @@ class Dotpay extends PaymentModule
                                   $this->l('Available only for PLN').'</b>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'blik_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'blik_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -635,11 +610,11 @@ class Dotpay extends PaymentModule
                                   $this->l('Requires Dotpay API username and password (enter below).').'</b>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'oc_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'oc_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -656,11 +631,11 @@ class Dotpay extends PaymentModule
                                   $this->l('Requires Dotpay API username and password (enter below).').'</b>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'refund_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'refund_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -677,11 +652,11 @@ class Dotpay extends PaymentModule
                                   $this->l('Requires Dotpay API username and password (enter below).').'</b>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'instr_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'instr_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -709,11 +684,11 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('Enable separate payment channel for foreign currencies'),
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'fcc_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'fcc_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -761,11 +736,11 @@ class Dotpay extends PaymentModule
                                   $this->l('Any value will not be add on shop site'),
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'surcharge_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'surcharge_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -804,11 +779,11 @@ class Dotpay extends PaymentModule
                                   ).'</b>',
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'excharge_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'excharge_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )
@@ -842,11 +817,11 @@ class Dotpay extends PaymentModule
                         'desc' => $this->l('Enable discount for Dotpay payment method'),
                         'values' => array(
                             array(
-                                'id' => 'active_on',
+                                'id' => 'reduct_active_on',
                                 'value' => true,
                                 'label' => $this->l('Enable')
                             ),array(
-                                'id' => 'active_off',
+                                'id' => 'reduct_active_off',
                                 'value' => false,
                                 'label' => $this->l('Disable')
                             )

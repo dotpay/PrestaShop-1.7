@@ -30,6 +30,7 @@ use Dotpay\Exception\FunctionNotFoundException;
 use Dotpay\Exception\Resource\PaymentNotCreatedException;
 use Dotpay\Exception\Resource\InstructionNotFoundException;
 
+
 /**
  * Provide an interface to use Register Method to create payments
  */
@@ -163,7 +164,7 @@ class RegisterOrder extends Resource
                 'amount' => $channel->getTransaction()->getPayment()->getOrder()->getAmount(),
                 'currency' => $channel->getTransaction()->getPayment()->getOrder()->getCurrency(),
                 'description' => $channel->getTransaction()->getPayment()->getDescription(),
-                'control' => $channel->getTransaction()->getPayment()->getOrder()->getId()
+                'control' => $channel->getTransaction()->getPayment()->getOrder()->getId().'|domain:'.$this->config->geShoptHost().'|PrestaShop v'._PS_VERSION_.'|Register Order, DP module: '.$this->config->getPluginVersion()
             ],
             'seller' => [
                 'account_id' => $channel->getTransaction()->getPayment()->getSeller()->getId(),
@@ -189,7 +190,7 @@ class RegisterOrder extends Resource
 				{
 					$building_numberRO = $channel->getTransaction()->getPayment()->getCustomer()->getBuildingNumber();
 				}else{
-					$building_numberRO = " "; //this field may not be blank in register order.
+					$building_numberRO = "0"; //this field may not be blank in register order.
 				}
 		
 		

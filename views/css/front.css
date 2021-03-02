@@ -26,10 +26,10 @@
 * to avoid any conflicts with others containers.
 */
 
-.dotpay-widget-container .dotpay-channels {
+.dotpay-form-widget-container .dotpay-channels {
     float: left;
 }
-.dotpay-widget-container + p {
+.dotpay-form-widget-container + p {
     clear: both;
 }
 .selectedChannelContainer .channel-container label {
@@ -94,7 +94,7 @@
     text-align: left;
 }
 
-.dotpay-widget-container .channel-container label {
+.dotpay-form-widget-container .channel-container label {
     text-align: center !important;
 }
 
@@ -136,7 +136,7 @@ label#agreement_oc-store-card {
     color: black;
 }
 
-.dotpay-widget-container {
+.dotpay-form-widget-container {
     margin-top: 10px;
     margin-left: 10px;
     display: inline-table;

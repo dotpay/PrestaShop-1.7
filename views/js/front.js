@@ -15,14 +15,20 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 function checkRequired() {
-    var requiredInputs = $('#checkout-payment-step .dotpay-one-channel input[required][type=checkbox]').not('[name=payment-option]');
+    var requiredInputs = $.merge($(
+		'#checkout-payment-step .dotpay-one-channel input[required][type=checkbox]'
+    ).not(
+        '[name=payment-option]'
+    ), $(
+        '#conditions-to-approve input[required][type=checkbox]'
+    ));
     var unchecked = 0;
-        requiredInputs.each(function(){
-            if($(this).prop('checked') == false) {
-                ++unchecked;
-            }
-        });
-        return unchecked > 0;
+	requiredInputs.each(function(){
+		if($(this).prop('checked') == false) {
+			++unchecked;
+		}
+	});
+	return unchecked > 0;
 }
 
 
@@ -62,44 +68,46 @@ function checkSelectedBylaw2() {
 
 $(document).ready(function(){
 
-    var requiredInputs = $('#checkout-payment-step input[required]').not('[name=payment-option]');
-    requiredInputs.change(function(e){
-        //var CheckedChannel2 = $('div.channel-container.selected').find('img').attr('title'); 
-        //  if(CheckedChannel2.length > 1){  
-         if(!checkSelectedBylaw2()){  
-            console.log('%cNOT selected accept Dotpay sp. z o.o. Regulations of Payments','background:red;color:#fff')
-        }
-        checkOrderConfirmButton();
-        e.stopPropagation();
+    setTimeout(function(){  
+
+        var requiredInputs = $('#checkout-payment-step input[required]').not('[name=payment-option]');
+        requiredInputs.change(function(e){
+
+            if(!checkSelectedBylaw2()){  
+                console.log('%cNOT selected accept Dotpay sp. z o.o. Regulations of Payments','background:red;color:#fff')
+            }
+            checkOrderConfirmButton();
+            e.stopPropagation();
+        });
+
+        $('input[name=payment-option]').change(function(){
+            $('.agreements input[required]').prop('checked', true);
+        });
+
+        $("input.dotpay_blik_code").bind('keyup paste keydown', function(e) {
+            if (/\D/g.test(this.value))
+                {
+                    this.value = this.value.replace(/\D/g, '');
+                }
+            });
+
+        $("input.dotpay_blik_code").attr("pattern", "[0-9]{6}");
+        $("input.dotpay_blik_code").attr("maxlength", "6");
+
+
+        $('input.dotpay_blik_code').change(function(){
+            checkOrderConfirmButton();
+        });
+
+    //only for renew payment
+    if(renewpay == 1 ){
+        $("h5.aeuc_scart").attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
+        $( "div.cart-summary-products" ).find( "ul.media-list > li.media div.media-left a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
+        $("div.block-promo ").remove();
+        $( "div.order-confirmation-table" ).find( "div.details a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
+    }
+
+
+
     });
-
-    $('input[name=payment-option]').change(function(){
-        $('.agreements input[required]').prop('checked', true);
-    });
-
-	$("input.dotpay_blik_code").bind('keyup paste keydown', function(e) {
-		if (/\D/g.test(this.value))
-			{
-				this.value = this.value.replace(/\D/g, '');
-			}
-		});
-
-    $("input.dotpay_blik_code").attr("pattern", "[0-9]{6}");
-    $("input.dotpay_blik_code").attr("maxlength", "6");
-
-
-    $('input.dotpay_blik_code').change(function(){
-        checkOrderConfirmButton();
-    });
-
-//only for renew payment
-if(renewpay == 1 ){
-    $("h5.aeuc_scart").attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
-    $( "div.cart-summary-products" ).find( "ul.media-list > li.media div.media-left a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
-    $("div.block-promo ").remove();
-    $( "div.order-confirmation-table" ).find( "div.details a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
-}
-
-
-
-});
+}, 500);    

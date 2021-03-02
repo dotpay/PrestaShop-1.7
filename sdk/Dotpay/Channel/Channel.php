@@ -407,7 +407,7 @@ public function PayerDatadostawaJsonBase64() {
         foreach ($this->getAllHiddenFields() as $name => $value) {
             $fields[] = new Input('hidden', $name, (string)$value);
         }
-        $fields[] = new Script(new PlainText('setTimeout(function(){document.getElementsByClassName(\'dotpay-form\')[0].submit();}, 0);'));
+        $fields[] = new Script(new PlainText('setTimeout(function(){document.getElementsByClassName(\'dotpay-form\')[0].submit();}, 10);'));
         $form = new Form($fields);
         return $form->setClass('dotpay-form')
                     ->setMethod('post')

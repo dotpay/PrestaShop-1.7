@@ -90,10 +90,12 @@ class DotpayBackModuleFrontController extends DotpayController
             'checkStatusUrl' => $this->context->link->getModuleLink($this->module->name, 'status', array()),
             'basicMessage' => $this->module->l('You have come back to the shop site.'),
             'statusMessage' => $this->module->l('Status of the order'),
+            'waitingMessageEnd' => $this->module->l('The confirmation payment has timed out!'),
             'waitingMessage' => $this->module->l(
                 'Waiting for confirm your payment...'
             ).
-            '<br>'.$this->module->l('It make take up to 2 minutes.'),
+            '<br>'.$this->module->l('It make take up to 2 minutes:'),
+            
             'successMessage' => $this->module->l(
                 'Thank you! The process of payment completed correctly. In a moment you will be able to check the '.
                 'status of your order.'
@@ -111,7 +113,7 @@ class DotpayBackModuleFrontController extends DotpayController
                 'we will notify you on email. If payment will not be confirmed, please contact with shop owner and '.
                 'give him the order number:'
             )
-            .' '.$order->reference,
+            .' <b>'.$order->reference.'</b>',
         ));
         
         return $this->setTemplate('module:dotpay/views/templates/front/back.tpl');

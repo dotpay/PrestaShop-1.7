@@ -93,7 +93,7 @@ abstract class Resource
         $headers = [
             $this->getAcceptHeader(),
             'Content-Type: application/json; charset=utf-8',
-            'User-Agent: DotpaySDK'
+            'User-Agent: DotpaySDK/Prestashop v'._PS_VERSION_.'/ID: '.$this->config->getId()
         ];
         $this->curl->addOption(CURLOPT_HTTPHEADER, $headers);
         $this->curl->addOption(CURLOPT_RETURNTRANSFER, 1);

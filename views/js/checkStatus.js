@@ -88,6 +88,34 @@ function DotpayStatusChecker(parent, config) {
 
     setInfoMessage(config.messages.basic);
     showLoader();
+    var now1 = new Date().getTime();
+    var countDownDate = new Date(now1 + 1000*120).getTime();
+
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+            
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        var dp_countdownEl = document.getElementById("dp_countdown");
+
+        // Output the result
+        if(dp_countdownEl){
+            dp_countdownEl.innerHTML = minutes + "m " + seconds + "s ";
+            
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                clearInterval(x);
+                dp_countdownEl.innerHTML = config.messages.pendingend;
+            }
+        }
+
+    }, 1000);
+
+
     var checkInt = setInterval(function(){
         if(counter<counterLimit)
             ++counter;
@@ -122,7 +150,7 @@ function DotpayStatusChecker(parent, config) {
                     setErrorMessage(getMessageWithStatus(config.messages.error, data.status)+additionalMessage);
                     break;
                 case 1://PENDING
-                    setInfoMessage(getBaseMessage(data.status)+"<br />"+config.messages.pending+additionalMessage);
+                    setInfoMessage(getBaseMessage(data.status)+"<br />"+config.messages.pending+additionalMessage+" <code id='dp_countdown'>&nbsp; ... &nbsp;</code>");
                     break;
                 case 2://SUCCESS
                     finish(checkInt);
