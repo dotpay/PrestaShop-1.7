@@ -58,9 +58,19 @@ class Configuration
     const SELLER_URL_DEV = 'https://ssl.dotpay.pl/test_seller/';
 
     /**
-     * Address IP of Dotpay confirmation server
+     * Addresses IP of Dotpay confirmation server
      */
-    const CALLBACK_IP = '195.150.9.37';
+    //const CALLBACK_IP = '195.150.9.37';
+
+    const DOTPAY_CALLBACK_IP_WHITE_LIST = array(
+                                                '195.150.9.37',
+                                                '91.216.191.181',
+                                                '91.216.191.182',
+                                                '91.216.191.183',
+                                                '91.216.191.184',
+                                                '91.216.191.185',
+                                                '5.252.202.255',
+                                                );
 
     /**
      * Address IP od Dotpay office
@@ -161,6 +171,11 @@ class Configuration
     private $testMode = false;
 
     /**
+     * @var boolean Flag if 'server does not use a proxy' mode is activated
+     */
+    private $nonproxyMode = true;
+
+    /**
      * @var boolean Default currency for ID
      */
     private $DefaultCurrency = 'PLN';
@@ -257,7 +272,8 @@ class Configuration
     /**
      * @var string Payment API version
      */
-    private $api = 'dev';
+        //private $api = 'dev'; // depreciated
+    private $api = 'next'; // current - new method for calculating the chk parameter
 
     /**
      * @var array List of all visible channels id
@@ -361,6 +377,16 @@ class Configuration
     public function getTestMode()
     {
         return $this->testMode;
+    }
+
+    
+    /**
+     * Check if non proxy is enabled
+     * @return boolean
+     */
+    public function getNonProxyMode()
+    {
+        return $this->nonproxyMode;
     }
 
     /**
@@ -788,6 +814,19 @@ class Configuration
 
 
     /**
+     * Set the flag which informs if non proxy is enabled or not
+     * @param bool $NonProxyMode mode flag
+     * @return Configuration
+     */
+    public function setNonProxyMode($nonproxyMode)
+    {
+        $this->nonproxyMode = (bool)$nonproxyMode;
+        return $this;
+    }
+
+
+
+    /**
      * Set the list of codes of default currencies for ID
      * @param string $DefaultCurrency
      * @return Configuration
@@ -1051,19 +1090,22 @@ class Configuration
     }
 
     /**
-     * Set the given API version
-     * @param string $api Api version. Only "dev" is allowed.
+     * Set the given API version.
+     * @param string $api Api version. Only "dev" or "next" is allowed
      * @return Configuration
-     * @throws ApiVersionException Thrown when the given payment API version is different than the "dev" string
+     * @throws ApiVersionException Thrown when the given payment API version is different than the "dev" or "next" string
      */
     public function setApi($api)
     {
-        if ($api !== 'dev') {
-            throw new ApiVersionException($api);
+        if (($api != 'next') && ($api != 'dev')) {
+            $this->addError(new ApiVersionException($api));
+            return $this;
         }
-        $this->api = trim($api);
+        $this->api = $api;
+
         return $this;
     }
+
 
     /**
      * Check if the given currency is on the given list

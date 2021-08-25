@@ -308,16 +308,16 @@ public function PayerDatadostawaJsonBase64() {
 
                     "city" => $this->transaction->getPayment()->getCustomer()->getCityDelivery(),
                     "street" => $this->transaction->getPayment()->getCustomer()->getStreetDelivery(),
-                    "building_number" => $this->transaction->getPayment()->getCustomer()->getBuildingNumber(),
-                    "postcode" => $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery()
+                    "building_number" => (string) $this->transaction->getPayment()->getCustomer()->getBuildingNumber(),
+                    "postcode" => (string) $this->transaction->getPayment()->getCustomer()->getPostCodeDelivery()
                 )
             )
         );
 
         if ($this->transaction->getPayment()->getCustomer()->getCustomerCreateDate() !== null && $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount() !== null)
         {
-           $customer["registered_since"] = $this->transaction->getPayment()->getCustomer()->getCustomerCreateDate();
-           $customer["order_count"] = $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount();
+           $customer["registered_since"] = (string) $this->transaction->getPayment()->getCustomer()->getCustomerCreateDate();
+           $customer["order_count"] = (string) $this->transaction->getPayment()->getCustomer()->getCustomerOrdersCount();
         }
 
         if ($this->transaction->getPayment()->getCustomer()->getPhone() != "") {
@@ -331,7 +331,7 @@ public function PayerDatadostawaJsonBase64() {
 
         if ($this->transaction->getPayment()->getOrder()->getReference() !== null && $this->transaction->getPayment()->getOrder()->getId() !== null)
         {
-           $customer["order"]["id"] = $this->transaction->getPayment()->getOrder()->getReference().'/'.$this->transaction->getPayment()->getOrder()->getId();
+           $customer["order"]["id"] = (string) $this->transaction->getPayment()->getOrder()->getReference().'/'.$this->transaction->getPayment()->getOrder()->getId();
         }
 
 
@@ -356,35 +356,54 @@ public function PayerDatadostawaJsonBase64() {
     protected function prepareHiddenFields()
     {
         $data = [];
-        $data['id'] = $this->seller->getId();
-        $data['control'] = $this->transaction->getControl();
-        $data['p_info'] = $this->transaction->getPayment()->getSeller()->getInfo();
+        $data['id'] = (string) $this->seller->getId();
+        $data['control'] = (string) $this->transaction->getControl();
+        $data['p_info'] = (string) $this->transaction->getPayment()->getSeller()->getInfo();
         $sellerEmail = $this->transaction->getPayment()->getSeller()->getEmail();
         if (!empty($sellerEmail)) {
-            $data['p_email'] = $sellerEmail;
+            $data['p_email'] = (string) $sellerEmail;
         }
-        $data['amount'] = $this->transaction->getPayment()->getOrder()->getAmount();
-        $data['currency'] = $this->transaction->getPayment()->getOrder()->getCurrency();
-        $data['description'] = $this->transaction->getPayment()->getDescription();
-        $data['lang'] = $this->transaction->getPayment()->getCustomer()->getLanguage();
-        $data['url'] = $this->transaction->getBackUrl();
-        $data['urlc'] = $this->transaction->getConfirmUrl();
-        $data['api_version'] = $this->config->getApi();
-        $data['type'] = 4;
-        $data['ch_lock'] = 0;
-        $data['firstname'] = $this->transaction->getPayment()->getCustomer()->getFirstName();
-        $data['lastname'] = $this->transaction->getPayment()->getCustomer()->getLastName();
-        $data['email'] = $this->transaction->getPayment()->getCustomer()->getEmail();
-        $data['phone'] = $this->transaction->getPayment()->getCustomer()->getPhone();
-        $data['street'] = $this->transaction->getPayment()->getCustomer()->getStreet();
-        $data['street_n1'] = $this->transaction->getPayment()->getCustomer()->getBuildingNumber();
-        $data['city'] = $this->transaction->getPayment()->getCustomer()->getCity();
-        $data['postcode'] = $this->transaction->getPayment()->getCustomer()->getPostCode();
-        $data['country'] = $this->transaction->getPayment()->getCustomer()->getCountry();
-        $data['bylaw'] = 1;
-        $data['personal_data'] = 1;
-        $data['channel'] = $this->getChannelId();
-        $data['customer'] = $this->PayerDatadostawaJsonBase64();
+        $data['amount'] = (string) $this->transaction->getPayment()->getOrder()->getAmount();
+        $data['currency'] = (string) $this->transaction->getPayment()->getOrder()->getCurrency();
+        $data['description'] = (string) $this->transaction->getPayment()->getDescription();
+        $data['lang'] = (string) $this->transaction->getPayment()->getCustomer()->getLanguage();
+        $data['url'] = (string) $this->transaction->getBackUrl();
+        $data['urlc'] = (string) $this->transaction->getConfirmUrl();
+        $data['api_version'] = (string) $this->config->getApi();
+        $data['type'] = "4";
+       // $data['ch_lock'] = "0";
+        $data['firstname'] = (string) $this->transaction->getPayment()->getCustomer()->getFirstName();
+        $data['lastname'] = (string) $this->transaction->getPayment()->getCustomer()->getLastName();
+        $data['email'] = (string) $this->transaction->getPayment()->getCustomer()->getEmail();
+
+        if ( (string) $this->transaction->getPayment()->getCustomer()->getPhone() != "" ){
+            $data['phone'] = (string) $this->transaction->getPayment()->getCustomer()->getPhone();
+        }
+        
+		if ((string) $this->transaction->getPayment()->getCustomer()->getStreet() != "") {
+            $data['street'] = (string) $this->transaction->getPayment()->getCustomer()->getStreet();
+        }
+
+        if ((string) $this->transaction->getPayment()->getCustomer()->getBuildingNumber() != "" ) {
+            $data['street_n1'] = (string) $this->transaction->getPayment()->getCustomer()->getBuildingNumber();
+        }
+        if ((string) $this->transaction->getPayment()->getCustomer()->getCity() != "") {
+            $data['city'] = (string)$this->transaction->getPayment()->getCustomer()->getCity();
+        }
+        if ((string) $this->transaction->getPayment()->getCustomer()->getPostCode() != ""){
+            $data['postcode'] = (string) $this->transaction->getPayment()->getCustomer()->getPostCode();
+        }
+        if ((string) $this->transaction->getPayment()->getCustomer()->getCountry() != ""){
+            $data['country'] = (string) $this->transaction->getPayment()->getCustomer()->getCountry();
+        }
+
+        $data['bylaw'] = "1";
+        $data['personal_data'] = "1";
+        $data['channel'] = (string) $this->getChannelId();
+        if ((null !== $this->PayerDatadostawaJsonBase64()) || ((string) $this->PayerDatadostawaJsonBase64() !="") ) {
+            $data['customer'] = (string) $this->PayerDatadostawaJsonBase64();
+        }
+
         return $data;
     }
 
@@ -394,7 +413,16 @@ public function PayerDatadostawaJsonBase64() {
      */
     public function getAllHiddenFields() {
         $data = $this->prepareHiddenFields();
-        $data['chk'] = $this->getCHK($data);
+
+        if($this->config->getApi() == 'next'){
+            $data['chk'] = $this->generateCHK($data, $this->seller->getPin());
+        }else {
+            $data['chk'] = $this->getCHK($data);
+        }
+
+
+
+        
         return $data;
     }
 
@@ -525,11 +553,53 @@ public function PayerDatadostawaJsonBase64() {
         ]);
     }
 
-    /**
-     * Calculate CHK for the given data
-     * @param array $inputParameters Array with transaction parameters
+
+   /**
+     * CURRENT: calculate CHK for the given data. - only for 'api_version = next'
+     *
+     * @param array  $inputParameters Array with transaction parameters
+     * @param string $pin             Seller pin to sign the control sum
+     *
      * @return string
      */
+    
+    
+    ## function: counts the checksum from the defined array of all parameters
+
+    protected function generateCHK($ParametersArray,$DotpayPin)
+    {
+       
+            //sorting the parameter list
+            ksort($ParametersArray);
+            
+            // Display the semicolon separated list
+            $paramList = implode(';', array_keys($ParametersArray));
+            
+            //adding the parameter 'paramList' with sorted list of parameters to the array
+            $ParametersArray['paramsList'] = $paramList;
+            
+            //re-sorting the parameter list
+            ksort($ParametersArray);
+            
+            //json encoding  
+            $json = json_encode($ParametersArray, JSON_UNESCAPED_SLASHES);
+            
+         return hash_hmac('sha256', $json, $DotpayPin, false);
+       
+    }
+    
+
+
+
+    /**
+     * Depreciated: calculate CHK for the given data. - only for 'api_version = dev'
+     *
+     * @param array  $inputParameters Array with transaction parameters
+     * @param array Array of subpayments
+     *
+     * @return string
+     */
+
     protected function getCHK($inputParameters) {
         $CHkInputString =
             $this->seller->getPin().
@@ -611,4 +681,10 @@ public function PayerDatadostawaJsonBase64() {
 
         return hash('sha256',$CHkInputString);
     }
+
+
+
+
+
+
 }

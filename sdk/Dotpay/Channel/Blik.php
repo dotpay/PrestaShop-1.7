@@ -97,9 +97,9 @@ class Blik extends Channel
     protected function prepareHiddenFields()
     {
         $data = parent::prepareHiddenFields();
-        if (!$this->config->getTestMode()) {
-            $data['blik_code'] = $this->blikCode;
-        }
+        //if (!$this->config->getTestMode()) {
+            $data['blik_code'] = (string)$this->blikCode;
+       // }
         return $data;
     }
     

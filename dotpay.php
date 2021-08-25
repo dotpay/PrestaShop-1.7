@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.6';
+        $this->version = '1.3.0';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -387,7 +387,7 @@ class Dotpay extends PaymentModule
                         'required' => true
                     ),array(
                         'type' => 'switch',
-                        'label' => $this->l('Test mode'),
+                        'label' => '🧪 '.$this->l('Test mode'),
                         'name' => 'DP_TEST_MODE',
                         'is_bool' => true,
                         'desc' => $this->l('I\'m using Dotpay test account (test ID)').
@@ -508,6 +508,24 @@ class Dotpay extends PaymentModule
                         'name' => 'DP_ADV_MODE',
                         'is_bool' => true,
                         'desc' => $this->l('Show advanced plugin settings'),
+                        'values' => array(
+                            array(
+                                'id' => 'adv_active_on',
+                                'value' => true,
+                                'label' => $this->l('Enable')
+                            ),array(
+                                'id' => 'adv_active_off',
+                                'value' => false,
+                                'label' => $this->l('Disable')
+                            )
+                        )
+                    ),
+                    array(
+                        'type' => 'radio',
+                        'label' => '<span class="dev-option advanced-mode-switch dotpayproxy">💻 '.$this->l('My server does not use a proxy').'</span>',
+                        'name' => 'DP_PROXY_MODE',
+                        'is_bool' => true,
+                        'desc' => $this->l('By default, we recommend that you set it on (no proxy).').'<br>'.$this->l('If you are sure otherwise or you have problems receiving confirmations about the completed payment - set it to off.'),
                         'values' => array(
                             array(
                                 'id' => 'adv_active_on',
@@ -1043,7 +1061,7 @@ class Dotpay extends PaymentModule
                 $newOption = new PaymentOption();
                 $newOption->setCallToActionText($channel->getTitle())
                           ->setAction($channel->get('target'))
-                          ->setLogo($channel->getLogo())
+                          ->setLogo($channel->getLogo("small"))
                           ->setModuleName($this->name)
                           ->setForm($this->context->smarty->fetch('module:dotpay/views/templates/front/payment.tpl'));
                 $payment_options[] = $newOption;

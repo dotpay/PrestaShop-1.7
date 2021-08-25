@@ -121,7 +121,8 @@ class Payer
     public function setFirstName($firstName)
     {
         if (!Name::validate($firstName)) {
-            throw new FirstnameException("Incorect first name: ".$firstName);
+            //throw new FirstnameException("Incorect first name: ".$firstName);
+            $firstName = $this->NewPersonName($firstName);
         }
         $this->firstName = (string)$firstName;
         return $this;
@@ -136,7 +137,8 @@ class Payer
     public function setLastName($lastName)
     {
         if (!Name::validate($lastName)) {
-            throw new LastnameException("Incorect last name: ".$lastName);
+            //throw new LastnameException("Incorect last name: ".$lastName);
+            $lastName = $this->NewPersonName($lastName);
         }
         $this->lastName = (string)$lastName;
         return $this;

@@ -30,16 +30,21 @@ class Dotpay extends \Dotpay\Channel\Dotpay
      * Return an URL of image which is a logo of the channel
      * @return string
      */
-    public function getLogo()
+    public function getLogo($size="big")
     {
+        if($size == "big"){
+            $img_file = "dotpay_logo_big.png";
+        }else{
+            $img_file = "dotpay_logo_small.png";
+        }
         if ($this->getChannelId() != null) {
-            return parent::getLogo();
+            return parent::getLogo("small");
         } else {
             $baseUrl = Context::getContext()->link->getBaseLink();
             if (Tools::substr($baseUrl, -1, 1) !== '/') {
                 $baseUrl .= '/';
             }
-            return $baseUrl.'modules/'.$this->config->getPluginId().'/views/img/dotpay_logo_big.png';
+            return $baseUrl.'modules/'.$this->config->getPluginId().'/views/img/'.$img_file;
         }
     }
 }

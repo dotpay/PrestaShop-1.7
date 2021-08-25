@@ -94,11 +94,19 @@ class Confirmation
         $this->outputMessage = '';
         $clientIp = $this->getClientIp();
         
-        if ($_SERVER['REQUEST_METHOD'] == 'GET' && $clientIp == $config::OFFICE_IP ) 
+        if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && $clientIp == $config::OFFICE_IP ) 
+
         {
             $this->completeInformations();
             throw new ConfirmationInfoException($this->outputMessage);
-        } else if(!($_SERVER['REQUEST_METHOD'] == 'POST' && ($clientIp == $config::CALLBACK_IP || $_SERVER['REMOTE_ADDR'] == $config::CALLBACK_IP)))
+
+        } else if(!(strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' && (
+                                                                        (((int)$config->getNonProxyMode() == 1) && ($this->isAllowedIp($_SERVER['REMOTE_ADDR'], $config::DOTPAY_CALLBACK_IP_WHITE_LIST))) || 
+                                                                        ( ( (int)$config->getNonProxyMode() != 1) && ($this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)))
+                                                                     ) 
+        
+                ))
+
         {
             throw new IncorrectRequestException('IP: '.$this->getClientIp('true').' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
         }
@@ -223,6 +231,7 @@ class Confirmation
              ->addOutputMessage('Correct Pin: '.$CorrectPin)
              ->addOutputMessage('API Version: '.$config->getApi())
              ->addOutputMessage('Test Mode: '.(int)$config->getTestMode())
+             ->addOutputMessage('Not Uses Proxy fo server: '.(int)$config->getNonProxyMode())
              ->addOutputMessage('Default currency: '.$config->getDefaultCurrency())
              ->addOutputMessage('Refunds: '.(int)$config->getRefundsEnable())
              ->addOutputMessage('Widget: '.(int)$config->getWidgetVisible())
@@ -269,16 +278,27 @@ class Confirmation
      * @return boolean
      * @throws ConfirmationDataException Thrown when IP address of a notification is incorrect
      */
+
     protected function checkIp()
     {
         $config = $this->config;
         $clientIp = $this->getClientIp();
-        if ($clientIp != $config::CALLBACK_IP) 
+
+        if (
+            !(
+                (((int)$config->getNonProxyMode() == 1) && ($this->isAllowedIp($_SERVER['REMOTE_ADDR'], $config::DOTPAY_CALLBACK_IP_WHITE_LIST))) || 
+                ( ( (int)$config->getNonProxyMode() != 1) && ($this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)))
+
+             )
+           ) 
         {
-            throw new ConfirmationDataException("ERROR (IP ADDRESSES: ".$this->getClientIp(true).")");
+            throw new ConfirmationDataException('ERROR (REMOTE ADDRESS: '.$clientIp.')');
         }
+
         return true;
     }
+
+
     
     /**
      * Check if a HTTP method used during confirmation is correct
@@ -449,6 +469,25 @@ class Confirmation
         } else {
             return $ipaddress;
         }
+    }
+
+
+    /**
+         * Returns if the given ip is on the given whitelist.
+         *
+         * @param string $ip        The ip to check.
+         * @param array  $whitelist The ip whitelist. An array of strings.
+         *
+         * @return bool
+     */
+    public static function isAllowedIp($ip, array $whitelist)
+    {
+        $ip = (string)$ip;
+        if (in_array($ip, $whitelist, true)) {
+            return true;
+        }
+
+        return false;
     }
 	
 	

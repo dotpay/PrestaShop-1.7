@@ -72,6 +72,7 @@ class Configuration extends \Dotpay\Model\Configuration
         'DP_DEF_CURRENCY' => 'DefaultCurrency',
         'DP_WIDGET_EN' => 'WidgetVisible',
         'DP_ADV_MODE' => 'AdvancedMode',
+        'DP_PROXY_MODE' => 'NonProxyMode',
         'DP_RENEW' => 'Renew',
         'DP_RENEW_DAYS' => 'RenewDays',
         'DP_WIDGET_CURR' => 'WidgetCurrencies',

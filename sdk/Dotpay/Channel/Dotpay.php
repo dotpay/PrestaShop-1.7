@@ -132,10 +132,10 @@ class Dotpay extends Channel
     {
         $data = parent::prepareHiddenFields();
         if (empty($this->getChannelId()) || !$this->config->getWidgetVisible()) {
-            $data['type'] = 0;
-            $data['ch_lock'] = 0;
+            $data['type'] = "0";
+            $data['ch_lock'] = "0";
         } else {
-            $data['channel'] = $this->getChannelId();
+            $data['channel'] = (string) $this->getChannelId();
         }
         return $data;
     }

@@ -344,7 +344,8 @@ class Customer extends Payer
     public function setStreet($street,$address_deliv = null)
     {
         if (!Street::validate($this->NewStreet($street))) {
-            throw new StreetException($street);
+           // throw new StreetException($street);
+            $street = null;
         }
         if($address_deliv == 1)
         {
@@ -365,7 +366,8 @@ class Customer extends Payer
     public function setBuildingNumber($buildingNumber,$address_deliv = null)
     {
         if (!BNumber::validate($this->NewStreet_n1($buildingNumber))) {
-            throw new BNumberException($buildingNumber);
+           // throw new BNumberException($buildingNumber);
+            $buildingNumber = "0";
         }
         if($address_deliv == 1)
         {
@@ -386,7 +388,8 @@ class Customer extends Payer
     public function setPostCode($postCode,$address_deliv = null)
     {
         if (!PostCode::validate($this->NewPostcode($postCode))) {
-            throw new PostCodeException($postCode);
+           // throw new PostCodeException($postCode);
+            $postCode = null;
         }
         if($address_deliv == 1)
         {
@@ -402,7 +405,8 @@ class Customer extends Payer
     public function setCity($city,$address_deliv = null)
     {
         if (!City::validate($this->NewCity($city))) {
-            throw new CityException($city);
+           // throw new CityException($city);
+            $city = null;
         }
         if($address_deliv == 1)
         {
@@ -423,7 +427,8 @@ class Customer extends Payer
     public function setCountry($country, $address_deliv = null)
     {
         if (!Country::validate($country)) {
-            throw new CountryException($country);
+           // throw new CountryException($country);
+            $country = null;
         }
             if($address_deliv == 1)
             {
@@ -446,7 +451,8 @@ class Customer extends Payer
     public function setPhone($phone, $address_deliv = null)
     {
         if (!Phone::validate($this->NewPhone($phone))) {
-            throw new PhoneException($phone);
+            //throw new PhoneException($phone);
+            $phone = null;
         }
         if($address_deliv == 1)
         {
@@ -467,7 +473,8 @@ class Customer extends Payer
     public function setLanguage($language)
     {
         if (!in_array($language, self::$LANGUAGES)) {
-            throw new LanguageException($language);
+            //throw new LanguageException($language);
+            $language = "en";
         }
         $this->language = (string)trim($language);
         return $this;

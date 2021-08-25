@@ -55,7 +55,7 @@
 }
 
 .payment-option img {
-    height: 40px;
+    max-height: 35px;
 }
 
 .alert-total {
