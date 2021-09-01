@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay sp. z o.o.
+ * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Html;
@@ -66,7 +66,17 @@ abstract class Element extends Node
     {
         return $this->getAttribute('class');
     }
-    
+   
+    /**
+     * Return a placeholder of the element
+     * @return string
+     */
+    public function getPlaceholder()
+    {
+        return $this->getAttribute('placeholder');
+    }
+
+
     /**
      * Return a data information
      * @param string $name A name of data information
@@ -106,6 +116,17 @@ abstract class Element extends Node
     public function setClass($className)
     {
         return $this->setAttribute('class', $className);
+    }
+
+
+    /**
+     * Set a 
+     * @param string $placeholder
+     * @return Element
+     */
+    public function setPlaceholder($placeholder)
+    {
+        return $this->setAttribute('placeholder', $placeholder);
     }
     
     /**

@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  * 
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay sp. z o.o.
+ * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Channel;
@@ -113,6 +113,7 @@ class Blik extends Channel
         $data = parent::getViewFields();
         $field = new Text('blik_code');
         $field->setClass('dotpay_blik_code');
+        $field->setPlaceholder('kod BLIK');
         if(!empty($this->fieldDescription)) {
             $field = new Label($field, $this->fieldDescription);
         }

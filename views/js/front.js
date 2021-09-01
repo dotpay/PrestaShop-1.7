@@ -11,7 +11,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay sp. z o.o.
+ * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 function checkRequired() {
@@ -74,7 +74,7 @@ $(document).ready(function(){
         requiredInputs.change(function(e){
 
             if(!checkSelectedBylaw2()){  
-                console.log('%cNOT selected accept Dotpay sp. z o.o. Regulations of Payments','background:red;color:#fff')
+                console.log('%cNOT selected accept PayPro S.A. Regulations of Payments','background:red;color:#fff')
             }
             checkOrderConfirmButton();
             e.stopPropagation();

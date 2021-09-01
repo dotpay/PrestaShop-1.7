@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay sp. z o.o.
+ * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Resource;
@@ -90,10 +90,10 @@ class Payment extends Resource
         }
 
         $url = $this->config->getPaymentUrl().
-               'payment_api/channels/'.
-               '?id='.$id.
+               'payment_api/v1/channels/'.
+               '?currency='.$defcurrency.
+               '&id='.$id.
                '&amount=317.02'.
-               '&currency='.$defcurrency.
                '&format=json';
 
         $content = $this->getContent($url);
@@ -173,9 +173,9 @@ class Payment extends Resource
             throw new NotFoundException();
         }
         return $this->config->getPaymentUrl().'payment_api/channels/'.
-               '?id='.$id.
+               '?currency='.$payment->getOrder()->getCurrency().
+               '&id='.$id.
                '&amount='.$payment->getOrder()->getAmount().
-               '&currency='.$payment->getOrder()->getCurrency().
                '&lang='.$lang.
                '&format=json';
     }

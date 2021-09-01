@@ -112,6 +112,7 @@ $_MODULE['<{dotpay}prestashop>dotpay_d082f054837b2c2b99b891eec5888a0c'] = 'Płat
 $_MODULE['<{dotpay}prestashop>dotpay_73a61696f100b3858511e212a3feea6b'] = 'Zapłać swoją kartą płatniczą';
 $_MODULE['<{dotpay}prestashop>dotpay_24977f5a91613985a9cde6c9f2ec265f'] = 'dzięki Dotpay';
 $_MODULE['<{dotpay}prestashop>dotpay_91d1fc4990d4fff923bde3c6c70b7e16'] = 'Kod Blik';
+$_MODULE['<{dotpay}prestashop>dotpay_cd22333a1ce94d0e985189da1dbc0c23'] = 'Wygeneruj kod BLIK w aplikacji swojego banku i wpisz go poniżej:';
 $_MODULE['<{dotpay}prestashop>dotpay_96559b5a124d7ca7cbc0cbad1fbdb54d'] = 'Wybrany kanał  płatności';
 $_MODULE['<{dotpay}prestashop>dotpay_2e57fd21d7e51b909f2cad0dbb9d5b4d'] = 'zmień kanał';
 $_MODULE['<{dotpay}prestashop>dotpay_9db387d72269723d491753cd6e992b73'] = 'Wybierz kanał płatności';

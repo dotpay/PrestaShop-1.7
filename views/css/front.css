@@ -151,7 +151,7 @@ label#agreement_oc-store-card {
 }
 
 input[name="blik_code"] {
-  width: 160px;
+  width: 190px;
   border: #ff6600 2px solid;
   height: auto;
   font-size: 32px;
@@ -160,8 +160,9 @@ input[name="blik_code"] {
   letter-spacing: 0.2rem;
   display: inline-block;
   text-align: center;
-  margin-left: 0px !important;
+  margin-left: 45px !important;
   margin-right: 0px !important;
+  margin-top: 10px;
 }
 
 input[name=blik_code]:hover {

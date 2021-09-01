@@ -12,7 +12,7 @@
  * to tech@dotpay.pl so we can send you a copy immediately.
  *
  * @author    Dotpay Team <tech@dotpay.pl>
- * @copyright Dotpay sp. z o.o.
+ * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 namespace Dotpay\Model;
@@ -32,17 +32,17 @@ class Instruction
     /**
      * Name of the recipient of payment
      */
-    const RECIPIENT_NAME = 'Dotpay sp. z o.o.';
+    const RECIPIENT_NAME = 'PayPro S.A.';
     
     /**
      * Street of the recipient of payment
      */
-    const RECIPIENT_STREET = 'Wielicka 28B';
+    const RECIPIENT_STREET = 'ul. Kanclerska 15';
     
     /**
      * Post code and city of the recipient of payment
      */
-    const RECIPIENT_CITY = '30-552 Kraków';
+    const RECIPIENT_CITY = '60-327 Poznań';
     
     /**
      * @var int|null Id of the instruction in a shop

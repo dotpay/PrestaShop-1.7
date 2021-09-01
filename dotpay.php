@@ -1158,7 +1158,7 @@ class Dotpay extends PaymentModule
             $this->getArgumentsForChannelTarget($blik),
             true
         ))
-             ->setFieldDescription($this->l('BLIK code').":&nbsp;");
+             ->setFieldDescription("<br/>".$this->l('Generate a BLIK code in your bank\'s app and enter this below:')."&nbsp;<br/>");
         $channelList->addChannel($blik);
 
         foreach ($this->config->getVisibleChannelsArray() as $channelId) {
