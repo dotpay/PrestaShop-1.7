@@ -21,7 +21,8 @@ namespace Dotpay\Exception\Resource;
  * Resource is unavailable
  */
 class UnavailableException extends \RuntimeException {
-    
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Resource is unavailable';
 }
-
-?>

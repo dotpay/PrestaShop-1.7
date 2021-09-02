@@ -22,4 +22,21 @@ namespace Dotpay\Exception;
  */
 class DotpayException extends \RuntimeException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'An error with Dotpay translations has been occured. Details: %1';
+
+    /**
+     * Initialize locale exception.
+     *
+     * @param string     $message  Details of exception
+     * @param int        $code     Code of exception
+     * @param \Exception $previous The previous exception used for the exception chaining
+     */
+    public function __construct($message = '', $code = 0, $previous = null)
+    {
+        parent::__construct(str_replace('%1', $message, static::MESSAGE), $code, $previous);
+    }
+
 }

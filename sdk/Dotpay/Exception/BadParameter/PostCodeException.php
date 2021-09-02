@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class PostCodeException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect post code: %1';
 }

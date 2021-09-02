@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class CurrencyException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect currency: %1';
 }

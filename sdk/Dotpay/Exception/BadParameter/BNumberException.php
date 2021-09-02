@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class BNumberException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect building number: %1';
 }

@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Processor;
  */
 class ConfirmationDataException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Error with confirmation data from Dotpay server: %1';
 }

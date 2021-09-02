@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource\Github;
  */
 class VersionNotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Version registry is not found for given project: %1';
 }

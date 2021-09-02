@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class CountryException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect country name: %1';
 }

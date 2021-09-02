@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class ForbiddenException extends HttpException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Dotpay API is forbidden to using';
 }

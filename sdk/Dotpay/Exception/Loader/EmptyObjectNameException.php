@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Loader;
  */
 class EmptyObjectNameException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception
+     */
+    const MESSAGE = "Name of the object '%1' is empty";
 }

@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class UnauthorizedException extends HttpException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Using of Dotpay API is not authorized';
 }

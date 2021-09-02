@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class CardMaskException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect card mask: %1';
 }

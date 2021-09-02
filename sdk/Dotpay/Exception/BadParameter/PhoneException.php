@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class PhoneException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect phone number: %1';
 }

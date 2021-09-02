@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class PinException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect seller pin';
 }

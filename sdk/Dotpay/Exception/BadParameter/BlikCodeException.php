@@ -23,4 +23,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class BlikCodeException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect Blik code: %1';
 }

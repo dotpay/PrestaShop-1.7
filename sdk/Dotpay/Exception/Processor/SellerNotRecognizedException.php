@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Processor;
  */
 class SellerNotRecognizedException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Seller with given id (%1) is not recognized';
 }

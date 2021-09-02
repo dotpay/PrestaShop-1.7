@@ -192,7 +192,7 @@ class DotpayConfirmModuleFrontController extends DotpayController
         } catch (ConfirmationInfoException $ex) {
             die($ex->getMessage());
         } catch (RuntimeException $ex) {
-            die('EXCEPTION! '.get_class($ex).' '.$ex->getMessage());
+            die('EXCEPTION! '.get_class($ex).' : '.$ex->getMessage());
         }
     }
     

@@ -22,4 +22,8 @@ namespace Dotpay\Exception;
  */
 class FileNotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = "File '%1' is not found";
 }

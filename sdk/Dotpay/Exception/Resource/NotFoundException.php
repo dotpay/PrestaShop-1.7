@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class NotFoundException extends HttpException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Resource is not found';
 }

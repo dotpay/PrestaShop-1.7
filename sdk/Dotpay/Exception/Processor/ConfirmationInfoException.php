@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Processor;
  */
 class ConfirmationInfoException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Access denied: %1';
 }

@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource\Account;
  */
 class NotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Account of seller is not recognized by Dotpay server';
 }

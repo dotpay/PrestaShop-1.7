@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class EmailException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect email address: %1';
 }

@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class UrlException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect url address: %1';
 }

@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Loader;
  */
 class ObjectNotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception
+     */
+    const MESSAGE = "Object '%1' is not found";
 }

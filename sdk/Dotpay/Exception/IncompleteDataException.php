@@ -22,4 +22,8 @@ namespace Dotpay\Exception;
  */
 class IncompleteDataException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Given data is incompleted';
 }

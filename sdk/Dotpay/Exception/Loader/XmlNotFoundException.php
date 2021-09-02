@@ -24,4 +24,8 @@ use Dotpay\Exception\FileNotFoundException;
  */
 class XmlNotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = "XML file  '%1' is not found";
 }

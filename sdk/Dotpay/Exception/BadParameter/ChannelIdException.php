@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class ChannelIdException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect channel id: %1';
 }

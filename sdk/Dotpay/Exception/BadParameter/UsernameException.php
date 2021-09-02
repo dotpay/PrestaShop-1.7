@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class UsernameException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect Dotpay username: %1';
 }

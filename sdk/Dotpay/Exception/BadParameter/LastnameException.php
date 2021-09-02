@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class LastnameException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect last name: %1';
 }

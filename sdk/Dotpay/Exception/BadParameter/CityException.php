@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class CityException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect city name: %1';
 }

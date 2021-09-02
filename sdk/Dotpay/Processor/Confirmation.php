@@ -92,23 +92,32 @@ class Confirmation
         $this->paymentApi = $paymentApi;
         $this->sellerApi = $sellerApi;
         $this->outputMessage = '';
-        $clientIp = $this->getClientIp();
+    
+    
+        if( (int)$config->getNonProxyMode() == 1) {
+            $clientIp = $_SERVER['REMOTE_ADDR'];
+            $proxy_desc = 'FALSE';
+        }else{
+            $clientIp = $this->getClientIp();
+            $proxy_desc = 'TRUE';
+        }
+    
         
-        if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && $clientIp == $config::OFFICE_IP ) 
-
+        if ( (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') && ($clientIp == $config::OFFICE_IP) ) 
+    
         {
             $this->completeInformations();
-            throw new ConfirmationInfoException($this->outputMessage);
+            die($this->outputMessage);
+            
+    
+        } else if((strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') && ($clientIp != $config::OFFICE_IP)) {
+            
+            throw new ConfirmationInfoException('IP: '.$this->getClientIp('true').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD']);
 
-        } else if(!(strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' && (
-                                                                        (((int)$config->getNonProxyMode() == 1) && ($this->isAllowedIp($_SERVER['REMOTE_ADDR'], $config::DOTPAY_CALLBACK_IP_WHITE_LIST))) || 
-                                                                        ( ( (int)$config->getNonProxyMode() != 1) && ($this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)))
-                                                                     ) 
-        
-                ))
-
+        } else if(!((strtoupper($_SERVER['REQUEST_METHOD']) == 'POST') && ($this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)) ) )
+    
         {
-            throw new IncorrectRequestException('IP: '.$this->getClientIp('true').' ; METHOD: '.$_SERVER['REQUEST_METHOD']);
+            throw new IncorrectRequestException('IP: '.$this->getClientIp('true').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD']);
         }
     }
     
@@ -232,6 +241,7 @@ class Confirmation
              ->addOutputMessage('API Version: '.$config->getApi())
              ->addOutputMessage('Test Mode: '.(int)$config->getTestMode())
              ->addOutputMessage('Not Uses Proxy fo server: '.(int)$config->getNonProxyMode())
+             ->addOutputMessage('&dollar;_SERVER&lbrack;&apos;REMOTE_ADDR&apos;&rbrack;: '.$_SERVER['REMOTE_ADDR'])
              ->addOutputMessage('Default currency: '.$config->getDefaultCurrency())
              ->addOutputMessage('Refunds: '.(int)$config->getRefundsEnable())
              ->addOutputMessage('Widget: '.(int)$config->getWidgetVisible())
@@ -282,17 +292,20 @@ class Confirmation
     protected function checkIp()
     {
         $config = $this->config;
-        $clientIp = $this->getClientIp();
+
+        if( (int)$config->getNonProxyMode() == 1) {
+            $clientIp = $_SERVER['REMOTE_ADDR'];
+            $proxy_desc = 'FALSE';
+        }else{
+            $clientIp = $this->getClientIp();
+            $proxy_desc = 'TRUE';
+        }
 
         if (
-            !(
-                (((int)$config->getNonProxyMode() == 1) && ($this->isAllowedIp($_SERVER['REMOTE_ADDR'], $config::DOTPAY_CALLBACK_IP_WHITE_LIST))) || 
-                ( ( (int)$config->getNonProxyMode() != 1) && ($this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)))
-
-             )
+            !( $this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST) )
            ) 
         {
-            throw new ConfirmationDataException('ERROR (REMOTE ADDRESS: '.$clientIp.')');
+            throw new ConfirmationDataException('ERROR (REMOTE ADDRESS: '.$clientIp.'/'.$_SERVER['REMOTE_ADDR'].', PROXY:'.$proxy_desc.')');
         }
 
         return true;
@@ -423,10 +436,10 @@ class Confirmation
                   ) {
                     return new Seller($this->config->getFccId(), $this->config->getFccPin());
                 } else {
-                    throw new SellerNotRecognizedException($this->notification->getAccountId());
+                    throw new SellerNotRecognizedException($this->notification->getOperation()->getAccountId());
                 }
             default:
-                throw new SellerNotRecognizedException($this->notification->getAccountId());
+                throw new SellerNotRecognizedException($this->notification->getOperation()->getAccountId());
         }
     }
     

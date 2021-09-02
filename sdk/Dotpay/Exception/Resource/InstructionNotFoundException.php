@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class InstructionNotFoundException extends HttpException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = "Instruction is not found - probably it's not saved";
 }

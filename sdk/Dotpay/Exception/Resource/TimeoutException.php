@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class TimeoutException extends \RuntimeException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Timeout has been exceed';
 }

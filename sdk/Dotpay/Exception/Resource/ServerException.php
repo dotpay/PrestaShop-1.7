@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class ServerException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'A problem of using the Dotpay server has been occured';
 }

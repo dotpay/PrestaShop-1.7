@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class PaymentNotCreatedException extends HttpException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Payment is not created';
 }

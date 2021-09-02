@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Loader;
  */
 class ParamNotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception
+     */
+    const MESSAGE = "Param '%1' is not found";
 }

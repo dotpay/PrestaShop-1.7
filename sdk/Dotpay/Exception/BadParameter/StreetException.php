@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class StreetException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect street: %1';
 }

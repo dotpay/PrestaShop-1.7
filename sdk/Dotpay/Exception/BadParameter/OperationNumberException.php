@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class OperationNumberException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect operation number: %1';
 }

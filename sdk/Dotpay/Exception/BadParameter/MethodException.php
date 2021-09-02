@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadParameter;
  */
 class MethodException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect method: %1';
 }

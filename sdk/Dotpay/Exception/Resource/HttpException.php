@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource;
  */
 class HttpException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Error of HTTP comunication has been occured';
 }

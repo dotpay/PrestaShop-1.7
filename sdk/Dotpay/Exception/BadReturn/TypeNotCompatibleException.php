@@ -22,4 +22,8 @@ namespace Dotpay\Exception\BadReturn;
  */
 class TypeNotCompatibleException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Returned type is not compatible with an expected type. Details: %1';
 }

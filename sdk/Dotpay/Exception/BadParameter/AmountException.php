@@ -22,4 +22,9 @@ namespace Dotpay\Exception\BadParameter;
  */
 class AmountException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Incorrect amount: %1';
+
 }

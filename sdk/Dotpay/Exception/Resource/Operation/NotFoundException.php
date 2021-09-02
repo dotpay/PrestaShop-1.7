@@ -22,4 +22,8 @@ namespace Dotpay\Exception\Resource\Operation;
  */
 class NotFoundException extends \Dotpay\Exception\DotpayException
 {
+    /**
+     * Message of error thrown by the exception.
+     */
+    const MESSAGE = 'Operation with given identificator is not found on Dotpay server';
 }
