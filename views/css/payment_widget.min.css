@@ -88,7 +88,7 @@
 .dotpay-one-channel .channels-wrapper p {
     font-size: 1.5em;
     text-align: center;
-    color: red
+    color: red;
 }
 
 .dotpay-one-channel .channels-wrapper .vertical-center,
@@ -222,9 +222,9 @@
 
 .dotpay-one-channel .channels-wrapper .image-container {
     display: block;
-    width: 90%;
+    max-width: 90%;
     text-align: center;
-    top: 12px
+    top: 10px
 }
 
 .dotpay-one-channel .channels-wrapper .image-container img {
