@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.3.1';
+        $this->version = '1.3.2';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -240,7 +240,7 @@ class Dotpay extends PaymentModule
             try {
                 $version = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME);
                 $number = $version->getNumber();
-                $obsoletePlugin = version_compare($number, $this->version, '>');
+                $obsoletePlugin = version_compare($number, $this->version, '>=');
                 $canNotCheckPlugin = false;
             } catch (RuntimeException $e) {
                 $obsoletePlugin = false;

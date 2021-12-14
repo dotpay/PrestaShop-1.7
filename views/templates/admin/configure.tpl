@@ -147,7 +147,6 @@
     <h3>{l s='Updates' mod='dotpay'}</h3>
     <h4>
 	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong>.<br>
-	{l s='The latest public version available is: ' mod='dotpay'}<strong><a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a></strong>
 	</h4>
     {if $obsoletePlugin}
         <div class="alert alert-danger">
@@ -156,7 +155,7 @@
             <br />
             <p style="color: #555;">
                 {l s='You can download the latest version from' mod='dotpay'}
-                <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{l s='this page' mod='dotpay'}</a>.
+                <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH}</a>.
             </p>
         </div>
     {elseif $canNotCheckPlugin}

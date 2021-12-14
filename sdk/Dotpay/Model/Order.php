@@ -132,7 +132,9 @@ class Order
      */
     public function setCurrency($currency)
     {
-        $currency = strtoupper($currency);
+        $currency = strtoupper(preg_replace('/[^A-Za-z]/', '',$currency)  );
+        $currency = substr($currency, strlen($currency)-3, strlen($currency));
+        
         if (!in_array($currency, Configuration::$CURRENCIES)) {
             throw new CurrencyException($currency);
         }

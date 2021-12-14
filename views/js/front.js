@@ -14,7 +14,7 @@
  * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-function checkRequired() {
+ function checkRequired() {
     var requiredInputs = $.merge($(
 		'#checkout-payment-step .dotpay-one-channel input[required][type=checkbox]'
     ).not(
@@ -33,6 +33,16 @@ function checkRequired() {
 
 
 
+	jQueryCodeBLIKregex = function(){
+		var $regexblik=/^([0-9]{6})$/;
+		if ($('input.dotpay_blik_code').val().match($regexblik)) {
+			return true;
+		}else{
+			return false;
+		}
+	};
+
+
 function checkBlikCode() {
     if($('.dotpay_blik_code').parents('.payment-form').parent().css('display') != 'block') {
         return false;
@@ -40,8 +50,8 @@ function checkBlikCode() {
 
     var value = $('input[name="blik_code"]').val();
     return !(value.length == 6 && !isNaN(parseInt(value)) && parseInt(value) == value);
-}
 
+}
 
 
 function checkOrderConfirmButton() {
@@ -60,9 +70,13 @@ function getURLParameter(name) {
 
 var renewpay = getURLParameter('renew');
 
+var dp_empty_blik_code = '<p class="alert alert-warning" id="dotpay_empty_blik_code"><strong>Brak kodu BLIK!</strong><br> Dla wybranej metody płatności należy uzupełnić 6-cyfrowy kod BLIK z aplikacji bankowej.</p><br>';
+
+
+
 function checkSelectedBylaw2() {
     var unchecked = $("#agreement_bylaw > input[type=checkbox]:checked").length;
-        return unchecked > 0;
+        return unchecked > 2;
 }
 
 
@@ -75,10 +89,12 @@ $(document).ready(function(){
 
             if(!checkSelectedBylaw2()){  
                 console.log('%cNOT selected accept PayPro S.A. Regulations of Payments','background:red;color:#fff')
+				$('#payment-confirmation button').attr("disabled", "disabled");
             }
             checkOrderConfirmButton();
-            e.stopPropagation();
+            //e.stopPropagation();
         });
+
 
         $('input[name=payment-option]').change(function(){
             $('.agreements input[required]').prop('checked', true);
@@ -95,10 +111,76 @@ $(document).ready(function(){
         $("input.dotpay_blik_code").attr("maxlength", "6");
 
 
-        $('input.dotpay_blik_code').change(function(){
-            checkOrderConfirmButton();
+		$('input.dotpay_blik_code').on('keypress keydown keyup',function(){
+            	
+			var value_blik = $('input[name="blik_code"]').val();
+			if(value_blik.length == 6 && !isNaN(parseInt(value_blik))){
+					console.log('BLIK code is ok :) ');
+					$('#dotpay_empty_blik_code').remove();
+					$('input.dotpay_blik_code').css({"background-color":"#d3f2d2","border-color":"#3a9112"});
+			}else{
+					console.log('BLIK code is not ok! ');
+					$('input.dotpay_blik_code').css({"background-color":"#ffc9c9","border-color":"#f22"});
+					if( ($('#dotpay_empty_blik_code').length < 1) && ($('input.dotpay_blik_code').parents('.payment-form').parent().css('display') == 'block') ) {
+						$('#payment-confirmation button').before(dp_empty_blik_code);
+					}
+			}	
+			
+			checkOrderConfirmButton();
+			
         });
+		
+	//check if main conditions changes	
 
+		$('#payment-confirmation button').attr("disabled", "disabled");
+
+		$('input[id^="conditions_to_approve"]').change(function(){
+			var main_conditions = $('input[id^="conditions_to_approve"]:checked').length;
+			
+			if(main_conditions > 0 ){
+				$(document).ready(function(){
+					setTimeout(function(){   
+										if(!checkSelectedBylaw2()){  
+											console.log('%cSelect first PayPro S.A. Regulations of Payments !','background:red;color:#fff');
+								            $('#payment-confirmation button').attr("disabled", "disabled");
+							            }
+										
+										//if blik method enabled
+										if($('input.dotpay_blik_code').parents('.payment-form').parent().css('display') == 'block') 
+											{
+												if(!jQueryCodeBLIKregex()){
+													console.log('%cNo blik code or incomplete','background: #cfcfcf; color: brown;');
+													$('#payment-confirmation button').attr("disabled", "disabled");
+														if(jQuery('#dotpay_empty_blik_code').length < 1) {
+															$('#payment-confirmation button').before(dp_empty_blik_code);
+														}
+														$('input.dotpay_blik_code').on('keypress keydown keyup',function(){
+															
+															if($('input.dotpay_blik_code').val().length < 1) {
+																console.log('%cNo blik code enter','background: #cfcfcf; color: brown;');
+															}
+															
+												
+														});
+
+												}
+
+											}
+
+					 }, 200);
+										
+										
+										
+										
+				});
+			}  
+
+		});
+
+
+		},500);
+		
+   setTimeout(function(){  
     //only for renew payment
     if(renewpay == 1 ){
         $("h5.aeuc_scart").attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
@@ -107,7 +189,8 @@ $(document).ready(function(){
         $( "div.order-confirmation-table" ).find( "div.details a" ).attr('href', '').css({'cursor': 'pointer', 'pointer-events' : 'none'});
     }
 
+    }, 500);
 
 
-    });
-}, 500);    
+});  
+

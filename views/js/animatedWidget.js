@@ -14,7 +14,7 @@
  * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-(function($) {
+ (function($) {
     var defaults = {
         channelsContainerClass: "dotpay-channels-selection",
         channelChangeClass: "channel-selected-change",
@@ -69,7 +69,11 @@
                             }else {
                                 $('<span class="dp_checkedchannel">'+ CheckedChannel +'<br></span>').insertBefore('.channel-selected-change');
                             }
-
+						
+						if(checkSelectedChannel() > 0 &&  checkSelectedBylaw() > 0 && checktoggleapprove() > 0){
+							$('div#payment-confirmation > div > button').removeClass('disabled');
+							$('#payment-confirmation button').attr("disabled", false);
+						}						
 
                         }  else {
                             $('p#dp_NoSelected').show();
@@ -178,6 +182,10 @@ if (typeof jQuery != 'undefined') {
                                 
                                 if (!(value_blik_code.length == 6 && !isNaN(parseInt(value_blik_code)) && parseInt(value_blik_code) == value_blik_code)){
                                         jQuery('div#payment-confirmation > div > button').prop('disabled', true);
+                                        // fix for PrestaShop v1.7.8:  
+                                        jQuery('div#payment-confirmation > div > button').addClass('disabled');
+                                        
+
                                         console.log('Empty blik code');
                                 
                                         jQuery('input.dotpay_blik_code').keyup(function(){
@@ -185,12 +193,21 @@ if (typeof jQuery != 'undefined') {
                                             if(value_blik_code.length == 6 && !isNaN(parseInt(value_blik_code)) && parseInt(value_blik_code) == value_blik_code){
                                                 console.log('Code blik entered.');
                                                 jQuery('div#payment-confirmation > div > button').prop('disabled', false);
+                                                
+                                                // fix for PrestaShop v1.7.8 :   
+                                                if (jQuery('div#payment-confirmation > div > button').hasClass('disabled')){
+                                                    jQuery('div#payment-confirmation > div > button').removeClass('disabled');
+                                                }
+												
+												
                                             }
                                         });
                            
                                         }
                                         jQuery('p#dp_NoSelected').hide();
-                            }
+                            }else{
+								$('#dotpay_empty_blik_code').remove();
+							}
                                         
 
 
@@ -211,6 +228,10 @@ if (typeof jQuery != 'undefined') {
                                         }else{
                                             jQuery('p#dp_NoSelected').show();
                                             jQuery( "#payment-confirmation > div > button" ).prop('disabled', true);
+
+                                            // fix for PrestaShop v1.7.8: 
+                                            jQuery('div#payment-confirmation > div > button').addClass('disabled'); 
+                                            
                                             console.log('No payment channel selected');
                                             
                                         }

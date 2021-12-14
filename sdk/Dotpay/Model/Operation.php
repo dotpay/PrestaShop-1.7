@@ -471,7 +471,9 @@ class Operation
      */
     public function setCurrency($currency)
     {
-        $currency = strtoupper($currency);
+        $currency = strtoupper(preg_replace('/[^A-Za-z]/', '',$currency)  );
+        $currency = substr($currency, strlen($currency)-3, strlen($currency));
+
         if (!in_array($currency, Configuration::$CURRENCIES)) {
             throw new CurrencyException($currency);
         }
@@ -502,7 +504,9 @@ class Operation
      */
     public function setOriginalCurrency($originalCurrency)
     {
-        $originalCurrency = strtoupper($originalCurrency);
+        $originalCurrency = strtoupper(preg_replace('/[^A-Za-z]/', '',$originalCurrency)  );
+        $originalCurrency = substr($originalCurrency, strlen($originalCurrency)-3, strlen($originalCurrency));
+
         if (!in_array($originalCurrency, Configuration::$CURRENCIES)) {
             throw new CurrencyException($originalCurrency);
         }
