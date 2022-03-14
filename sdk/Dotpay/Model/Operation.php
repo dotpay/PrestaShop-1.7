@@ -127,6 +127,19 @@ class Operation
      */
     private $paymentMethod = null;
     
+
+    /**
+     * @var string A data for credit card
+     */
+        private $ccissuernumber = null;
+        private $ccmasked = null;
+        private $ccexpyear = null;
+        private $ccexpmonth = null;
+        private $ccbrandcodename = null;
+        private $ccbrandcode = null;
+        private $ccunique = null;
+        private $ccardid = null;
+
     /**
      * Status identifier of new operation
      */
@@ -293,6 +306,56 @@ class Operation
         return $this->dateTime;
     }
     
+
+    
+	/**
+     * Return a credit card data
+     * @return float|null
+     */
+    public function getCCissuerNumber()
+    {
+        return $this->ccissuernumber;
+    }
+	
+    public function getCCmasked()
+    {
+        return $this->ccmasked;
+    }
+    
+	public function getCCexpYear()
+    {
+        return $this->ccexpyear;
+    }
+    
+	public function getCCexpMonth()
+    {
+        return $this->ccexpmonth;
+    }
+   
+   public function getCcbrandCodename()
+    {
+        return $this->ccbrandcodename;
+    }
+   
+   public function getCcbrandCode()
+    {
+        return $this->ccbrandcode;
+    }
+    
+	public function getCCuniq()
+    {
+        return $this->ccunique;
+    }
+    
+	public function getCCcardId()
+    {
+        return $this->ccardid;
+    }	
+
+
+
+
+
     /**
      * Return a flag if operation is marked as completed in Seller panel
      * @return boolean|null
@@ -628,4 +691,97 @@ class Operation
         $this->paymentMethod = $paymentMethod;
         return $this;
     }
+
+    /**
+     * Set a Masked payment card issuer number with which payment has been made.
+     * @param string $ccissuernumber A Masked payment card issuer number
+     * @return Operation
+     */
+    public function setCCissuerNumber($ccissuernumber)
+    {
+        $this->ccissuernumber = (string)$ccissuernumber;
+        return $this;
+    }
+
+    /**
+     * Set a Masked payment card number with which payment has been made.
+     * @param string $ccmasked A Masked payment card number
+     * @return Operation
+     */
+    public function setCcmasked($ccmasked)
+    {
+        $this->ccmasked = (string)$ccmasked;
+        return $this;
+    }
+
+    /**
+     * Set a Year expiration date of a payment card, which payment has been made.
+     * @param string $ccexpyear A year expiration date of a payment card
+     * @return Operation
+     */
+    public function setCCexpYear($ccexpyear)
+    {
+        $this->ccexpyear = (string)$ccexpyear;
+        return $this;
+    }
+
+    /**
+     * Set a Month  expiration date of a payment card, which payment has been made.
+     * @param string $ccexpyear A month expiration date of a payment card
+     * @return Operation
+     */
+    public function setCCexpMonth($ccexpmonth)
+    {
+        $this->ccexpmonth = (string)$ccexpmonth;
+        return $this;
+    }
+
+
+    /**
+     * Set a Payment card brand with which payment has been made.
+     * @param string $ccbrandcodename A Payment card brand 
+     * @return Operation
+     */
+    public function setCcbrandCodename($ccbrandcodename)
+    {
+        $this->ccbrandcodename = (string)$ccbrandcodename;
+        return $this;
+    }
+
+        /**
+     * Set a Payment card brand code with which payment has been made.
+     * @param string $ccbrandcode A Payment card brand code 
+     * @return Operation
+     */
+    public function setCcbrandCode($ccbrandcode)
+    {
+        $this->ccbrandcode = (string)$ccbrandcode;
+        return $this;
+    }
+
+
+    /**
+     * Set a unique identifier of the card registered in Dotpay.
+     * @param string $ccunique A unique identifier of the card registered 
+     * @return Operation
+     */
+    public function setCCuniq($ccunique)
+    {
+        $this->ccunique = (string)$ccunique;
+        return $this;
+    }
+	
+	/**
+     * Set a Payment card ID given by Dotpay system.
+     * @param string $ccardid A Payment card ID. 
+     * @return Operation
+     */
+    public function setCCcardId($ccardid)
+    {
+        $this->ccardid = (string)$ccardid;
+        return $this;
+    }
+
+
+
 }

@@ -224,7 +224,8 @@
     display: block;
     max-width: 90%;
     text-align: center;
-    top: 10px
+    top: 10px;
+    left: 25px;
 }
 
 .dotpay-one-channel .channels-wrapper .image-container img {

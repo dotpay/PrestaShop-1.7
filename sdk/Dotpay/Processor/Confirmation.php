@@ -17,18 +17,19 @@
  */
 namespace Dotpay\Processor;
 
-use Dotpay\Action\UpdateCcInfo;
+use \Db;
 use Dotpay\Action\MakePaymentOrRefund;
+use Dotpay\Action\UpdateCcInfo;
+use Dotpay\Exception\Processor\ConfirmationDataException;
+use Dotpay\Exception\Processor\ConfirmationInfoException;
+use Dotpay\Exception\Processor\IncorrectRequestException;
+use Dotpay\Exception\Processor\SellerNotRecognizedException;
 use Dotpay\Model\Configuration;
-use Dotpay\Model\Payment;
 use Dotpay\Model\Notification;
+use Dotpay\Model\Payment;
 use Dotpay\Model\Seller;
 use Dotpay\Resource\Payment as PaymentResource;
 use Dotpay\Resource\Seller as SellerResource;
-use Dotpay\Exception\Processor\IncorrectRequestException;
-use Dotpay\Exception\Processor\SellerNotRecognizedException;
-use Dotpay\Exception\Processor\ConfirmationDataException;
-use Dotpay\Exception\Processor\ConfirmationInfoException;
 
 /**
  * Processor of confirmation activity
@@ -92,6 +93,8 @@ class Confirmation
         $this->paymentApi = $paymentApi;
         $this->sellerApi = $sellerApi;
         $this->outputMessage = '';
+        $dp_debug_allow = false;
+        $show_time_in_urlc = "";
     
     
         if( (int)$config->getNonProxyMode() == 1) {
@@ -101,24 +104,54 @@ class Confirmation
             $clientIp = $this->getClientIp();
             $proxy_desc = 'TRUE';
         }
-    
-        
-        if ( (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') && ($clientIp == $config::OFFICE_IP) ) 
-    
-        {
-            $this->completeInformations();
-            die($this->outputMessage);
-            
-    
-        } else if((strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') && ($clientIp != $config::OFFICE_IP)) {
-            
-            throw new ConfirmationInfoException('IP: '.$this->getClientIp('true').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD']);
 
-        } else if(!((strtoupper($_SERVER['REQUEST_METHOD']) == 'POST') && ($this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)) ) )
-    
-        {
-            throw new IncorrectRequestException('IP: '.$this->getClientIp('true').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD']);
+
+        if( strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && isset($_GET['dp_debug']) ){
+            $string_to_hash = 'h:'.$this->config->geShoptHost().',id:'.$config->getId().',d:'.date('YmdHi').',p:'.$config->getPin();
+            
+            if(trim($_GET['dp_debug']) == 'time'){
+                $show_time_in_urlc = ", Time: ".date('YmdHi');
+            }
+            $dp_debug_hash = hash('sha256', $string_to_hash);
+            if(trim($_GET['dp_debug']) == $dp_debug_hash){
+                $dp_debug_allow = true;
+            }else{
+                $dp_debug_allow = false;
+            }
+
+        }else{
+            $dp_debug_allow = false;
         }
+
+    
+        //GET
+        if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') 
+        {
+            if ( $clientIp == $config::OFFICE_IP || $dp_debug_allow == true)  {
+
+                $this->completeInformations();
+                die($this->outputMessage);
+
+            } else {
+
+                throw new ConfirmationInfoException('IP: '.$this->getClientIp('true').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD'].$show_time_in_urlc);
+
+            }
+        }
+
+        //POST
+        if (strtoupper($_SERVER['REQUEST_METHOD']) == 'POST') {
+
+            if( !$this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST)) {
+
+                throw new IncorrectRequestException('IP: '.$this->getClientIp('true').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD']);
+
+            }
+
+
+
+        }       
+
     }
     
     /**
@@ -168,6 +201,7 @@ class Confirmation
         
         $this->checkIp();
         $this->checkMethod();
+        $this->checkPaymentControl();
         $this->checkSignature();
         $this->checkCurrency();
         
@@ -227,14 +261,16 @@ class Confirmation
 					$FCC_CorrectPin = '&lt;empty or not active function&gt;';
 				}
 		
-        $this->addOutputMessage('--- Dotpay Diagnostic Information ---')
+        $this->addOutputMessage('--- Dotpay Diagnostic Information: date: '.date('YmdHi').' ---')
+             ->addOutputMessage('    ', true)
+             ->addOutputMessage('Module Version: '.$this->config->getPluginVersion())
              ->addOutputMessage('Enabled: '.(int)$config->getEnable(), true)
-             ->addOutputMessage('--- System Info ---')
+             ->addOutputMessage('--- System Info ---', true)
              ->addOutputMessage('PrestaShop Version: '._PS_VERSION_)
              ->addOutputMessage('Sdk Version: '.$config::SDK_VERSION) 	
-             ->addOutputMessage('Module Version: '.$this->config->getPluginVersion(), true)
              ->addOutputMessage('PHP Version: '.  phpversion())	 
-             ->addOutputMessage('--- Dotpay PLN ---')
+             ->addOutputMessage('Memory limit in PHP (memory_limit): '. ((\Tools::getMemoryLimit())/1048576) .' M', true)	 
+             ->addOutputMessage('--- Dotpay PLN ---', true)
              ->addOutputMessage('Id: '.$config->getId().' '.$seller_receiver)
              ->addOutputMessage('Correct Id: '. $CorrectId)
              ->addOutputMessage('Correct Pin: '.$CorrectPin)
@@ -242,22 +278,23 @@ class Confirmation
              ->addOutputMessage('Test Mode: '.(int)$config->getTestMode())
              ->addOutputMessage('Not Uses Proxy fo server: '.(int)$config->getNonProxyMode())
              ->addOutputMessage('&dollar;_SERVER&lbrack;&apos;REMOTE_ADDR&apos;&rbrack;: '.$_SERVER['REMOTE_ADDR'])
+             ->addOutputMessage('Host: '.$this->config->geShoptHost())
              ->addOutputMessage('Default currency: '.$config->getDefaultCurrency())
              ->addOutputMessage('Refunds: '.(int)$config->getRefundsEnable())
              ->addOutputMessage('Widget: '.(int)$config->getWidgetVisible())
              ->addOutputMessage('Widget currencies: '.$config->getWidgetCurrencies())
              ->addOutputMessage('Instructions: '.(int)$config->getInstructionVisible(), true)
-             ->addOutputMessage('--- Separate Channels ---')
+             ->addOutputMessage('--- Separate Channels ---', true)
              ->addOutputMessage('One Click: '.(int)$config->getOcVisible())
              ->addOutputMessage('Credit Card: '.(int)$config->getCcVisible())
              ->addOutputMessage('Blik: '.(int)$config->getBlikVisible(), true)
-             ->addOutputMessage('--- Dotpay FCC ---')
+             ->addOutputMessage('--- Dotpay FCC ---', true)
              ->addOutputMessage('FCC Mode: '.(int)$config->getFccVisible())
              ->addOutputMessage('FCC Id: '.$config->getFccId())
   			 ->addOutputMessage('FCC Correct Id: '. $FCC_CorrectId)
   			 ->addOutputMessage('FCC Correct Pin: '. $FCC_CorrectPin)
              ->addOutputMessage('FCC Currencies: '.$config->getFccCurrencies(), true)
-             ->addOutputMessage('--- Dotpay API ---')
+             ->addOutputMessage('--- Dotpay API ---', true)
              ->addOutputMessage('Data: '.(($config->isGoodApiData())?'&lt;given&gt;':'&lt;empty&gt;'))
              ->addOutputMessage('Login: '.$config->getUsername());
         $isAccountRight = false;
@@ -266,6 +303,7 @@ class Confirmation
         } catch (Exception $ex) {
         }
         $this->addOutputMessage('Correct data: '.$isAccountRight, true);
+
     }
     
     /**
@@ -305,7 +343,7 @@ class Confirmation
             !( $this->isAllowedIp($clientIp, $config::DOTPAY_CALLBACK_IP_WHITE_LIST) )
            ) 
         {
-            throw new ConfirmationDataException('ERROR (REMOTE ADDRESS: '.$clientIp.'/'.$_SERVER['REMOTE_ADDR'].', PROXY:'.$proxy_desc.')');
+            throw new ConfirmationDataException('ERROR (REMOTE ADDRESS: '.$clientIp.'/'.$_SERVER['REMOTE_ADDR'].'; PROXY:'.$proxy_desc.')');
         }
 
         return true;
@@ -368,6 +406,47 @@ class Confirmation
         }
         return true;
     }
+
+
+    protected function checkPaymentControl()
+    {
+        $receivedControl = $this->notification->getOperation()->getControl();
+		$receivedDescription = $this->notification->getOperation()->getDescription();
+		
+        $control = explode('|', (string)$receivedControl);
+        
+        if(isset($control[0]) && (int)$control[0] > 0){
+            $receivedIdOrder = (int)$control[0];
+        }else{
+            $receivedIdOrder = null;
+        }
+
+
+            $isOrderX = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'orders WHERE id_order = '.(int)$receivedIdOrder.' and module = "dotpay"');
+            $order_reference = $isOrderX['reference'];
+            $order_id = $isOrderX['id_order'];
+		
+
+			if ($receivedIdOrder == null || $receivedIdOrder != $order_id) {
+				throw new ConfirmationDataException('ERROR! NO MATCH ORDER ID OR ORDER ID IS EMPTY: '.$receivedIdOrder.' <> '.$order_id);
+			}
+		
+		if (isset($order_reference) && !empty($order_reference)) {
+
+			//if id_order is ok, but reference is not ok for this order
+			if (strpos((string)$receivedDescription, (string)$order_reference) == false) 
+			{
+				throw new ConfirmationDataException('ERROR! NO MATCH REFERENCE ('.(string)$receivedDescription.') FOR ORDER ID '.$receivedIdOrder.'.');
+			}
+		}else{
+			throw new ConfirmationDataException('ERROR! INCORRECT REFERENCES  ('.(string)$receivedDescription.') FOR ORDER ID '.$receivedIdOrder.'.');
+		}
+
+		
+        return true;
+    }
+
+
     
     /**
      * Make a payment and execute all additional actions
@@ -375,8 +454,10 @@ class Confirmation
      */
     protected function makePayment()
     {
+
         $config = $this->config;
         $this->checkPaymentAmount();
+
         $operation = $this->notification->getOperation();
         if (
            $operation->getStatus() == $operation::STATUS_COMPLETE &&

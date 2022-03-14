@@ -99,7 +99,7 @@ class AdminDotpayRefundController extends ModuleAdminController
             
             $details = array(
                 'sum_of_payments' => $sumOfPayments,
-                'description' => $this->l('Refund of order:').' '.$order->reference,
+                'description' => $this->l('Refund for order:').' '.$order->reference,
                 'currency' => $operation->getCurrency(),
             );
             if (function_exists('json_encode')) {

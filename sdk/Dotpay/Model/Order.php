@@ -20,6 +20,8 @@ namespace Dotpay\Model;
 use Dotpay\Validator\Amount;
 use Dotpay\Exception\BadParameter\AmountException;
 use Dotpay\Exception\BadParameter\CurrencyException;
+use Dotpay\Exception\Processor\ConfirmationInfoException;
+
 
 /**
  * Informations about an order
@@ -104,6 +106,9 @@ class Order
     public function setId($id)
     {
         $this->id = (int)$id;
+        if(!isset($this) && !(int)$this){
+            throw new ConfirmationInfoException('ERROR NO MATCH ORDER ID '.$id);
+        }
         return $this;
     }
     

@@ -82,6 +82,33 @@ class Notification extends \Dotpay\Model\Notification
         
         parent::__construct($operation, Tools::getValue('channel'));
         
+        if (Tools::getValue('credit_card_issuer_identification_number')) {
+            $this->setCCissuerNumber(Tools::getValue('credit_card_issuer_identification_number'));
+        }
+		 if (Tools::getValue('credit_card_masked_number')) {
+            $this->setCcmasked(Tools::getValue('credit_card_masked_number'));
+        }
+		if (Tools::getValue('credit_card_expiration_year')) {
+            $this->setCCexpYear(Tools::getValue('credit_card_expiration_year'));
+        }
+		if (Tools::getValue('credit_card_expiration_month')) {
+            $this->setCCexpMonth(Tools::getValue('credit_card_expiration_month'));
+        }
+		if (Tools::getValue('credit_card_brand_codename')) {
+            $this->setCcbrandCodename(Tools::getValue('credit_card_brand_codename'));
+        }
+		if (Tools::getValue('credit_card_brand_code')) {
+            $this->setCcbrandCode(Tools::getValue('credit_card_brand_code'));
+        }		
+		
+		if (Tools::getValue('credit_card_unique_identifier')) {
+            $this->setCCuniq(Tools::getValue('credit_card_unique_identifier'));
+        }
+		if (Tools::getValue('credit_card_id')) {
+            $this->setCCcardId(Tools::getValue('credit_card_id'));
+        }
+
+
         if (Tools::getValue('p_info')) {
             $this->setShopName(Tools::getValue('p_info'));
         }

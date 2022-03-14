@@ -39,12 +39,16 @@ class DotpayStatusModuleFrontController extends DotpayController
             $lastOrderState = new OrderState($order->getCurrentState());
             $statusName = (gettype($lastOrderState->name) == 'array')?$lastOrderState->name[1]:$lastOrderState->name;
             $status->setStatus($statusName);
+
             switch ($lastOrderState->id) {
+
                 case $this->config->getWaitingStatus():
                     $status->codePending();
                     break;
                 case _PS_OS_PAYMENT_:
+                    
                     $payments = OrderPayment::getByOrderId($orderId);
+
                     if ((count($payments) - count($order->getBrother())) > 1) {
                         $status->codeTooMany();
                     } else {
@@ -54,6 +58,11 @@ class DotpayStatusModuleFrontController extends DotpayController
                 case _PS_OS_ERROR_:
                     $status->codeError();
                     break;
+                
+                case $this->config->getOverpaidStatus():
+                    $status->codeTooMany();
+                    break;
+
                 default:
                     $status->codeOtherStatus();
             }

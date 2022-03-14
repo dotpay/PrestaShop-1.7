@@ -16,13 +16,13 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
-use Dotpay\Loader\Loader;
-use Dotpay\Exception\Processor\ConfirmationInfoException;
+use Dotpay\Action\MakePaymentOrRefund;
+use Dotpay\Action\UpdateCcInfo;
 use Dotpay\Exception\Processor\ConfirmationDataException;
+use Dotpay\Exception\Processor\ConfirmationInfoException;
+use Dotpay\Loader\Loader;
 use Dotpay\Model\CreditCard;
 use Dotpay\Model\Operation;
-use Dotpay\Action\UpdateCcInfo;
-use Dotpay\Action\MakePaymentOrRefund;
 
 require_once('dotpay.php');
 
@@ -31,6 +31,21 @@ require_once('dotpay.php');
  */
 class DotpayConfirmModuleFrontController extends DotpayController
 {
+   
+   
+   
+    //Remove UTF8 Bom, new lines and spaces
+
+    public function remove_utf8_bom($text)
+    {
+        $bom = pack('H*','EFBBBF');
+        $text = preg_replace("/^$bom/", "", $text);
+        $text2 = preg_replace("/\r|\n|\s/", "", $text);
+        return (trim($text2));
+    }
+   
+   
+   
     /**
      * Confirm payment based on Dotpay URLC
      */
@@ -41,6 +56,14 @@ class DotpayConfirmModuleFrontController extends DotpayController
         try {
             $confirmProcessor = $loader->get('Confirmation');
             $notification = $loader->get('Notification');
+
+            $notificationControl = $notification->getOperation()->getControl();
+            $control_received  = explode('|', (string)$notificationControl);
+
+            if(!isset($control_received[0]) || !(int)$control_received[0] > 0){
+                throw new ConfirmationDataException('ERROR! NO MATCH ORDER ID IN THE CONTROL OR ORDER ID IS EMPTY: '.$control_received[0].'.');
+            }
+
             $this->setCart(Cart::getCartByOrderId($notification->getOperation()->getControl()));
             $this->initializeOrderData(true);
             
@@ -60,6 +83,8 @@ class DotpayConfirmModuleFrontController extends DotpayController
                     $control = explode('|', (string)$operation->getControl());
                     $order = new Order($control[0]);
                     $brotherOrders = array($order);
+
+
                     foreach ($order->getBrother() as $brotherOrder) {
                         $brotherOrders[] = $brotherOrder;
                     }
@@ -71,13 +96,89 @@ class DotpayConfirmModuleFrontController extends DotpayController
                         if ($newOrderState === null) {
                             throw new ConfirmationDataException('PrestaShop - WRONG TRANSACTION STATUS');
                         }
-                        if ($lastOrderState->id == _PS_OS_PAYMENT_ ||
-                            $newOrderState == $config->getWaitingStatus()) {
+                        if ($newOrderState == $config->getWaitingStatus() ) {
                             return true;
                         }
+
+
+                        if ($lastOrderState->id == _PS_OS_PAYMENT_  || $lastOrderState->id == $config->getOverpaidStatus() ) {
+                           
+                            $payments_id = OrderPayment::getByOrderId($order->id);
+
+                            //check saved transactions
+                            $query_transactions = 'SELECT DISTINCT transaction_id FROM '. _DB_PREFIX_ .'order_payment WHERE order_reference = "'.$order->reference.'" AND payment_method NOT LIKE "%refund%" AND payment_method NOT LIKE "%zwrot%" ';
+							
+                            $isTransactionExist = Db::getInstance()->ExecuteS($query_transactions);
+							$count_transactions = count($isTransactionExist);
+
+                            $payment_transactions= array();
+										
+                            foreach ($isTransactionExist as $TrX){
+                                $payment_transactions[] = $TrX['transaction_id'];
+                            }
+                            
+                            if($count_transactions > 0){
+
+                                if(in_array($operation->getNumber(),$payment_transactions)){
+                                    throw new ConfirmationDataException('PrestaShop - PAYMENT WITH THIS NUMBER '.$operation->getNumber().' IS ALREADY SAVED');
+                                }else{
+
+                                    if($operation->getStatus() != $operation::STATUS_REJECTED){
+
+                                        if($lastOrderState->id == _PS_OS_PAYMENT_ ){
+
+                                            $newOrderState == $config->getOverpaidStatus();
+                                            $history->changeIdOrderState($newOrderState, $history->id_order);
+                                        }                                        
+    
+                                        $history->id_order = $order->id;
+                                        $payments_id = $this->prepareOrderPayment($operation, $order);
+                                        $payments_id->add();
+                                        
+                                        $count_transactions_all = $count_transactions + 1;
+
+                                        throw new ConfirmationDataException('PrestaShop - Another payment '.$operation->getNumber().' has been registered for the same order: '.$order->id.'; total: '.$count_transactions_all .', transactions registered before: '.json_encode($payment_transactions) );
+                                    }else{
+                                        
+                                        $history = new OrderHistory();
+                                        $history->id_order = $order->id;
+                                        return true;
+
+                                    }
+
+
+
+                                }
+
+                            }
+
+                            if($operation->getStatus() == $operation::STATUS_REJECTED){
+
+                                $history = new OrderHistory();
+                                $history->id_order = $order->id;
+                                return true;
+                            }
+      
+
+                            return true;
+
+                        } 
+                        
+                        if ($operation->getStatus() == $operation::STATUS_REJECTED && ( $lastOrderState->id != _PS_OS_PAYMENT_  || $lastOrderState->id != $config->getOverpaidStatus() ) ) {
+                            $state = _PS_OS_ERROR_;
+                            $history = new OrderHistory();
+                            $history->id_order = $order->id;
+                            $history->changeIdOrderState($state, $history->id_order);
+                           // $history->addWithemail(true);
+                        }
+
+
+
                         if ($lastOrderState->id != $newOrderState) {
+
                             $history->changeIdOrderState($newOrderState, $history->id_order);
                             $history->addWithemail(true);
+
                             if ($newOrderState == _PS_OS_PAYMENT_ || $newOrderState == _PS_OS_OUTOFSTOCK_PAID_) {
                                 $payments = OrderPayment::getByOrderId($order->id);
                                 $numberOfPayments = count($payments);
@@ -103,15 +204,16 @@ class DotpayConfirmModuleFrontController extends DotpayController
                             } elseif (is_string($lastOrderState->name)) {
                                 $stateName = $lastOrderState->name;
                             }
-                            throw new
-                            ConfirmationDataException('PrestaShop - THIS STATE ('.$stateName.') IS ALERADY REGISTERED');
+                            throw new ConfirmationDataException('PrestaShop - THIS STATE ('.$stateName.') IS ALERADY REGISTERED');
                         }
                     }
                     return true;
                 }
             );
+
             $confirmProcessor->setMakePaymentAction($paymentAction);
             
+
             /* ---- REFUND ---- */
             $refundAction = new MakePaymentOrRefund(
                 function (Operation $operation) use ($config, $loader) {
@@ -120,18 +222,17 @@ class DotpayConfirmModuleFrontController extends DotpayController
                         return true;
                     }
                     
+                    
                     $control = explode('|', (string)$operation->getControl());
-                    $order = new Order($control[0]);
+                    $order = new Order((int)$control[0]);
+
                     $payments = OrderPayment::getByOrderId($order->id);
                     $foundPaymet = false;
                     $sumOfPayments = 0.0;
                     
                     foreach ($payments as $payment) {
                         if ($payment->transaction_id == $operation->getNumber()) {
-                            throw new
-                            ConfirmationDataException(
-                                'PrestaShop - PAYMENT '.$operation->getNumber().' IS ALREADY SAVED'
-                            );
+                            throw new ConfirmationDataException('PrestaShop - REFUND '.$operation->getNumber().' IS ALREADY SAVED');
                         } elseif ($payment->transaction_id == $operation->getRelatedNumber()) {
                             $foundPaymet = true;
                         }
@@ -147,9 +248,7 @@ class DotpayConfirmModuleFrontController extends DotpayController
                     
                     $receivedAmount = (float)$operation->getOriginalAmount();
                     if ($receivedAmount - $sumOfPayments >= 0.01) {
-                        throw new
-                        ConfirmationDataException(
-                            'PrestaShop - NO MATCH OR WRONG AMOUNT - '.$receivedAmount.' > '.$sumOfPayments
+                        throw new ConfirmationDataException('PrestaShop - NO MATCH OR WRONG AMOUNT - '.$receivedAmount.' > '.$sumOfPayments
                         );
                     }
 
@@ -161,6 +260,7 @@ class DotpayConfirmModuleFrontController extends DotpayController
                     if ($operation->getStatus() == $operation::STATUS_COMPLETE) {
                         $payment = $this->prepareOrderPayment($operation, $order, true);
                         $payment->add();
+                        $this->updateNegativeAmount($order->reference,$receivedAmount);
 
                         if ($receivedAmount < $sumOfPayments) {
                             $state = $config->getPartialRefundStatus();
@@ -185,7 +285,7 @@ class DotpayConfirmModuleFrontController extends DotpayController
             $confirmProcessor->setMakeRefundAction($refundAction);
             
             if ($confirmProcessor->execute($loader->get('PaymentModel'), $notification)) {
-                die('OK');
+                die($this->remove_utf8_bom('OK'));
             } else {
                 die('PRESTASHOP - AN ERROR OCCURED');
             }
@@ -219,6 +319,8 @@ class DotpayConfirmModuleFrontController extends DotpayController
             case $operation::STATUS_COMPLETE:
                 if ($lastOrderState->id == _PS_OS_OUTOFSTOCK_UNPAID_) {
                     $actualState = _PS_OS_OUTOFSTOCK_PAID_;
+                }else if($lastOrderState->id == _PS_OS_PAYMENT_){
+                    $actualState = $this->getConfig()->getOverpaidStatus();
                 } else {
                     $actualState = _PS_OS_PAYMENT_;
                 }
@@ -239,15 +341,45 @@ class DotpayConfirmModuleFrontController extends DotpayController
     {
         $payment = new OrderPayment();
         $payment->order_reference = $order->reference;
-        $payment->amount = (float)(($minus ? '-':'').Tools::getValue('operation_original_amount'));
+        $payment->amount = (float)(($minus ? '':'').Tools::getValue('operation_original_amount'));
+        //$payment->amount = (float)(($minus ? '-':'').Tools::getValue('operation_original_amount')); //don't use: problem with negative amount in Prestashop
         $payment->id_currency = $order->id_currency;
         $payment->conversion_rate = 1;
         $payment->transaction_id = $operation->getNumber();
-        $payment->payment_method = $this->module->displayName;
+       // $payment->payment_method = $this->module->displayName;
+        $payment->payment_method = $this->module->displayName.($minus ? ' (refund)':'');
         $payment->date_add = new \DateTime();
+        $payment->card_number = (Tools::getValue('credit_card_masked_number') ? Tools::getValue('credit_card_masked_number'):'' );
+        $payment->card_brand = (Tools::getValue('credit_card_brand_code') ? Tools::getValue('credit_card_brand_code'):'' );
+        $payment->card_expiration = (Tools::getValue('credit_card_expiration_year') ? Tools::getValue('credit_card_expiration_year').'/'.Tools::getValue('credit_card_expiration_month'):'' );
+
         return $payment;
     }
     
+
+	 /**
+     * Update the value amount in database for refund (negative amount)
+	 * Fix this problem: https://github.com/PrestaShop/PrestaShop/issues/23983
+     */
+    private function updateNegativeAmount($reference,$amount)
+    {
+        if (trim($reference) === null) {
+            return false;
+        }
+
+
+        return Db::getInstance()->execute(
+            'UPDATE `'._DB_PREFIX_.'order_payment`
+            SET
+            amount = (amount * (-1))
+            WHERE id_order_payment = (SELECT max(id_order_payment) as id_order_payment_last FROM `'._DB_PREFIX_.'order_payment` WHERE order_reference = "'.$reference.'" 
+            ORDER BY id_order_payment DESC LIMIT 1) AND
+			ROUND(amount,2) = "'.$amount.'" '
+        );
+
+    }
+
+
     /**
      * Return a correct and well-formatted amount, which is based on input parameter
      * @param float $amount Amount of order

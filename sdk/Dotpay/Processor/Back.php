@@ -28,6 +28,7 @@ use Dotpay\Exception\Payment\LowAmountException;
 use Dotpay\Exception\Payment\ExpiredException;
 use Dotpay\Exception\Payment\UnknowChannelException;
 use Dotpay\Exception\Payment\UnrecognizedException;
+use Dotpay\Exception\Payment\NotUniqueControlException;
 
 /**
  * Processor of service of back after making a payment
@@ -53,6 +54,7 @@ class Back {
      * @throws BadDataFormatException Thrown when format of request data is bad
      * @throws HashNotEqualException Thrown when request has been modified during transmission
      * @throws UrlcInvalidException Thrown when SSL ptotocol is required
+     * @throws NotUniqueControlException Thrown when when uniqueness checking of the control parameter is enabled on the dotpay account and the same request is sent to api
      * @throws UnrecognizedException Thrown when unrecognized error occured
      */
     public function execute() {
@@ -79,7 +81,9 @@ class Back {
             case 'HASH_NOT_EQUAL_CHK':
                 throw new HashNotEqualException();
             case 'URLC_INVALID':
-                throw new UrlcInvalidException();     
+                throw new UrlcInvalidException();  
+            case 'NOT_UNIQUE_CONTROL':
+                throw new NotUniqueControlException();   
             default:
                 throw new UnrecognizedException();
         }

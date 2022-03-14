@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.3.2';
+        $this->version = '1.4.0';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -130,7 +130,8 @@ class Dotpay extends PaymentModule
                 $this->registerHook('displayAdminOrder') &&
                 $this->registerHook('displayOrderDetail') &&
                 $this->registerHook('paymentOptions') &&
-                $this->addOrderWaitingStatus() &&
+                $this->addOrderWaitingStatus() && 
+                $this->addOrderOverpaidStatus() &&              
                 $this->addTotalRefundStatus() &&
                 $this->addPartialRefundStatus() &&
                 $this->addWaitingRefundStatus() &&
@@ -240,10 +241,11 @@ class Dotpay extends PaymentModule
             try {
                 $version = $this->sdkLoader->get('Github')->getLatestProjectVersion('dotpay', self::REPOSITORY_NAME);
                 $number = $version->getNumber();
-                $obsoletePlugin = version_compare($number, $this->version, '>=');
+                $number = str_replace('v', '', $number);
+                $obsoletePlugin = !(version_compare($number, $this->version, '<='));
                 $canNotCheckPlugin = false;
             } catch (RuntimeException $e) {
-                $obsoletePlugin = false;
+                $obsoletePlugin = true;
                 $canNotCheckPlugin = true;
                 $number = $this->version;
             }
@@ -284,7 +286,7 @@ class Dotpay extends PaymentModule
                 'testCorrectSellerForApi' => !$testCorrectSellerForApi,
                 'obsoletePlugin' => $obsoletePlugin,
                 'canNotCheckPlugin' => $canNotCheckPlugin,
-                'availableChannels' => $availableChannels,
+                'availableChannels' => $availableChannels
             );
             if ($saved === false) {
                 $templateData['universalErrorMessage'] = false;
@@ -409,12 +411,11 @@ class Dotpay extends PaymentModule
                    
                     ),array(
                         'type' => 'select',
-                        'class' => 'fixed-width-xxl',
+                        'class' => 'fixed-width-xxl api-select',
                         'label' => $this->l('Set default currency for this account (ID)'),
                         'name' => 'DP_DEF_CURRENCY',
                         'required' => true,
                         'disabled' => false,
-                        'class' => 'api-select',
                         'options' => array(
                             'query' => array(
                                 array(
@@ -1344,7 +1345,23 @@ class Dotpay extends PaymentModule
             $this->smarty->assign(array(
                 'orderId' => $order->id,
                 'payments' => $payments,
-                'returnUrl' => $this->context->link->getAdminLink('AdminDotpayRefund')
+                'returnUrl' => $this->context->link->getAdminLink('AdminDotpayRefund'),
+                'TransactionNumber' =>  $this->l('Dotpay Payment Number to be refund:'),
+                'TransactionAmount' =>  $this->l('Amount to refund'),
+                'TransactionDescription' =>  $this->l('Refund description'),
+                'RefundTransaction' =>  $this->l('Refund'),
+                'RefundWait' =>  $this->l('Refund has already been initiated!'),
+                'RefundWaitDesc' =>  $this->l('A refund has already been attempted. The current status of the refund is:'),
+                'RefundDone' =>  $this->l('The payment has already been refunded!'),
+                'RefundDonePartial' =>  $this->l('A partial refund has already been made. The current status of the refund is:'),
+                'RefundDoneTotal' =>  $this->l('The payment has already been fully refunded. The current status of the refund is:'),
+                'RefundAlertInfo1' =>  $this->l('Payment refund via dotpay'),
+                'RefundAlertInfo2' =>  $this->l('You can refund the payment for an amount less than or equal to the payment amount recorded in dotpay.'),
+                'RefundAlertInfo3' =>  $this->l('For the functionality to work properly, ask Dotpay to turn on the appropriate notifications for refunds for your account.'),
+                'Refundbutton2' =>  $this->l('Refund your payment!'),
+                'Refundbutton3' =>  $this->l('Do not refund'),
+                'RefundConfirmInfo' => $this->l('Are you sure you want to refund the payment?')
+
             ));
             return $this->display(__FILE__, 'orderDetails.tpl');
         }
@@ -1550,6 +1567,8 @@ class Dotpay extends PaymentModule
         return $newOrderState->id;
     }
 
+
+
     /**
      * Adds Dotpay new payment status if not exist
      * @return boolean
@@ -1565,7 +1584,7 @@ class Dotpay extends PaymentModule
         $stateId = $this->addDotpayOrderStatus(
             'Oczekuje na potwierdzenie płatności z Dotpay',
             'Awaiting for Dotpay Payment confirmation',
-            '#00abf4'
+            '#a977e6'
         );
         if ($stateId === false) {
             return false;
@@ -1574,6 +1593,29 @@ class Dotpay extends PaymentModule
         $this->copyStatusImage('wait', $stateId);
         return true;
     }
+
+
+    /**
+     * Adds Dotpay new overpaid payment status if not exist
+     * @return boolean
+     */
+    private function addOrderOverpaidStatus()
+    {
+        if (Validate::isInt($this->config->getOverpaidStatus()) &&
+           (Validate::isLoadedObject($order_state_new = new OrderState($this->config->getOverpaidStatus()))) &&
+           Validate::isInt($order_state_new->id)
+        ) {
+            return true;
+        }
+        $stateId = $this->addDotpayOrderStatus('Płatność Dotpay większa niż spodziewana', 'Order overpaid', '#ff00ff');
+        if ($stateId === false) {
+            return false;
+        }
+        $this->config->setOverpaidStatus($stateId);
+        $this->copyStatusImage('overpaid', $stateId);
+        return true;
+    }
+
 
     /**
      * Adds Dotpay total refund status if not exist
@@ -1630,9 +1672,9 @@ class Dotpay extends PaymentModule
             return true;
         }
         $stateId = $this->addDotpayOrderStatus(
-            'Zwrot oczekuje na potwierdzenie',
+            'Zwrot płatności oczekuje na potwierdzenie',
             'Refund is waiting for confirmation',
-            '#ffe5d1'
+            '#e49457'
         );
         if ($stateId === false) {
             return false;
@@ -1654,7 +1696,7 @@ class Dotpay extends PaymentModule
         ) {
             return true;
         }
-        $stateId = $this->addDotpayOrderStatus('Zwrot został odrzucony', 'Refund has rejected', '#ff6059');
+        $stateId = $this->addDotpayOrderStatus('Zwrot płatności został odrzucony', 'Refund has rejected', '#ff6059');
         if ($stateId === false) {
             return false;
         }

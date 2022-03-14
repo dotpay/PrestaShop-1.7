@@ -155,7 +155,7 @@ function DotpayStatusChecker(parent, config) {
                 case 2://SUCCESS
                     finish(checkInt);
                     setSuccessMessage(getMessageWithStatus(config.messages.success, data.status+additionalMessage));
-                    setTimeout(function(){location.href=config.redirect;}, config.delay*1000);
+                    setTimeout(function(){location.href=config.redirect;}, config.delay*3500);
                     break;
                 case 3://TOO MANY
                     finish(checkInt);

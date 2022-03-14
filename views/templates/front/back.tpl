@@ -90,7 +90,7 @@
 		}
 
 		#statusMessageContainer > p.alert-danger:before {
-			font-family: "Material Icons"; content: "\E8DB";
+			font-family: "Material Icons"; content: "\E629";
 			font-size: 2.5em;
 			color: #d04f4f;
 			display: block;
@@ -102,7 +102,7 @@
 		}
 
 		#statusMessageContainer > p.alert-success:before {
-			font-family: "Material Icons"; content: "\E8DC";
+			font-family: "Material Icons"; content: "\E86C";
 			font-size: 2.5em;
 			color: #4cbb6c;
 			display: block;
@@ -114,7 +114,7 @@
 		}
 
 		#statusMessageContainer > p.alert-info:before {
-			font-family: "Material Icons"; content: "\E023";
+			font-family: "Material Icons"; content: "\E627";
 			font-size: 2.5em;
 			color: #2fb5d2;
 			display: block;
@@ -126,7 +126,7 @@
 		}
 
 		#statusMessageContainer > p.alert-warning:before {
-			font-family: "Material Icons"; content: "\E002";
+			font-family: "Material Icons"; content: "\e84f";
 			font-size: 2.5em;
 			color: #FF5722;
 			display: block;
@@ -182,16 +182,16 @@
                     status: "{/literal}{$statusMessage|escape:'htmlall':'UTF-8'}{literal}",
                     timeout: "{/literal}{$timeoutMessage|unescape: 'html' nofilter}{literal}",
                     pending: "{/literal}{$waitingMessage nofilter}{literal}",
-                    pendingend: "{/literal}{$waitingMessageEnd nofilter}{literal}",
-                    success: "{/literal}{$successMessage|escape:'htmlall':'UTF-8'}{literal}",
-                    error: "{/literal}{$errorMessage|escape:'htmlall':'UTF-8'}{literal}",
-                    tooMany: "{/literal}{$tooManyPaymentsMessage|escape:'htmlall':'UTF-8'}{literal}",
+                    pendingend: "{/literal}{$waitingMessageEnd|unescape: 'html' nofilter}{literal}",
+                    success: "{/literal}{$successMessage|unescape: 'html' nofilter}{literal}",
+                    error: "{/literal}{$errorMessage|unescape: 'html' nofilter}{literal}",
+                    tooMany: "{/literal}{$tooManyPaymentsMessage|unescape: 'html' nofilter}{literal}",
                     unknown: "{/literal}{$unknownMessage|escape:'htmlall':'UTF-8'}{literal}"
                 },
                 target: "{/literal}{$checkStatusUrl nofilter}{literal}",
                 redirect: "{/literal}{$redirectUrl}{literal}",
                 orderId: {/literal}{$orderId}{literal},
-                interval: 5,
+                interval: 9,
                 timeout: 2*60
             };
             ready(function(){

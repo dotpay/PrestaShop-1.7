@@ -15,7 +15,14 @@
  * @copyright PayPro S.A.
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-@ini_set('memory_limit', '256M');
+
+
+ ## force memory_limit
+if( ((int)\Tools::getMemoryLimit()/1048576) < 256) 
+{
+    @ini_set('memory_limit', '256M');
+}
+
 
 /**
  * SDK class is not found
@@ -23,6 +30,7 @@
 class DotpayClassNotFoundException extends Exception {
     
 }
+
 
 /**
  * SDK class is not in found file

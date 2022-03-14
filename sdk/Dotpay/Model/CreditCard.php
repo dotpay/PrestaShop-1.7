@@ -38,6 +38,8 @@ class CreditCard
      */
     private $mask = '';
     
+    private $ccmasked = '';
+
     /**
      * @var CardBrand|null Brand object for the credit card
      */

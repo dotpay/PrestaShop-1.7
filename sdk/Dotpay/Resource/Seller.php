@@ -68,7 +68,13 @@ class Seller extends Resource
             return false;
         }
         try {
-            $this->getDataFromApi('payments/');
+
+            if((int)$this->config->getId() !=null){
+                $this->getDataFromApi('accounts/'.(int)$this->config->getId().'/');
+            }else{
+                $this->getDataFromApi('accounts/');
+            }
+
         } catch (UnauthorizedException $e) {
             return false;
         }

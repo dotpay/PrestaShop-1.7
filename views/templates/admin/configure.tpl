@@ -136,7 +136,7 @@
         <p><b style="color: brown;">{l s='Only thing You have to do is log in to the Dotpay user panel and untick "Block external URLC" option in Settings -> Notifications -> Urlc configuration -> Edit.' mod='dotpay'}</b></p>
         <p><b style="color: brown;">{l s='If your shop does not use HTTPS protocol you should also disable HTTPS verify and SSL certificate verify.' mod='dotpay'}</b></p>
         <br />
-        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersionGH}/Dotpay_PrestaShop_module-manual_v{$moduleVersionGH}_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
+        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersion}/Dotpay_PrestaShop_module-manual_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
     
     
     </div>
@@ -146,19 +146,9 @@
     <div class="dotpay-config-state">
     <h3>{l s='Updates' mod='dotpay'}</h3>
     <h4>
-	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong>.<br>
+	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong> <em>({l s='official last:' mod='dotpay'}  <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a>)</em>.<br>
 	</h4>
-    {if $obsoletePlugin}
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your plugin is obsolete!' mod='dotpay'}</h2>
-            <br />
-            <p style="color: #555;">
-                {l s='You can download the latest version from' mod='dotpay'}
-                <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH}</a>.
-            </p>
-        </div>
-    {elseif $canNotCheckPlugin}
+  {if $canNotCheckPlugin}
         <div class="alert alert-danger">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Can not check the update' mod='dotpay'}</h2>
@@ -166,6 +156,16 @@
             <p style="color: #555;">
                 {l s='You can manually check the latest version' mod='dotpay'}
                 <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">{l s='on this page' mod='dotpay'}</a>.
+            </p>
+        </div>
+    {elseif $obsoletePlugin}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your plug is out of date!' mod='dotpay'}</h2>
+            <br />
+            <p style="color: #555;">
+                {l s='You can download the latest version from' mod='dotpay'} Github: 
+                <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a>.
             </p>
         </div>
     {else}
@@ -536,6 +536,7 @@
         });
 
         $.dpChannelChooser();
+
     });
 </script>
 {/literal}

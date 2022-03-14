@@ -185,7 +185,19 @@ class Configuration extends \Dotpay\Model\Configuration
     {
         return (int)\Configuration::get('DP_WAITING_STATE');
     }
+
     
+    /**
+     * Return an id of payment overpaid
+     * @return int
+     */
+    public function getOverpaidStatus()
+    {
+        return (int)\Configuration::get('DP_OVERPAID_STATE');
+    }
+
+
+
     /**
      * Return an id of partial refund status
      * @return int
@@ -345,6 +357,19 @@ class Configuration extends \Dotpay\Model\Configuration
         \Configuration::updateValue('DP_WAITING_STATE', (int)$waitingStatus);
         return $this;
     }
+
+
+   /**
+     * Set an id of payment overpaid status
+     * @param int $overpaidStatus Id of payment overpaid
+     * @return Configuration
+     */
+    public function setOverpaidStatus($overpaidStatus)
+    {
+        \Configuration::updateValue('DP_OVERPAID_STATE', (int)$overpaidStatus);
+        return $this;
+    }
+
     
     /**
      * Set an id of partial refund status

@@ -69,6 +69,20 @@ class Notification
      */
     private $creditCard = null;
     
+
+    /**
+     * @var string A data for credit card
+     */
+    private $ccissuernumber = null;
+    private $ccmasked = null;
+    private $ccexpyear = null;
+    private $ccexpmonth = null;
+    private $ccbrandcodename = null;
+    private $ccbrandcode = null;
+    private $ccunique = null;
+    private $ccardid = null;
+
+
     /**
      * @var string Checksum of a Dotpay notification
      */
@@ -105,6 +119,56 @@ class Notification
         return $this->shopEmail;
     }
    
+
+
+	/**
+     * Return a credit card data
+     * @return float|null
+     */
+    public function getCCissuerNumber()
+    {
+        return $this->ccissuernumber;
+    }
+	
+    public function getCCmasked()
+    {
+        return $this->ccmasked;
+    }
+    
+	public function getCCexpYear()
+    {
+        return $this->ccexpyear;
+    }
+    
+	public function getCCexpMonth()
+    {
+        return $this->ccexpmonth;
+    }
+   
+   public function getCcbrandCodename()
+    {
+        return $this->ccbrandcodename;
+    }
+   
+   public function getCcbrandCode()
+    {
+        return $this->ccbrandcode;
+    }
+    
+	public function getCCuniq()
+    {
+        return $this->ccunique;
+    }
+    
+	public function getCCcardId()
+    {
+        return $this->ccardid;
+    }
+
+
+
+
+
 	/**
 	 * prepare data for the name of the shop so that it would be consistent with the validation
 	 */
@@ -160,7 +224,6 @@ class Notification
         return $this->sellerCode;
     }    
 
-    
 
     /**
      * Return a CreditCard object if payment was realize by credit card and this information is allowed to send
@@ -189,40 +252,46 @@ class Notification
     public function calculateSignature($pin)
     {
         $sign=
-            $pin.
-            $this->getOperation()->getAccountId().
-            $this->getOperation()->getNumber().
-            $this->getOperation()->getType().
-            $this->getOperation()->getStatus().
-            (is_null($this->getOperation()->getAmount()) ? null : number_format($this->getOperation()->getAmount(),2, '.', '')).
-            $this->getOperation()->getCurrency().
-            (is_null($this->getOperation()->getWithdrawalAmount()) ? null : number_format($this->getOperation()->getWithdrawalAmount(),2, '.', '')).
-            (is_null($this->getOperation()->getCommissionAmount()) ? null : number_format($this->getOperation()->getCommissionAmount(),2, '.', '')).
-            $this->getOperation()->isCompletedString().
-            (is_null($this->getOperation()->getOriginalAmount()) ? null : number_format($this->getOperation()->getOriginalAmount(),2, '.', '')).
-            $this->getOperation()->getOriginalCurrency().
-            $this->getOperation()->getDateTime()->format('Y-m-d H:i:s').
-            $this->getOperation()->getRelatedNumber().
-            $this->getOperation()->getControl().
-            $this->getOperation()->getDescription().
-            $this->getOperation()->getPayer()->getEmail().
-            $this->getShopName().
-            $this->getShopEmail();
-        if ($this->getCreditCard() !== null) {
-            $sign.=
-                $this->getCreditCard()->getIssuerId().
-                $this->getCreditCard()->getMask().
-                $this->getCreditCard()->getBrand()->getCodeName().
-                $this->getCreditCard()->getBrand()->getName().
-                $this->getCreditCard()->getCardId();
-        }
+                $pin.
+                $this->getOperation()->getAccountId().
+                $this->getOperation()->getNumber().
+                $this->getOperation()->getType().
+                $this->getOperation()->getStatus().
+                (is_null($this->getOperation()->getAmount()) ? null : number_format($this->getOperation()->getAmount(),2, '.', '')).
+                $this->getOperation()->getCurrency().
+                (is_null($this->getOperation()->getWithdrawalAmount()) ? null : number_format($this->getOperation()->getWithdrawalAmount(),2, '.', '')).
+                (is_null($this->getOperation()->getCommissionAmount()) ? null : number_format($this->getOperation()->getCommissionAmount(),2, '.', '')).
+                $this->getOperation()->isCompletedString().
+                (is_null($this->getOperation()->getOriginalAmount()) ? null : number_format($this->getOperation()->getOriginalAmount(),2, '.', '')).
+                $this->getOperation()->getOriginalCurrency().
+                $this->getOperation()->getDateTime()->format('Y-m-d H:i:s').
+                $this->getOperation()->getRelatedNumber().
+                $this->getOperation()->getControl().
+                $this->getOperation()->getDescription().
+                $this->getOperation()->getPayer()->getEmail().
+                $this->getShopName().
+                $this->getShopEmail();
+
+        $sign.=    
+                (is_null($this->getCCissuerNumber()) ? null : $this->getCCissuerNumber()).
+                (is_null($this->getCcmasked()) ? null : $this->getCcmasked()).
+                (is_null($this->getCCexpYear()) ? null : $this->getCCexpYear()).
+                (is_null($this->getCCexpMonth()) ? null : $this->getCCexpMonth()).
+                (is_null($this->getCcbrandCodename()) ? null : $this->getCcbrandCodename()).
+                (is_null($this->getCcbrandCode()) ? null : $this->getCcbrandCode()).
+                (is_null($this->getCCuniq()) ? null : $this->getCCuniq()).
+                (is_null($this->getCCcardId()) ? null : $this->getCCcardId());
+
         $sign.=
-            $this->getChannelId().
-            $this->getChannelCountry().
-            $this->getIpCountry().
-            $this->getSellerCode();
+                $this->getChannelId().
+                $this->getChannelCountry().
+                $this->getIpCountry().
+                $this->getSellerCode();
+
 
         return hash('sha256', $sign);
+
+
     }
     
     /**
@@ -322,6 +391,109 @@ class Notification
         return $this;
     }
     
+ /**
+     * Set a PaymentMethod with details of a payment
+     * @param PaymentMethod $paymentMethod A PaymentMethod with details of a payment
+     * @return Operation
+     */
+    public function setPaymentMethod(PaymentMethod $paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+        return $this;
+    }
+
+    /**
+     * Set a Masked payment card issuer number with which payment has been made.
+     * @param string $ccissuernumber A Masked payment card issuer number
+     * @return Operation
+     */
+    public function setCCissuerNumber($ccissuernumber)
+    {
+        $this->ccissuernumber = (string)$ccissuernumber;
+        return $this;
+    }
+
+    /**
+     * Set a Masked payment card number with which payment has been made.
+     * @param string $ccmasked A Masked payment card number
+     * @return Operation
+     */
+    public function setCcmasked($ccmasked)
+    {
+        $this->ccmasked = (string)$ccmasked;
+        return $this;
+    }
+
+    /**
+     * Set a Year expiration date of a payment card, which payment has been made.
+     * @param string $ccexpyear A year expiration date of a payment card
+     * @return Operation
+     */
+    public function setCCexpYear($ccexpyear)
+    {
+        $this->ccexpyear = (string)$ccexpyear;
+        return $this;
+    }
+
+    /**
+     * Set a Month  expiration date of a payment card, which payment has been made.
+     * @param string $ccexpyear A month expiration date of a payment card
+     * @return Operation
+     */
+    public function setCCexpMonth($ccexpmonth)
+    {
+        $this->ccexpmonth = (string)$ccexpmonth;
+        return $this;
+    }
+
+
+    /**
+     * Set a Payment card brand with which payment has been made.
+     * @param string $ccbrandcodename A Payment card brand 
+     * @return Operation
+     */
+    public function setCcbrandCodename($ccbrandcodename)
+    {
+        $this->ccbrandcodename = (string)$ccbrandcodename;
+        return $this;
+    }
+
+        /**
+     * Set a Payment card brand code with which payment has been made.
+     * @param string $ccbrandcode A Payment card brand code 
+     * @return Operation
+     */
+    public function setCcbrandCode($ccbrandcode)
+    {
+        $this->ccbrandcode = (string)$ccbrandcode;
+        return $this;
+    }
+
+
+    /**
+     * Set a unique identifier of the card registered in Dotpay.
+     * @param string $ccunique A unique identifier of the card registered 
+     * @return Operation
+     */
+    public function setCCuniq($ccunique)
+    {
+        $this->ccunique = (string)$ccunique;
+        return $this;
+    }
+	
+	/**
+     * Set a Payment card ID given by Dotpay system.
+     * @param string $ccardid A Payment card ID. 
+     * @return Operation
+     */
+    public function setCCcardId($ccardid)
+    {
+        $this->ccardid = (string)$ccardid;
+        return $this;
+    }
+
+
+
     /**
      * Set a checksum of a Dotpay notification
      * @param string $signature Checksum of a Dotpay notification
@@ -332,4 +504,7 @@ class Notification
         $this->signature = (string)trim($signature);
         return $this;
     }
+
+
+
 }
