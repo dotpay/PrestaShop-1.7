@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>dotpay</name>
-    <displayName><![CDATA[Płatności Dotpay]]></displayName>
-    <version><![CDATA[1.4.0]]></version>
-    <description><![CDATA[Ten moduł pozwala dokonywać płatności przy pomocy bramki płatności Dotpay]]></description>
-    <author><![CDATA[Dotpay]]></author>
+    <displayName><![CDATA[Płatności Przelewy24.pl]]></displayName>
+    <version><![CDATA[1.5.0]]></version>
+    <description><![CDATA[Ten moduł pozwala dokonywać płatności przy pomocy bramki płatności Przelewy24.pl]]></description>
+    <author><![CDATA[Przelewy24.pl]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
-	<confirmUninstall><![CDATA[Czy na pewno chcesz odinstalować moduł płatności Dotpay?]]></confirmUninstall>
+	<confirmUninstall><![CDATA[Czy na pewno chcesz odinstalować moduł płatności Przelewy24.pl?]]></confirmUninstall>
     <is_configurable>1</is_configurable>
     <need_instance>1</need_instance>
 	<limited_countries></limited_countries>

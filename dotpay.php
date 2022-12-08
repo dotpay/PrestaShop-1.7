@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.4.0';
+        $this->version = '1.5.0';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -98,10 +98,10 @@ class Dotpay extends PaymentModule
 
         parent::__construct();
 
-        $this->displayName = $this->l('Dotpay Payments');
-        $this->description = $this->l('This module allows to pay via Dotpay');
+        $this->displayName = $this->l('Przelewy24.pl');
+        $this->description = $this->l('Przelewy24.pl - Payment Service');
 
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall Dotpay module?');
+        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
 
         $this->sdkLoader->parameter('Config:pluginId', $this->name);
         $this->config = $dpConfig = $this->sdkLoader->get('Config');
@@ -207,13 +207,20 @@ class Dotpay extends PaymentModule
             $paymentResource = $this->sdkLoader->get('PaymentResource');
             $sellerResource = $this->sdkLoader->get('SellerResource');
             $testGoodApiData = $this->config->isGoodApiData();
+            $DotopayMigratedP24 = $this->config->getDProxyP24Migrated();        
+
             $testCorrectSellerForApi = true;
             $availableChannels = $this->getChannelList($paymentResource);
+            $DotpayIDSeller = $this->config->getId();
+            $P24DotpayIDSeller = $this->config->getId();
             try {
                 $testSellerId = $paymentResource->checkSeller($this->config->getId(),'check');
+                $P24testSellerId = $paymentResource->checkSeller($this->config->getId(),'check','p24_check');
                 $testSellerIderror = $paymentResource->checkSeller($this->config->getId(),'error_code');
+                $P24testSellerIderror = $paymentResource->checkSeller($this->config->getId(),'error_code','p24_check');
                 $DotpayIDSellerName = $paymentResource->checkSeller($this->config->getId(),'receiver');
-                $DotpayIDSeller = $this->config->getId();
+                $P24IDSellerName = $paymentResource->checkSeller($this->config->getId(),'receiver','p24_check');
+
                 $testApiAccount = $sellerResource->isAccountRight();
                 $testSellerPin = $sellerResource->checkPin();
             } catch (AccountNotFoundException $e) {
@@ -225,14 +232,26 @@ class Dotpay extends PaymentModule
             if (!isset($testSellerId)) {
                 $testSellerId = false;
             }
+            if (!isset($P24testSellerId)) {
+                $P24testSellerId = false;
+            }
             if (!isset($testSellerIderror)) {
                 $testSellerIderror = false;
+            }
+            if (!isset($P24testSellerIderror)) {
+                $P24testSellerIderror = false;
             }
             if (!isset($DotpayIDSellerName)) {
                 $DotpayIDSellerName = false;
             }
+            if (!isset($P24IDSellerName)) {
+                $P24IDSellerName = false;
+            }
             if (trim($this->config->getId()) == "") {
                 $DotpayIDSeller = false;
+            }
+            if (trim($this->config->getId()) == "") {
+                $P24DotpayIDSeller = false;
             }
             
             if (!isset($testApiAccount)) {
@@ -271,16 +290,22 @@ class Dotpay extends PaymentModule
                     $this->isSSLEnabled()
                 ),
                 'oldVersion' => !version_compare(_PS_VERSION_, "1.7", ">="),
+                'CurrentVersion' => _PS_VERSION_,
                 'badPhpVersion' => !version_compare(PHP_VERSION, "5.6", ">="),
                 'phpVersion' => PHP_VERSION,
                 'minorPhpVersion' => '5.6',
                 'confOK' => $this->config->isGoodAccount() && $this->config->getEnable(),
+                'P24Migrated' => $DotopayMigratedP24,
                 'errorCodeID' => $testSellerIderror,
+                'P24errorCodeID' => $P24testSellerIderror,
                 'SellerIDName' => $DotpayIDSellerName,
+                'P24SellerIDName' => $P24IDSellerName,
                 'SellerID' => $DotpayIDSeller,
+                'P24SellerID' => $P24DotpayIDSeller,
                 'moduleVersionGH' => $number,
                 'moduleVersion' => $this->version,
                 'testSellerId' => $testSellerId,
+                'P24testSellerId' => $P24testSellerId,
                 'testApiAccount' => $testGoodApiData && !$testApiAccount,
                 'testSellerPin' => $testGoodApiData && $testApiAccount && !$testSellerPin,
                 'testCorrectSellerForApi' => !$testCorrectSellerForApi,
@@ -354,7 +379,7 @@ class Dotpay extends PaymentModule
                         'name' => 'DP_ENABLED',
                         'is_bool' => true,
                         'required' => true,
-                        'desc' => $this->l('You can hide Dotpay payments without uninstalling the module'),
+                        'desc' => $this->l('You can hide Przelewy24 payments without uninstalling the module'),
                         'values' => array(
                             array(
                                 'id' => 'enabled_active_on',
@@ -366,11 +391,31 @@ class Dotpay extends PaymentModule
                                 'label' => $this->l('Disabled')
                             )
                         ),
+                    )
+                    ,array(
+                        'type' => 'switch',
+                        'label' => '<span id="p24_migrated">🧑‍💻 '.$this->l('My account has already been migrated from Dotpay to Przelewy24').'</span>',
+                        'name' => 'DP_P24_PROXY_MIGRATED',
+                        'is_bool' => true,
+                        'desc' => $this->l('My new panel is at:').' <a href="https://panel.przelewy24.pl/" target="_blank" '.
+                                   'title="'.$this->l('Przelewy24 Transaction Panel').'">https://panel.przelewy24.pl/</a>',
+                        'values' => array(
+                            array(
+                                'id' => 'dproxy_active_on',
+                                'value' => true,
+                                'label' => $this->l('Enable')
+                            ),array(
+                                'id' => 'dproxy_active_off',
+                                'value' => false,
+                                'label' => $this->l('Disable')
+                            )
+                        )
+                   
                     ),array(
                         'type' => 'text',
                         'name' => 'DP_ID',
                         'prefix' => '<i style="font-weight: bold; color: #10279b; font-size: 1.4em;">&#35;</i>',
-                        'label' => $this->l('ID'),
+                        'label' => $this->l('ID (from Dotpay Panel)'),
                         'hint' => $this->l('The ID is 6 digits copied from the administration panel'),
                         'size' => 6,
                         'maxlength' => 6,
@@ -393,10 +438,7 @@ class Dotpay extends PaymentModule
                         'name' => 'DP_TEST_MODE',
                         'is_bool' => true,
                         'desc' => $this->l('I\'m using Dotpay test account (test ID)').
-                                  '<br><b>'.$this->l('Required Dotpay test account:').
-                                  ' <a href="https://www.dotpay.pl/developer/sandbox/pl/?affiliate_id='.
-                                  'prestashop_module" target="_blank" title="'.
-                                  $this->l('Dotpay test account registration').'">'.$this->l('registration').'</b></a>',
+                                  '<br><b>'.$this->l('Required Dotpay test account').'</b>',
                         'values' => array(
                             array(
                                 'id' => 'test_active_on',
@@ -1044,7 +1086,7 @@ class Dotpay extends PaymentModule
                     'surMessage' => $this->l('This payment will be increased by the additional surcharge'),
                     'exMessage' => $this->l('This payment will be increased by'),
                     'reductMessage' => $this->l('This payment will be reduced by'),
-                    'agreementsMessage' => $this->l('Acceptance Dotpay regulation:'),
+                    'agreementsMessage' => $this->l('Acceptance Przelewy24 regulation:'),
                     'totalMessage' => $this->l('Total amount for payment'),
                     'totalAmount' => number_format($totalAmount, 2, '.', ' '),
                     'isTestMode' => $this->config->getTestMode(),
@@ -1053,8 +1095,8 @@ class Dotpay extends PaymentModule
                         'This store uses the Dotpay test payment mode. Payments are only simulated and your order '.
                         'will not be processed!'
                     ),
-                    'NOchannelsMessage1' => $this->l('You chose the fast and secure payments via Dotpay.'),
-                    'NOchannelsMessage2' => $this->l('Continue to choose your payment method on the Dotpay website.'),
+                    'NOchannelsMessage1' => $this->l('You chose the fast and secure payments via Przelewy24.'),
+                    'NOchannelsMessage2' => $this->l('Continue to choose your payment method on the Przelewy24 website.'),
                     'NOchannelsMessage3' => $this->l('Or choose a different payment method.'),
                     'NOchannelsSelectedMessage1' => $this->l('No payment channel selected!'),
                     'NOchannelsSelectedMessage2' => $this->l('You must select one of the available payment channels to continue payment.'),
@@ -1171,7 +1213,8 @@ class Dotpay extends PaymentModule
                 $this->sdkLoader->get('PaymentResource'),
                 $this->sdkLoader->get('SellerResource')
             ));
-            $channel->setTitle($channel->getTitle().' '.$this->l('via Dotpay'));
+           // $channel->setTitle($channel->getTitle().' '.$this->l('via Przelewy24'));
+            $channel->setTitle($channel->getTitle());
             $channel->set(
                 'target',
                 $this->context->link->getModuleLink(
@@ -1186,7 +1229,7 @@ class Dotpay extends PaymentModule
     }
 
         $dotpay = $this->sdkLoader->get('DotpayChannel');
-        $dotpay->setTitle($this->l("Dotpay"))
+        $dotpay->setTitle($this->l('Przelewy24'))
                ->set(
                    'target',
                    $this->context->link->getModuleLink(
@@ -1346,7 +1389,7 @@ class Dotpay extends PaymentModule
                 'orderId' => $order->id,
                 'payments' => $payments,
                 'returnUrl' => $this->context->link->getAdminLink('AdminDotpayRefund'),
-                'TransactionNumber' =>  $this->l('Dotpay Payment Number to be refund:'),
+                'TransactionNumber' =>  $this->l('Przelewy24 Payment Number to be refund:'),
                 'TransactionAmount' =>  $this->l('Amount to refund'),
                 'TransactionDescription' =>  $this->l('Refund description'),
                 'RefundTransaction' =>  $this->l('Refund'),
@@ -1355,7 +1398,7 @@ class Dotpay extends PaymentModule
                 'RefundDone' =>  $this->l('The payment has already been refunded!'),
                 'RefundDonePartial' =>  $this->l('A partial refund has already been made. The current status of the refund is:'),
                 'RefundDoneTotal' =>  $this->l('The payment has already been fully refunded. The current status of the refund is:'),
-                'RefundAlertInfo1' =>  $this->l('Payment refund via dotpay'),
+                'RefundAlertInfo1' =>  $this->l('Payment refund via Przelewy24'),
                 'RefundAlertInfo2' =>  $this->l('You can refund the payment for an amount less than or equal to the payment amount recorded in dotpay.'),
                 'RefundAlertInfo3' =>  $this->l('For the functionality to work properly, ask Dotpay to turn on the appropriate notifications for refunds for your account.'),
                 'Refundbutton2' =>  $this->l('Refund your payment!'),

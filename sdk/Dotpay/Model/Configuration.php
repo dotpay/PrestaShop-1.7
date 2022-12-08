@@ -35,23 +35,32 @@ class Configuration
     /**
      * Version of the SDK
      */
-    const SDK_VERSION = '1.0.9';
+    const SDK_VERSION = '1.0.10';
 
     /**
      * Url of Dotpay payment production server
      */
     const PAYMENT_URL_PROD = 'https://ssl.dotpay.pl/t2/';
 
-    /**
-     * Url of Dotpay payment test server
-     */
-    const PAYMENT_URL_DEV = 'https://ssl.dotpay.pl/test_payment/';
+    // Dotpay Proxy in Przelewy24 URL
+    const DPROXY_URL = 'https://dproxy.przelewy24.pl/t2/';
+
 
     /**
      * Url of Dotpay seller production server
      */
     const SELLER_URL_PROD = 'https://ssl.dotpay.pl/s2/login/';
+    
+    
+    // Dotpay Proxy in Przelewy24 Seller Api URL
+    const DPROXY_SELLER_API_URL = 'https://dproxy.przelewy24.pl/s2/login/';
 
+   
+    /**
+     * Url of Dotpay payment test server
+     */
+    const PAYMENT_URL_DEV = 'https://ssl.dotpay.pl/test_payment/';
+   
     /**
      * Url of Dotpay seller test server
      */
@@ -69,6 +78,7 @@ class Configuration
                                                 '91.216.191.183',
                                                 '91.216.191.184',
                                                 '91.216.191.185',
+                                                '5.252.202.254',
                                                 '5.252.202.255'
                                                 );
 
@@ -144,6 +154,12 @@ class Configuration
      * @var boolean Flag which inform if Dotpay payment is enabled in a shop
      */
     private $enable = false;
+
+    /**
+     * @var boolean Flag if this account was migrated from Dotpay to Przelewy24 Api
+     */
+    private $DProxyP24Migrated = true;
+
 
     /**
      * @var int|null Seller id
@@ -315,6 +331,17 @@ class Configuration
     {
         return $this->enable;
     }
+
+
+    /**
+     * Checks if this account was migrated from Dotpay to Przelewy24 Api
+     * @return boolean
+     */
+    public function getDProxyP24Migrated()
+    {
+        return $this->dproxyP24Migrated;
+    }
+
 
     /**
      * Return seller id
@@ -641,10 +668,20 @@ class Configuration
      * Return an URL to Dotpay server for payments
      * @return string
      */
-    public function getPaymentUrl()
+    public function getPaymentUrl($P24Check=false)
     {
+
+        if($P24Check == 'p24_check') {
+             return self::DPROXY_URL;
+        }
+
         if (!$this->getTestMode()) {
-            return self::PAYMENT_URL_PROD;
+            if (!$this->getDProxyP24Migrated()) {
+                return self::PAYMENT_URL_PROD;
+            }else{
+                return self::DPROXY_URL;
+            }
+            
         } else {
             return self::PAYMENT_URL_DEV;
         }
@@ -657,7 +694,12 @@ class Configuration
     public function getSellerUrl()
     {
         if (!$this->getTestMode()) {
-            return self::SELLER_URL_PROD;
+            if (!$this->getDProxyP24Migrated()) {
+                return self::SELLER_URL_PROD;
+            }else{
+                return self::DPROXY_SELLER_API_URL;
+            }
+
         } else {
             return self::SELLER_URL_DEV;
         }
@@ -738,6 +780,17 @@ class Configuration
     public function setEnable($enable)
     {
         $this->enable = (bool)$enable;
+        return $this;
+    }
+
+    /**
+     * Set a flag that informs whether the Dotpay account has been migrated to Przelewy24
+     * @param bool $DProxyP24Migrated mode flag
+     * @return Configuration
+     */
+    public function setDProxyP24Migrated($dproxyP24Migrated)
+    {
+        $this->dproxyP24Migrated = (bool)$dproxyP24Migrated;
         return $this;
     }
 

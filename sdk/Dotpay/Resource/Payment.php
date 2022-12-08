@@ -80,7 +80,7 @@ class Payment extends Resource
      * @return boolean, string, array
      * @throws TypeNotCompatibleException Thrown when a response from Dotpay server is in incompatible type
      */
-    public function checkSeller($id,$more_view)
+    public function checkSeller($id,$more_view,$p24_check=false)
     {
 
         if($this->config->getDefaultCurrency() !== ""){
@@ -88,12 +88,18 @@ class Payment extends Resource
         }else{
             $defcurrency = "PLN";
         }
-
-        $url = $this->config->getPaymentUrl().
+        if($p24_check == 'p24_check'){
+            $url1 = $this->config->getPaymentUrl('p24_check');
+            $amount = '315.15';
+        }else{
+            $url1 = $this->config->getPaymentUrl();
+            $amount = '312.12';
+        }
+        $url = $url1.
                'payment_api/v1/channels/'.
                '?currency='.$defcurrency.
                '&id='.$id.
-               '&amount=317.02'.
+               '&amount='.$amount.
                '&format=json';
 
         $content = $this->getContent($url);

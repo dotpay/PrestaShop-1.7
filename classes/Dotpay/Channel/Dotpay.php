@@ -33,9 +33,9 @@ class Dotpay extends \Dotpay\Channel\Dotpay
     public function getLogo($size="big")
     {
         if($size == "big"){
-            $img_file = "dotpay_logo_big.png";
+            $img_file = "p24_logo.png";
         }else{
-            $img_file = "dotpay_logo_small.png";
+            $img_file = "p24_logo_small.png";
         }
         if ($this->getChannelId() != null) {
             return parent::getLogo("small");

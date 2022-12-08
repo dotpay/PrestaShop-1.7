@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>dotpay</name>
-    <displayName><![CDATA[Dotpay Payments]]></displayName>
-    <version><![CDATA[1.4.0]]></version>
-    <description><![CDATA[This module allows to pay via Dotpay]]></description>
-    <author><![CDATA[Dotpay]]></author>
+    <displayName><![CDATA[Przelewy24.pl Payments]]></displayName>
+    <version><![CDATA[1.5.0]]></version>
+    <description><![CDATA[This module allows to pay via Przelewy24.pl]]></description>
+    <author><![CDATA[Przelewy24.pl]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
-    <confirmUninstall><![CDATA[Are you sure you want to uninstall the Dotpay payment module?]]></confirmUninstall>
+    <confirmUninstall><![CDATA[Are you sure you want to uninstall the Przelewy24.pl payment module?]]></confirmUninstall>
     <is_configurable>1</is_configurable>
     <need_instance>1</need_instance>
 </module>

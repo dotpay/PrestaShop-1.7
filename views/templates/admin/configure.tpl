@@ -26,23 +26,61 @@
 <div class="panel">
     <div class="dotpay-config">
         <h3>{l s='Information' mod='dotpay'}</h3>
-        <a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl"><img src="{$moduleDir}views/img/dotpay_logo_big.png" height="50px" border="0" /></a>
+        <a href="https://www.przelewy24.pl/aktualnosci/kolejny-etap-integracji-przelewy24-i-dotpay-zakonczenie-kwestii-formalnych" target="_blank" title="www.przelewy24.pl"><img src="{$moduleDir}views/img/p24_logo.png" height="50px" border="0" /></a> | <a href="http://www.dotpay.pl" target="_blank" title="www.dotpay.pl"><img src="{$moduleDir}views/img/dotpay_logo85.png" height="50px" border="0" /></a>
+        <br>
+        <div class="alert alert-info">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <br />
+        <p style="color: #1662b3">{l s='Leading online payment operators on the Polish market:' mod='dotpay'} <b>Przelewy24</b> {l s='and' mod='dotpay'} <b>Dotpay</b> {l s='now work together.' mod='dotpay'}</p>
+        <p style="color: #1662b3">{l s='The target platform thanks to which we will provide the best possible infrastructure, products and services will be Przelewy24.' mod='dotpay'}</p>
+        <p style="color: #1662b3;font-weight: bold;">{l s='Therefore, in this version of the payment module, you will notice changes in the name and logos.' mod='dotpay'}</p>
+        <br />
+        <br />
+        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersion}/Dotpay_PrestaShop_module-manual_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
+    </div>
+    
         {if $confOK}
             <div class="alert alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Module is active. ' mod='dotpay'}</h2>
                 <br />
-                    {if $SellerIDName !== false}
-                        <p style="color: #1f4622; font-size: 1.3em;">{l s='The module has been configured for the account:' mod='dotpay'} <span style="color: #018c0b; font-weight: bold;">{$SellerIDName} (ID #{$SellerID})</span>
+                    {if $SellerIDName !== false || $P24SellerIDName !== false}
+                    <p style="color: #1f4622; font-size: 1.3em;">{l s='The module has been configured for the account:' mod='dotpay'} <span style="color: #018c0b; font-weight: bold;"><br>{if $P24SellerIDName !== false}<span style="color:#555";>P24:</span> {$P24SellerIDName} (ID #{$P24SellerID}){else}{$SellerIDName} (ID #{$SellerID}){/if}</span>
                         <em style="color: #627a82; font-weight: normal;"> &#8594; 
                         {if $testMode}{l s='testing environment' mod='dotpay'} {else} {l s='production environment' mod='dotpay'}{/if}
                         </em>
                         </p><br /><br />
                     {/if}
-                <p style="color: #ac1212;"><b>{l s='If you do not recive payment information, please check URLC configuration in your Dotpay user panel. Check also if your shop sees Dotpay IP address properly.' mod='dotpay'}</b></p>
-                <p style="color: #D27C82;"><b>{if $testMode}{l s='Module is in TEST mode. All payment information is fake!' mod='dotpay'}{/if}</b></p><br><br>
-                <p style="color: #D27C82;"><b>{if $oldVersion}{l s='Please update your PrestaShop installation to the latest version if you want to use the newest features!' mod='dotpay'}{/if}</b></p>
+
+                {if $P24Migrated === true} 
+                    {if $testMode == false}
+                        <p><b style="color: #b30000;">{l s='You have indicated in the configuration that your Dotpay account is already migrated to Przelewy24.' mod='dotpay'}</b></p><br>
+                    {/if} 
+                    {if $P24SellerIDName !== false}
+                        <p><b style="color: #065a30;">{l s='Your account is ready to work in P24' mod='dotpay'}</b></p><br>                  
+                    {/if}    
+                {else}
+                    {if $testMode == false && $P24SellerIDName === false}
+                        <p><b style="color: #721616;">{l s='If your account has already been transferred to the new Przelewy24 panel, be sure to select the option below:' mod='dotpay'} <span style="background: #ffe199;"> 🧑‍💻 {l s='My account has already been migrated from Dotpay to Przelewy24' mod='dotpay'}.</span></b> <em>({l s='not for sandbox accounts' mod='dotpay'})</em></p><br>                       
+                    {/if}    
+                {/if}
+
+                    {if $P24Migrated !== true  && $P24SellerIDName === false} 
+                        <p style="color: #472424;"><i>{l s='If you do not recive payment information, please check URLC configuration in your Dotpay user panel. Check also if your shop sees Dotpay IP address properly.' mod='dotpay'}</i></p>
+                    {/if}    
             </div>
+
+            {if $P24SellerIDName !== false && $P24Migrated !== true}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your account is ready to work in P24' mod='dotpay'}</h2>
+                    <br />
+                    <p><b style="color: #721616;font-size: 1.1rem;">{l s='Your Dotpay account has been migrated to the Przelewy24 panel, be sure to select the option below:' mod='dotpay'} <span style="background: #ffe199;"> 🧑‍💻 {l s='My account has already been migrated from Dotpay to Przelewy24' mod='dotpay'}.</span></b><br> <em>({l s='not for sandbox accounts' mod='dotpay'})</em></p><br> 
+                    <br />
+                </div>
+            {/if}
+
+
         {else}
 
                 <div class="alert alert-danger">
@@ -53,14 +91,41 @@
                     <br />
                 </div>
         {/if}
-        {if $testSellerId === false}
 
-             {if $errorCodeID === false}
+        {if $testMode}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Module is in TEST mode. All payment information is fake!' mod='dotpay'}</h2>
+                <br />
+                <p><b style="color: #721616;">{l s='If you want to run payments in production, change the switch settings below:' mod='dotpay'} <span style="background: #ffe199;"> 🧪 {l s='Test mode' mod='dotpay'}.</span></b></p><br>  
+            </div>
+        {/if}
+
+        {if $oldVersion !== false}
+            <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Prestashop version not supported!' mod='dotpay'}</h2>
+                <br />
+                <p style="color: #a82830;"><b>{l s='Please update your PrestaShop installation to the latest version if you want to use the newest features!' mod='dotpay'}</b><br><br>{l s='Your version of Prestashop:' mod='dotpay'} {$CurrentVersion} </p>
+            </div>
+        {/if}
+
+
+        {if $testSellerId === false || $P24testSellerId === false }
+
+             {if $errorCodeID === false || $P24errorCodeID === false }
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'}</h2>
+                    {if $P24SellerID !== false}
+                        <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'} (ID: {$P24SellerID})</h2>  
+                    {else}
+                        <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'} (ID: {$SellerID})</h2>  
+                    {/if}        
                     <br />
-                    <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p>
+                    <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b><br>
+                    {if $P24Migrated === true}<b style="color: #b30000;">{l s='You have indicated in the configuration that your Dotpay account is already migrated to P24. Change settings and check again.' mod='dotpay'}</b>                    
+                    {/if}
+                    </p>
                     <br />
                 </div>
             {else}
@@ -68,23 +133,29 @@
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Problem with Your seller ID !' mod='dotpay'} #{$SellerID}</h2>
 
-                     {if is_numeric($SellerID) && (float)(int)$SellerID === (float)$SellerID && $SellerID|count_characters:false == 6 } 
+                     {if ( is_numeric($SellerID) && (float)(int)$SellerID === (float)$SellerID && $SellerID|count_characters:false == 6) || (is_numeric($SellerID) && (float)(int)$P24SellerID === (float)$P24SellerID && $P24SellerID|count_characters:false == 6) } 
                        
                         <br />
-                        <h2 style="color: #a25d5d;"><b>[{$errorCodeID.error_code}]</b></h2><br />
-                        <h3 style="color: #b31a1a;"><b>{$errorCodeID.detail}</b></h3>
-                        {if $errorCodeID.error_code == "UNKNOWN_ACCOUNT"}
+                        {if $P24SellerID !== false}
+                            <h2 style="color: #a25d5d;"><b>error_code: [{$P24errorCodeID.error_code}]</b></h2><br />
+                            <h3 style="color: #b31a1a;max-width: 80%;padding: 20px;width: max-content;"><b>{$P24errorCodeID.detail}</b></h3>
+                        {else}
+                            <h2 style="color: #a25d5d;"><b>error_code: [{$errorCodeID.error_code}]</b></h2><br />
+                            <h3 style="color: #b31a1a;max-width: 80%;padding: 20px;width: max-content;"><b>{$errorCodeID.detail}</b></h3>
+
+                        {/if}
+                        {if $errorCodeID.error_code == "UNKNOWN_ACCOUNT" || $P24errorCodeID.error_code == "UNKNOWN_ACCOUNT"}        
                         <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b></p><br />
                         <p style="color: #b31a1a;">
                             {if $testMode}{l s='Module is in TEST mode. If you entered a production account ID, set below test mode for' mod='dotpay'} 
                                 <b>{l s='NO' mod='dotpay'}</b>.
                             {/if}</p><br>
                         {/if}
-                        <br />
+                    <br />
                      
                      {else} 
-                     {if $SellerID|count_characters:false != 6}
-                        <p style="color: #b31a1a;"><b>{l s='ID number is a 6-digit string. You have entered:' mod='dotpay'}  <em>{$SellerID|count_characters:false}</em></b>.</p><br />
+                     {if $SellerID|count_characters:false != 6 || $P24SellerID|count_characters:false != 6}
+                     <p style="color: #b31a1a;"><b>{l s='ID number is a 6-digit string. You have entered:' mod='dotpay'}  <em>{if $P24SellerID !== false}{$P24SellerID|count_characters:false}{else}{$SellerID|count_characters:false}{/if}</em></b>.</p><br />
                      {/if}
                         {l s='Your seller ID is incorrect.' mod='dotpay'}
                      {/if}
@@ -129,15 +200,6 @@
             </div>
         {/if}
 
-        <p>{l s='Thanks to Dotpay payment module the only activities needed for integration are: ID and PIN numbers and URLC confirmation configuration.' mod='dotpay'}</p>
-        <p>{l s='ID and PIN can be found in Dotpay panel in Settings in the top bar. ID number is a 6-digit string after # in a "Shop" column.' mod='dotpay'}</p>
-        <p>{l s='URLC configuration is just setting an address to which information about payment should be directed. This address is:' mod='dotpay'} <b>{$targetForUrlc|escape:'htmlall':'UTF-8'}</b></p>
-        <p>{l s='Your shop is going to automatically send URLC address to Dotpay.' mod='dotpay'}</p><br>
-        <p><b style="color: brown;">{l s='Only thing You have to do is log in to the Dotpay user panel and untick "Block external URLC" option in Settings -> Notifications -> Urlc configuration -> Edit.' mod='dotpay'}</b></p>
-        <p><b style="color: brown;">{l s='If your shop does not use HTTPS protocol you should also disable HTTPS verify and SSL certificate verify.' mod='dotpay'}</b></p>
-        <br />
-        <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersion}/Dotpay_PrestaShop_module-manual_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
-    
     
     </div>
 </div>
@@ -149,7 +211,7 @@
 	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong> <em>({l s='official last:' mod='dotpay'}  <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a>)</em>.<br>
 	</h4>
   {if $canNotCheckPlugin}
-        <div class="alert alert-danger">
+        <div class="alert alert-warning">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Can not check the update' mod='dotpay'}</h2>
             <br />
@@ -159,7 +221,7 @@
             </p>
         </div>
     {elseif $obsoletePlugin}
-        <div class="alert alert-danger">
+        <div class="alert alert-warning">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your plug is out of date!' mod='dotpay'}</h2>
             <br />
@@ -347,6 +409,37 @@
         $('.lastInSection').parents('.form-group').after('<hr />');
 
         $('input#DP_PIN').attr("type", "password");
+        $('#DP_TEST_MODE_on').parents('div.form-group').attr('style', '');
+        console.log('test off1');
+
+        //if configuration is incorrect
+        {/literal}
+        {if $testMode === false && $errorCodeID === false && $P24Migrated === true}
+            {literal}
+                $('#p24_migrated').parents('div.form-group').attr('style', 'border : 0.3rem solid #ff7b92; border-radius: 12px;');
+                console.log('migrated1 on');
+            {/literal}            
+        {else}
+            {literal}
+                $('#p24_migrated').parents('div.form-group').attr('style', 'border : 0.3rem solid #c0def0; border-radius: 12px;');
+                console.log('migrated1 off');
+            {/literal}   
+        {/if} 
+        {if $testMode === true}
+            {literal}
+                $('#DP_TEST_MODE_on').parents('div.form-group').attr('style', 'border : 0.3rem solid #ff7b92; border-radius: 12px;');
+                console.log('test on');
+            {/literal}            
+        {else}
+            {literal}
+                $('#DP_TEST_MODE_on').parents('div.form-group').attr('style', '');
+                console.log('test off2');
+            {/literal}  
+        {/if}    
+        {literal}
+
+
+
 
         $('<div id="advanced-settings"></div>').insertAfter($('.advanced-mode-switch').parents('.form-group'));
         $('#advanced-settings').nextAll().detach().appendTo('#advanced-settings');
@@ -359,6 +452,7 @@
         setFieldsForExCh();
         setFieldsForFCC();
         setFieldsForRenew();
+
 
 
         //remove spaces from PIN input

@@ -271,6 +271,7 @@ class Confirmation
              ->addOutputMessage('PHP Version: '.  phpversion())	 
              ->addOutputMessage('Memory limit in PHP (memory_limit): '. ((\Tools::getMemoryLimit())/1048576) .' M', true)	 
              ->addOutputMessage('--- Dotpay PLN ---', true)
+             ->addOutputMessage('Enabled the option that the account migrated to P24: '.(int)$config->getDProxyP24Migrated())
              ->addOutputMessage('Id: '.$config->getId().' '.$seller_receiver)
              ->addOutputMessage('Correct Id: '. $CorrectId)
              ->addOutputMessage('Correct Pin: '.$CorrectPin)

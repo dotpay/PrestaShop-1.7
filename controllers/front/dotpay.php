@@ -188,7 +188,10 @@ abstract class DotpayController extends ModuleFrontController
         $this->getOrder()->setId($order->id)
                          ->setReference($order->reference);
         $description = $this->module->l("Order ID:").' '.$order->reference;
-        $control = $this->getOrder()->getId().'|domain:'.$this->getConfig()->geShoptHost().'|PrestaShop v'._PS_VERSION_.' module: '.$this->module->version;
+
+        $control = $this->getOrder()->getId().'|domain:'.$this->getConfig()->geShoptHost().'|PrestaShop v'._PS_VERSION_.' module: '.$this->module->version . 'dp-p24 migrated:'.(int)$this->getConfig()->getDProxyP24Migrated();
+
+
         
         if ($this->getConfig()->getSurcharge()) {
             $description .= ' ('.

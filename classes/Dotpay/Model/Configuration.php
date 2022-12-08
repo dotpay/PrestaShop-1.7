@@ -66,6 +66,7 @@ class Configuration extends \Dotpay\Model\Configuration
      */
     private $modelMap = array(
         'DP_ENABLED' => 'Enable',
+        'DP_P24_PROXY_MIGRATED' => 'DProxyP24Migrated',
         'DP_ID' => 'Id',
         'DP_PIN'=> 'Pin',
         'DP_TEST_MODE' => 'TestMode',
