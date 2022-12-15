@@ -38,7 +38,7 @@
         <br />
         <h2>{l s='Check manual before configuration:'  mod='dotpay'}<a href="https://github.com/dotpay/{$repositoryName}/releases/download/v{$moduleVersion}/Dotpay_PrestaShop_module-manual_{l s='en'  mod='dotpay'}.pdf" Title="{l s='Get manual for this module' mod='dotpay'}" target="_blank"> {l s='download manual' mod='dotpay'}</a></h2>
     </div>
-    
+
         {if $confOK}
             <div class="alert alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -110,16 +110,15 @@
             </div>
         {/if}
 
-
-        {if $testSellerId === false || $P24testSellerId === false }
-
+        {if ($testSellerId === false && $P24Migrated === false) || ($P24testSellerId === false  && $P24Migrated === true)}
+				
              {if $errorCodeID === false || $P24errorCodeID === false }
                 <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    {if $P24SellerID !== false}
-                        <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'} (ID: {$P24SellerID})</h2>  
+                     {if $P24SellerID !== false && $P24testSellerId === false && $P24Migrated === true}
+                        <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'} (P24 ID: {$P24SellerID})</h2>  
                     {else}
-                        <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'} (ID: {$SellerID})</h2>  
+                        <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your seller ID is incorrect.' mod='dotpay'} (ID: {$SellerID})</h2>
                     {/if}        
                     <br />
                     <p style="color: #555;"><b>{l s='Please check your ID and Test mode settings.' mod='dotpay'}</b><br>
@@ -163,6 +162,10 @@
                 </div>
             {/if}
         {/if}
+		
+
+		
+		
         {if $testApiAccount }
             <div class="alert alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -208,7 +211,7 @@
     <div class="dotpay-config-state">
     <h3>{l s='Updates' mod='dotpay'}</h3>
     <h4>
-	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong> <em>({l s='official last:' mod='dotpay'}  <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a>)</em>.<br>
+	{l s='Version of this module is: ' mod='dotpay'}<strong>{$moduleVersion|escape:'htmlall':'UTF-8'}</strong>{if $canNotCheckPlugin === false } <em>({l s='official last:' mod='dotpay'}  <a href="https://github.com/dotpay/{$repositoryName}/releases/latest" target="_blank">v{$moduleVersionGH|escape:'htmlall':'UTF-8'}</a>)</em>.{/if}<br>
 	</h4>
   {if $canNotCheckPlugin}
         <div class="alert alert-warning">

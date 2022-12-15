@@ -66,7 +66,7 @@
             {foreach from=$channel->getAgreements() item=agreement}
               {if $agreement->getName() != 'personal_data'}
               <label id="agreement_{$agreement->getName()}">
-                  <input type="checkbox" value="1" name="{$agreement->getName()}" {if $agreement->getRequired()}required="true" checked {/if}/>
+                  <input type="checkbox" value="1" name="{$agreement->getName()}" {if $agreement->getRequired()}required="true"  {/if} />
                   {$agreement->getDescriptionHtml() nofilter}
               </label>
               {else}
