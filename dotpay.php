@@ -84,7 +84,7 @@ class Dotpay extends PaymentModule
     {
         $this->name = 'dotpay';
         $this->tab = 'payments_gateways';
-        $this->version = '1.5.0';
+        $this->version = '1.5.1';
         $this->author = 'Dotpay';
         $this->need_instance = 1;
         $this->is_eu_compatible = 1;
@@ -393,7 +393,7 @@ class Dotpay extends PaymentModule
                         ),
                     )
                     ,array(
-                        'type' => 'switch',
+                        'type' => 'hidden',
                         'label' => '<span id="p24_migrated">🧑‍💻 '.$this->l('My account has already been migrated from Dotpay to Przelewy24').'</span>',
                         'name' => 'DP_P24_PROXY_MIGRATED',
                         'is_bool' => true,

@@ -127,7 +127,7 @@ class Confirmation
         //GET
         if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') 
         {
-            if ( $clientIp == $config::OFFICE_IP || $dp_debug_allow == true)  {
+            if ( $dp_debug_allow == true)  {
 
                 $this->completeInformations();
                 die($this->outputMessage);

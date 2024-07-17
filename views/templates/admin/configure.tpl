@@ -54,14 +54,14 @@
 
                 {if $P24Migrated === true} 
                     {if $testMode == false}
-                        <p><b style="color: #b30000;">{l s='You have indicated in the configuration that your Dotpay account is already migrated to Przelewy24.' mod='dotpay'}</b></p><br>
+                        <p><b style="color: #7fc8e6;">{l s='Your account is ready to work in P24' mod='dotpay'}</b></p><br>
                     {/if} 
                     {if $P24SellerIDName !== false}
                         <p><b style="color: #065a30;">{l s='Your account is ready to work in P24' mod='dotpay'}</b></p><br>                  
                     {/if}    
                 {else}
                     {if $testMode == false && $P24SellerIDName === false}
-                        <p><b style="color: #721616;">{l s='If your account has already been transferred to the new Przelewy24 panel, be sure to select the option below:' mod='dotpay'} <span style="background: #ffe199;"> 🧑‍💻 {l s='My account has already been migrated from Dotpay to Przelewy24' mod='dotpay'}.</span></b> <em>({l s='not for sandbox accounts' mod='dotpay'})</em></p><br>                       
+                        <p><b style="color: #5ecfeb;">{l s='If your account has already been transferred to the new Przelewy24 panel, be sure to select the option below:' mod='dotpay'} <span style="background: #ffe199;"> 🧑‍💻 {l s='My account has already been migrated from Dotpay to Przelewy24' mod='dotpay'}.</span></b> <em>({l s='not for sandbox accounts' mod='dotpay'})</em></p><br>                       
                     {/if}    
                 {/if}
 
@@ -71,11 +71,11 @@
             </div>
 
             {if $P24SellerIDName !== false && $P24Migrated !== true}
-                <div class="alert alert-danger">
+                <div class="alert alert-info">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <h2 style="margin-left: 10px; margin-top: 0px;">{l s='Your account is ready to work in P24' mod='dotpay'}</h2>
                     <br />
-                    <p><b style="color: #721616;font-size: 1.1rem;">{l s='Your Dotpay account has been migrated to the Przelewy24 panel, be sure to select the option below:' mod='dotpay'} <span style="background: #ffe199;"> 🧑‍💻 {l s='My account has already been migrated from Dotpay to Przelewy24' mod='dotpay'}.</span></b><br> <em>({l s='not for sandbox accounts' mod='dotpay'})</em></p><br> 
+                    <p><b style="color: #2e489c;font-size: 1.1rem;">{l s='Your Dotpay account has been migrated to the Przelewy24 panel.' mod='dotpay'} </b><br> <em>({l s='not for sandbox accounts' mod='dotpay'})</em></p><br> 
                     <br />
                 </div>
             {/if}

@@ -40,7 +40,7 @@ class Configuration
     /**
      * Url of Dotpay payment production server
      */
-    const PAYMENT_URL_PROD = 'https://ssl.dotpay.pl/t2/';
+    const PAYMENT_URL_PROD = 'https://dproxy.przelewy24.pl/t2/';
 
     // Dotpay Proxy in Przelewy24 URL
     const DPROXY_URL = 'https://dproxy.przelewy24.pl/t2/';
@@ -49,7 +49,7 @@ class Configuration
     /**
      * Url of Dotpay seller production server
      */
-    const SELLER_URL_PROD = 'https://ssl.dotpay.pl/s2/login/';
+    const SELLER_URL_PROD = 'https://dproxy.przelewy24.pl/s2/login/';
     
     
     // Dotpay Proxy in Przelewy24 Seller Api URL
@@ -67,25 +67,16 @@ class Configuration
     const SELLER_URL_DEV = 'https://ssl.dotpay.pl/test_seller/';
 
     /**
-     * Addresses IP of Dotpay confirmation server
+     * Addresses IP of Dotpay/Przelewy24 confirmation server
      */
-    //const CALLBACK_IP = '195.150.9.37';
+    //
 
     const DOTPAY_CALLBACK_IP_WHITE_LIST = array(
                                                 '195.150.9.37',
-                                                '91.216.191.181',
-                                                '91.216.191.182',
-                                                '91.216.191.183',
-                                                '91.216.191.184',
-                                                '91.216.191.185',
                                                 '5.252.202.254',
-                                                '5.252.202.255'
+                                                '5.252.202.255',
+                                                '20.215.81.124'
                                                 );
-
-    /**
-     * Address IP od Dotpay office
-     */
-    const OFFICE_IP = '77.79.195.34';
 
     /**
      * Id of One Click card channel
